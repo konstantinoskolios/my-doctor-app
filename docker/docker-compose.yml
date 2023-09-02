@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: my_doctor_app
+      POSTGRES_USER: pgtest
+      POSTGRES_PASSWORD: pgtest
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgresdata:
+
+#docker compose down/up in case you want to use docker db.
