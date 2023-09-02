@@ -4,3 +4,7 @@ server:
 spring:
   thymeleaf:
     check-template: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: pgtest
+    password: pgtest
