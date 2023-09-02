@@ -1,0 +1,6 @@
+server:
+  port: 8500
+
+spring:
+  thymeleaf:
+    check-template: false
