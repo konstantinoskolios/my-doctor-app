@@ -3,7 +3,7 @@ server:
 
 spring:
   thymeleaf:
-    check-template: false
+    prefix: classpath:/custom-templates/
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: pgtest
