@@ -31,4 +31,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'ch.qos.logback:logback-classic'
     implementation 'org.postgresql:postgresql:42.2.27'
+    annotationProcessor 'org.hibernate:hibernate-jpamodelgen'
+    implementation 'org.apache.commons:commons-lang3:3.0'
 }
