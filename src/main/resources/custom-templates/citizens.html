@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Doctor App</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <style>
+        tbody tr:hover {
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<body>
+<div class="container">
+    <h1>Citizen Search</h1>
+
+    <!-- Search Form -->
+    <form class="mb-3" method="GET" th:action="@{/citizens/all}">
+        <div class="input-group">
+            <input class="form-control" name="searchBy" placeholder="Search by Tax, Mobile, or Social Number"
+                   type="text">
+            <div class="input-group-append">
+                <button class="btn btn-outline-primary" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Father First Name</th>
+            <th scope="col">Tax Number</th>
+            <th scope="col">Social Security Number</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Birthdate</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="citizen: ${citizens.content}">
+            <td th:text="${citizen.firstName}"/>
+            <td th:text="${citizen.lastName}"/>
+            <td th:text="${citizen.fatherFirstName}"/>
+            <td th:text="${citizen.taxNumber}"/>
+            <td th:text="${citizen.socialSecurityNumber}"/>
+            <td th:text="${citizen.phoneNumber}"/>
+            <td th:text="${citizen.birthdate}"/>
+            <td>
+                <button class="btn btn-primary" onclick="retrieveData(this)">Retrieve</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <ul class="pagination">
+        <li class="page-item" th:if="${citizens.hasPrevious()}">
+            <a class="page-link" th:href="@{/citizens/all(page=0)}">First</a>
+        </li>
+        <li class="page-item" th:if="${citizens.hasPrevious()}">
+            <a class="page-link" th:href="@{/citizens/all(page=${citizens.number - 1})}">Previous</a>
+        </li>
+        <li class="page-item" th:if="${citizens.hasNext()}">
+            <a class="page-link" th:href="@{/citizens/all(page=${citizens.number + 1})}">Next</a>
+        </li>
+        <li class="page-item" th:if="${citizens.hasNext()}">
+            <a class="page-link" th:href="@{/citizens/all(page=${citizens.totalPages - 1})}">Last</a>
+        </li>
+    </ul>
+
+    <!-- Display current page and items -->
+    <div class="text-center mt-3">
+        <p class="mb-0" th:text="'Page ' + ${citizens.number + 1} + ' of ' + ${citizens.totalPages}"></p>
+        <p class="mb-0"
+           th:text="'Displaying items ' + ${startItem} + ' - ' + ${endItem} + ' of ' + ${citizens.totalElements}"></p>
+    </div>
+
+    <!-- Sort and Order Form -->
+    <form class="mb-3" method="GET" th:action="@{/citizens/all}">
+        <div class="form-row align-items-center">
+            <div class="col-auto">
+                <select class="form-control" name="sortField">
+                    <option value="firstName">First Name</option>
+                    <option value="lastName">Last Name</option>
+                    <option value="fatherFirstName">Father First Name</option>
+                    <option value="taxNumber">Tax Number</option>
+                    <option value="socialSecurityNumber">Social Security Number</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <select class="form-control" name="sortDir">
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-outline-primary" type="submit">Apply Sort</button>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+
+<script>
+    function retrieveData(button) {
+        // Get the data from the clicked row
+        var row = $(button).closest('tr');
+        var firstName = row.find('td:eq(0)').text();
+        var lastName = row.find('td:eq(1)').text();
+        var fatherFirstName = row.find('td:eq(2)').text();
+        var taxNumber = row.find('td:eq(3)').text();
+        var socialSecurityNumber = row.find('td:eq(4)').text();
+        var phoneNumber = row.find('td:eq(5)').text();
+        var birthdate = row.find('td:eq(6)').text();
+
+        // Display the retrieved data (you can replace this with your desired action)
+        alert('First Name: ' + firstName +
+            '\nLast Name: ' + lastName +
+            '\nFather First Name: ' + fatherFirstName +
+            '\nTax Number: ' + taxNumber +
+            '\nSocial Security Number: ' + socialSecurityNumber +
+            '\nPhone Number: ' + phoneNumber +
+            '\nBirthdate: ' + birthdate);
+    }
+</script>
+
+</body>
+</html>
