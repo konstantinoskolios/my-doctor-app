@@ -2,8 +2,13 @@ server:
   port: 8500
 
 spring:
+  jpa:
+    show-sql: true
   thymeleaf:
     prefix: classpath:/custom-templates/
+    cache: false
+    mode: HTML
+    encoding: UTF-8
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: pgtest
