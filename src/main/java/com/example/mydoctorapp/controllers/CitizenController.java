@@ -27,7 +27,6 @@ public class CitizenController {
                          @RequestParam(name = "sortDir", defaultValue = "asc") String sortDir,
                          @RequestParam(name = "searchBy", required = false) String searchBy,
                          Model model) {
-
         return citizenService.getAllCitizens(page, size, sortField, sortDir, model, searchBy);
     }
 }
