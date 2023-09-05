@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
+import static com.example.mydoctorapp.Constants.PHONE_NUMBER_LENGTH;
+import static com.example.mydoctorapp.Constants.SOCIAL_SECURITY_NUMBER_LENGTH;
+import static com.example.mydoctorapp.Constants.TAX_NUMBER_LENGTH;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CitizenSpecification {
 
@@ -22,11 +26,11 @@ public class CitizenSpecification {
         }
 
         switch (StringUtils.length(input)) {
-            case 9:
+            case TAX_NUMBER_LENGTH:
                 return findByField(input, Citizen_.TAX_NUMBER);
-            case 10:
+            case PHONE_NUMBER_LENGTH:
                 return findByField(input, Citizen_.PHONE_NUMBER);
-            case 11:
+            case SOCIAL_SECURITY_NUMBER_LENGTH:
                 return findByField(input, Citizen_.SOCIAL_SECURITY_NUMBER);
             default:
                 return null;

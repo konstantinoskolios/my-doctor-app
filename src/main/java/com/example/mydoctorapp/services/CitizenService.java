@@ -10,6 +10,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import static com.example.mydoctorapp.Constants.CITIZENS;
+import static com.example.mydoctorapp.Constants.END_ITEM;
+import static com.example.mydoctorapp.Constants.ONE_VALUE;
+import static com.example.mydoctorapp.Constants.SORT_ASCENDING;
+import static com.example.mydoctorapp.Constants.START_ITEM;
 import static com.example.mydoctorapp.specifications.CitizenSpecification.constructCitizenSpecification;
 
 @Service
@@ -17,10 +22,7 @@ import static com.example.mydoctorapp.specifications.CitizenSpecification.constr
 @RequiredArgsConstructor
 public class CitizenService {
 
-    private static final String CITIZENS = "citizens";
-    private static final String SORT_ASCENDING = "asc";
-    private static final String START_ITEM = "startItem";
-    private static final String END_ITEM = "endItem";
+
     private final CitizenRepository citizenRepository;
 
     public String getAllCitizens(int page, int size, String sortField, String sortDir, Model model, String searchBy) {
@@ -32,8 +34,8 @@ public class CitizenService {
     }
 
     private void displayItems(Page<Citizen> citizens, int page, Model model) {
-        int startItem = Math.min((int) citizens.getTotalElements(), page * citizens.getSize() + 1);
-        int endItem = Math.min((startItem + citizens.getSize() - 1), (int) citizens.getTotalElements());
+        int startItem = Math.min((int) citizens.getTotalElements(), page * citizens.getSize() + ONE_VALUE);
+        int endItem = Math.min((startItem + citizens.getSize() - ONE_VALUE), (int) citizens.getTotalElements());
         model.addAttribute(START_ITEM, startItem);
         model.addAttribute(END_ITEM, endItem);
     }
