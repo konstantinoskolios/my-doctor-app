@@ -1,0 +1,20 @@
+/* Common CSS for both pages */
+.social-icon {
+    transition: background-color 0.3s ease-in-out;
+    margin: 1px; /* Add margin to the social icons for spacing */
+}
+
+.social-icon:hover {
+    background-color: #333; /* Change the background color on hover */
+    color: white; /* Change the text color on hover */
+}
+
+/* Add this CSS to override the footer icon style in main.html */
+.footer .social-icon {
+    margin: 1px; /* Add margin to the social icons for spacing */
+}
+
+.footer .social-icon:hover {
+    background-color: #333; /* Change the background color on hover */
+    color: white; /* Change the text color on hover */
+}

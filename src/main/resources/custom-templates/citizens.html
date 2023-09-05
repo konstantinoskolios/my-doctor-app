@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>My Doctor App</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/hover-icons.css}"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet"
+          type="text/css"/>
+
     <style>
         tbody tr:hover {
             background-color: #f5f5f5;
@@ -13,8 +17,35 @@
 </head>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <body>
+
+<div th:replace="fragments/navbar"></div>
+
 <div class="container">
     <h1>Citizen Search</h1>
+
+    <!-- Sort and Order Form -->
+    <form class="mb-3" method="GET" th:action="@{/citizens/all}">
+        <div class="form-row align-items-center">
+            <div class="col-auto">
+                <select class="form-control" name="sortField">
+                    <option value="firstName">First Name</option>
+                    <option value="lastName">Last Name</option>
+                    <option value="fatherFirstName">Father First Name</option>
+                    <option value="taxNumber">Tax Number</option>
+                    <option value="socialSecurityNumber">Social Security Number</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <select class="form-control" name="sortDir">
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-outline-primary" type="submit">Apply Sort</button>
+            </div>
+        </div>
+    </form>
 
     <!-- Search Form -->
     <form class="mb-3" method="GET" th:action="@{/citizens/all}">
@@ -78,30 +109,7 @@
            th:text="'Displaying items ' + ${startItem} + ' - ' + ${endItem} + ' of ' + ${citizens.totalElements}"></p>
     </div>
 
-    <!-- Sort and Order Form -->
-    <form class="mb-3" method="GET" th:action="@{/citizens/all}">
-        <div class="form-row align-items-center">
-            <div class="col-auto">
-                <select class="form-control" name="sortField">
-                    <option value="firstName">First Name</option>
-                    <option value="lastName">Last Name</option>
-                    <option value="fatherFirstName">Father First Name</option>
-                    <option value="taxNumber">Tax Number</option>
-                    <option value="socialSecurityNumber">Social Security Number</option>
-                </select>
-            </div>
-            <div class="col-auto">
-                <select class="form-control" name="sortDir">
-                    <option value="asc">Ascending</option>
-                    <option value="desc">Descending</option>
-                </select>
-            </div>
-            <div class="col-auto">
-                <button class="btn btn-outline-primary" type="submit">Apply Sort</button>
-            </div>
-        </div>
-    </form>
-
+    <div th:replace="fragments/footer :: footer"></div>
 
 </div>
 
