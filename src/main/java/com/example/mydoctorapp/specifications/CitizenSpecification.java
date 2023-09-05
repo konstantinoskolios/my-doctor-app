@@ -2,9 +2,12 @@ package com.example.mydoctorapp.specifications;
 
 import com.example.mydoctorapp.entities.Citizen;
 import com.example.mydoctorapp.entities.Citizen_;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CitizenSpecification {
 
     private static Specification<Citizen> findByField(String field, String fieldValue) {
