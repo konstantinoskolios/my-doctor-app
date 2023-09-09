@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome Page</title>
+</head>
+<body>
+
+<div th:replace="fragments/navbar"></div>
+
+<h1 th:text="Welcome Dr. ${doctorAccount.firstName} ${doctorAccount.lastName} , ${doctorAccount.speciality}"/>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+
+<h1></h1>
+</body>
+</html>
