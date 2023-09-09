@@ -10,11 +10,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import static com.example.mydoctorapp.Constants.CITIZENS;
-import static com.example.mydoctorapp.Constants.END_ITEM;
-import static com.example.mydoctorapp.Constants.ONE_VALUE;
-import static com.example.mydoctorapp.Constants.SORT_ASCENDING;
-import static com.example.mydoctorapp.Constants.START_ITEM;
+import static com.example.mydoctorapp.constants.Constants.CITIZENS;
+import static com.example.mydoctorapp.constants.Constants.CITIZENS_TEMPLATE_VALUE;
+import static com.example.mydoctorapp.constants.Constants.END_ITEM;
+import static com.example.mydoctorapp.constants.Constants.ONE_VALUE;
+import static com.example.mydoctorapp.constants.Constants.SORT_ASCENDING;
+import static com.example.mydoctorapp.constants.Constants.START_ITEM;
 import static com.example.mydoctorapp.specifications.CitizenSpecification.constructCitizenSpecification;
 
 @Service
@@ -30,7 +31,7 @@ public class CitizenService {
         var citizens = citizenRepository.findAll(constructCitizenSpecification(searchBy), pageable);
         displayItems(citizens, page, model);
         model.addAttribute(CITIZENS, citizens);
-        return CITIZENS;
+        return CITIZENS_TEMPLATE_VALUE;
     }
 
     private void displayItems(Page<Citizen> citizens, int page, Model model) {
