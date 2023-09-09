@@ -33,4 +33,5 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.2.27'
     annotationProcessor 'org.hibernate:hibernate-jpamodelgen'
     implementation 'org.apache.commons:commons-lang3:3.0'
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 }
