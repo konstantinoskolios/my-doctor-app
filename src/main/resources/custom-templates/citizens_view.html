@@ -25,6 +25,10 @@
     <p th:text="${successMessage}"></p>
 </div>
 
+<div class="alert alert-danger" id="failureMessage" th:if="${failureMessage}">
+    <p th:text="${failureMessage}"></p>
+</div>
+
 
 <div class="container">
     <h1>Citizen Search</h1>
@@ -86,9 +90,11 @@
             <td th:text="${citizen.phoneNumber}"/>
             <td th:text="${citizen.birthdate}"/>
             <td>
-                <a class="btn btn-primary" th:href="@{/citizens/add/{citizenId}(citizenId=${citizen.id})}">
-                    Add Patient
-                </a>
+                <form action="/citizens/add" method="post">
+                    <input name="citizenId" th:value="${citizen.id}" type="hidden"/>
+                    <input name="doctorId" th:value="${doctorId}" type="hidden"/>
+                    <button id ="add-patient-button" class="btn btn-primary" type="submit">Add Patient</button>
+                </form>
         </tr>
         </tbody>
     </table>
@@ -124,6 +130,23 @@
                 document.getElementById('successMessage').style.display = 'none';
             }, 2000);
         })();
+    </script>
+
+    <script th:if="${failureMessage}">
+        (() => {
+            setTimeout(() => {
+                document.getElementById('failureMessage').style.display = 'none';
+            }, 4000);
+        })();
+    </script>
+
+    <script>
+        var doctorId = localStorage.getItem("doctorId")
+        var doctorInputs = document.querySelectorAll('input[name="doctorId"]')
+        doctorInputs.forEach((input) => {
+            input.value = doctorId
+        })
+        console.log(doctorId)
     </script>
 
 </div>
