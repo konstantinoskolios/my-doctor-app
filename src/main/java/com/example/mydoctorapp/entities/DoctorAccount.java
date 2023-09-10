@@ -15,8 +15,8 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "account")
-public class Account {
+@Table(name = "doctoraccount")
+public class DoctorAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,4 +29,13 @@ public class Account {
     private String firstName;
     private String lastName;
     private String speciality;
+
+    public DoctorAccount(String email, String pass) {
+        this.id = 1000L;
+        this.email = email;
+        this.pass = pass;
+        this.firstName = "Nikos";
+        this.lastName = "Koukos";
+        this.speciality = "Pa8ologos";
+    }
 }

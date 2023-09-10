@@ -1,4 +1,4 @@
-package com.example.mydoctorapp;
+package com.example.mydoctorapp.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
