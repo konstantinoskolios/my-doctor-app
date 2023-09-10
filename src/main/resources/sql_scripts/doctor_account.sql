@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS account
+CREATE TABLE IF NOT EXISTS doctorAccount
 (
     id         serial primary key,
     email      VARCHAR(50) unique not null,
