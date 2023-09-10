@@ -41,4 +41,9 @@ public class ExceptionAdvisor {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(GuiException.class)
+    public ResponseEntity<String> handelGuiException(GuiException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }
