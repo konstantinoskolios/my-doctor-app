@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "patientaccount")
+@Table(name = "patient_account")
 public class PatientAccount {
 
     @Id
@@ -33,5 +33,5 @@ public class PatientAccount {
     private String birthdate;
     private String comments;
     private String prescriptionsIds;
-    private String doctorId;
+    private Long doctorId;
 }

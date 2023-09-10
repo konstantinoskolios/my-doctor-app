@@ -1,16 +1,16 @@
-CREATE TABLE IF NOT EXISTS patientAccount
+CREATE TABLE IF NOT EXISTS patient_account
 (
-    id                   serial primary key,
-    firstName            VARCHAR(50)        not null,
-    lastName             varchar(50)        not null,
-    fatherFirstName      varchar(50)        not null,
-    taxNumber            varchar(9) UNIQUE  not null,
-    socialSecurityNumber varchar(11) UNIQUE not null,
-    phoneNumber          varchar(10) UNIQUE not null,
-    birthdate            varchar(50)        not null,
-    comments             varchar(255),
-    prescriptionsIds     varchar(255)       not null,
-    doctorId             varchar(50)        not null
+    id                     serial primary key,
+    first_name             VARCHAR(50)        not null,
+    last_name              varchar(50)        not null,
+    father_first_name      varchar(50)        not null,
+    tax_number             varchar(9) UNIQUE  not null,
+    social_security_number varchar(11) UNIQUE not null,
+    phone_number           varchar(10) UNIQUE not null,
+    birthdate              varchar(50)        not null,
+    comments               varchar(255),
+    prescriptions_ids      varchar(255)       not null,
+    doctor_id              BIGINT             not null
 );
 
 

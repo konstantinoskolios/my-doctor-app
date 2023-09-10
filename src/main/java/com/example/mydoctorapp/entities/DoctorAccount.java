@@ -15,17 +15,15 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "doctoraccount")
+@Table(name = "doctor_account")
 public class DoctorAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(unique = true, nullable = false)
     private String email;
     @Column(nullable = false)
     private String pass;
-
     private String firstName;
     private String lastName;
     private String speciality;

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS doctorPatient
+CREATE TABLE IF NOT EXISTS doctor_patient
 (
     id         serial PRIMARY KEY,
     doctor_id  BIGINT NOT NULL,

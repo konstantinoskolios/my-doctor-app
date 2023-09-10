@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "doctorpatient")
+@Table(name = "doctor_patient")
 public class DoctorPatientRelation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
