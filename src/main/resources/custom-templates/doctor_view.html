@@ -2,17 +2,54 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Welcome Page</title>
+    <title>Doctor Page</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/hover-icons.css}"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
 <div th:replace="fragments/navbar"></div>
 
-<h1 th:text="Welcome Dr. ${doctorAccount.firstName} ${doctorAccount.lastName} , ${doctorAccount.speciality}"/>
+<h1 th:text="'Welcome Dr. ' + ${doctorAccount.firstName} + ' ' + ${doctorAccount.lastName} + ', ' + ${doctorAccount.speciality}"></h1>
+
+<div class="container mt-4">
+    <h2>Patients</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Age</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Loop through the list of patients -->
+        <tr th:each="patient : ${patientList}">
+            <td th:text="${patient.firstName}"></td>
+            <td th:text="${patient.lastName}"></td>
+            <td th:text="${patient.age}"></td>
+            <td>
+                <button class="btn btn-danger" th:onclick="'removePatient(' + ${patient.id} + ')'">Remove</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- Open a pop-up dialog when the "Add Patient" button is clicked -->
+    <button class="btn btn-success" onclick="openAddPatientDialog()">Add Patient</button>
+</div>
 
 <div th:replace="fragments/footer :: footer"></div>
 
+<script>
+    function openAddPatientDialog() {
+        var url = "http://localhost:8500/citizens/all";
 
-<h1></h1>
+        // Open a new window or modal dialog with the specified URL
+        window.open(url, "AddPatientDialog", "width=800,height=600");
+    }
+</script>
+
 </body>
 </html>

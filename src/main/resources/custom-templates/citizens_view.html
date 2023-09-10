@@ -20,6 +20,12 @@
 
 <div th:replace="fragments/navbar"></div>
 
+<!-- Add this code at the top of your HTML template to display the success message -->
+<div class="alert alert-success" id="successMessage" th:if="${successMessage}">
+    <p th:text="${successMessage}"></p>
+</div>
+
+
 <div class="container">
     <h1>Citizen Search</h1>
 
@@ -80,8 +86,9 @@
             <td th:text="${citizen.phoneNumber}"/>
             <td th:text="${citizen.birthdate}"/>
             <td>
-                <button class="btn btn-primary" onclick="retrieveData(this)">Retrieve</button>
-            </td>
+                <a class="btn btn-primary" th:href="@{/citizens/add/{citizenId}(citizenId=${citizen.id})}">
+                    Add Patient
+                </a>
         </tr>
         </tbody>
     </table>
@@ -111,29 +118,15 @@
 
     <div th:replace="fragments/footer :: footer"></div>
 
+    <script th:if="${successMessage}">
+        (() => {
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 2000);
+        })();
+    </script>
+
 </div>
-
-<script>
-    function retrieveData(button) {
-        // Get the data from the clicked row
-        var row = $(button).closest('tr');
-        var firstName = row.find('td:eq(0)').text();
-        var lastName = row.find('td:eq(1)').text();
-        var fatherFirstName = row.find('td:eq(2)').text();
-        var taxNumber = row.find('td:eq(3)').text();
-        var socialSecurityNumber = row.find('td:eq(4)').text();
-        var phoneNumber = row.find('td:eq(5)').text();
-        var birthdate = row.find('td:eq(6)').text();
-
-        alert('First Name: ' + firstName +
-            '\nLast Name: ' + lastName +
-            '\nFather First Name: ' + fatherFirstName +
-            '\nTax Number: ' + taxNumber +
-            '\nSocial Security Number: ' + socialSecurityNumber +
-            '\nPhone Number: ' + phoneNumber +
-            '\nBirthdate: ' + birthdate);
-    }
-</script>
 
 </body>
 </html>
