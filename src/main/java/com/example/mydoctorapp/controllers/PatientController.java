@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,9 +36,9 @@ public class PatientController {
         return "doctor_view";
     }
 
-    @PostMapping("patient/removePatient")
+    @DeleteMapping("patient/removePatient")
     public String removePatient(@RequestBody DoctorViewDto doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
-        doctorService.addComment(doctorViewDto,redirectAttributes,model);
+        doctorService.removePatient(doctorViewDto, redirectAttributes, model);
         return "doctor_view";
     }
 }

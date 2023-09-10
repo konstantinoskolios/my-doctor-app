@@ -20,6 +20,8 @@
 
 <div th:replace="fragments/navbar"></div>
 
+<button class="btn btn-secondary" onclick="notifyAndReloadParent()">Close Dialog</button>
+
 <!-- Add this code at the top of your HTML template to display the success message -->
 <div class="alert alert-success" id="successMessage" th:if="${successMessage}">
     <p th:text="${successMessage}"></p>
@@ -144,10 +146,17 @@
         var doctorId = localStorage.getItem("doctorId")
         var doctorInputs = document.querySelectorAll('input[name="doctorId"]')
         doctorInputs.forEach((input) => {
-            input.value = doctorId
+	        input.value = doctorId
         })
         console.log(doctorId)
     </script>
+
+	<script>
+    function notifyAndReloadParent() {
+	    window.opener.location.reload();
+	    window.close();
+    }
+</script>
 
 </div>
 

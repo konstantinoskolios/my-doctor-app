@@ -89,16 +89,27 @@ public class DoctorService {
             patientAccount.setComments(doctorViewDto.getComment());
             patientAccountRepository.save(patientAccount);
             redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE_ALERT, "Comment has been changed successfully");
-
-            //todo change this:
-            var doctorAccount = doctorAccountRepository.findById(doctorViewDto.getDoctorId()).orElseThrow(GuiException::new);
-            var patientList = patientAccountRepository.findAllByDoctorId(doctorViewDto.getDoctorId());
-            model.addAttribute("kelly123", "Comment has been changed successfully");
-            model.addAttribute("doctorAccount", doctorMapper.toDto(doctorAccount));
-            model.addAttribute("patientList", patientList);
+            constructDoctorTabAttributes(doctorViewDto.getDoctorId(), model);
         } catch (Exception e) {
             log.error("An error occurred during edit of the comment of the patient: {} and exception: {}", e.getMessage(), e);
             redirectAttributes.addFlashAttribute(FAILURE_MESSAGE_ALERT, GENERIC_ERROR_FOR_UI);
         }
+    }
+
+    public void removePatient(DoctorViewDto doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
+        try {
+            patientAccountRepository.deleteById(doctorViewDto.getPatientId());
+            constructDoctorTabAttributes(doctorViewDto.getDoctorId(), model);
+        } catch (Exception e) {
+            log.error("An error occurred removing the patient: {} with exception: {}", e.getMessage(), e);
+            redirectAttributes.addFlashAttribute(FAILURE_MESSAGE_ALERT, GENERIC_ERROR_FOR_UI);
+        }
+    }
+
+    private void constructDoctorTabAttributes(Long doctorId, Model model) {
+        var doctorAccount = doctorAccountRepository.findById(doctorId).orElseThrow(GuiException::new);
+        var patientList = patientAccountRepository.findAllByDoctorId(doctorId);
+        model.addAttribute("doctorAccount", doctorMapper.toDto(doctorAccount));
+        model.addAttribute("patientList", patientList);
     }
 }
