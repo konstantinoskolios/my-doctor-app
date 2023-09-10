@@ -1,8 +1,11 @@
 package com.example.mydoctorapp.services;
 
+import com.example.mydoctorapp.entities.DoctorAccount;
 import com.example.mydoctorapp.exceptions.InvalidCredentialsException;
 import com.example.mydoctorapp.exceptions.InvalidEmailFormatException;
-import com.example.mydoctorapp.repositories.AccountRepository;
+import com.example.mydoctorapp.mapstruct.DoctorMapper;
+import com.example.mydoctorapp.models.PatientAccountRepository;
+import com.example.mydoctorapp.repositories.DoctorAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,16 +22,24 @@ import static com.example.mydoctorapp.utils.MyDoctorAppUtils.getCurrentTimeInGMT
 @RequiredArgsConstructor
 public class DoctorService {
 
-    private final AccountRepository accountRepository;
+    private final DoctorAccountRepository doctorAccountRepository;
+    //    private final DoctorPatientRelationRepository doctorPatientRelationRepository;
+    private final PatientAccountRepository patientAccountRepository;
+    private final DoctorMapper doctorMapper;
 
     public String loginDoctor(String email, String password, Model model) {
         log.info(String.format("Doctor with email: %s has successfully logged into the application at: %s", email, getCurrentTimeInGMT3()));
-        model.addAttribute("hello123", "Hello world !!!!!!");
+        var dummyAcc = new DoctorAccount(email, password); //todo: replaced with actually data
+        model.addAttribute("doctorAccount", doctorMapper.toDto(dummyAcc));
+//        var patientsIds = doctorPatientRelationRepository.findAllByDoctorId(100L);
+//        patientAccountRepository.
+
+//        model.addAttribute("patientList", );
         return DOCTOR_TEMPLATE_VALUE;
     }
 
     private void isEmailExists(String email) {
-        accountRepository.findAccountByEmail(email).orElseThrow(() -> {
+        doctorAccountRepository.findDoctorAccountByEmail(email).orElseThrow(() -> {
             var errorMessage = String.format("No doctor account found with the provided email: %s", email);
             log.warn(String.format(errorMessage));
             throw new InvalidCredentialsException(errorMessage);
@@ -36,7 +47,7 @@ public class DoctorService {
     }
 
     private void isValidCredentials(String email, String password) {
-        accountRepository.findAccountByEmailAndPass(email, password).orElseThrow(() -> {
+        doctorAccountRepository.findDoctorAccountByEmailAndPass(email, password).orElseThrow(() -> {
             var errorMessage = String.format("Invalid login credentials for the doctor with email: %s", email);
             log.warn(errorMessage);
             throw new InvalidCredentialsException(errorMessage);
