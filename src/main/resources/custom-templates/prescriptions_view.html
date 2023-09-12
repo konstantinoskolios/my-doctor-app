@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/hover-icons.css}"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet"
+          type="text/css">
+    <!-- Add Bootstrap Datepicker CSS and JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+</head>
+<body>
+
+<div th:replace="fragments/navbar"></div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h3 class="text-center text-primary">John Smith</h3>
+            <form id="data-form">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Prescription Name</th>
+                        <th>Date</th>
+                        <th>
+                            <button class="btn btn-primary" id="add-row" type="button">+</button>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="table-body">
+                    <tr class="table-row">
+                        <td>
+                            <select class="form-control" name="category">
+                                <option value="dermatological">Dermatological</option>
+                                <option value="cardiological">Cardiological</option>
+                                <option value="muscles">Muscles</option>
+                                <option value="respiratory">Respiratory</option>
+                                <option value="gastrointestinal">Gastrointestinal</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control" name="prescription">
+                                <option value="">Select Prescription</option> <!-- Default option -->
+                            </select>
+                        </td>
+                        <td>
+                            <input class="form-control datepicker" type="text" name="date" />
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger delete-row">-</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="btn btn-success" id="submit-button">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Add Bootstrap Datepicker JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Define a data structure with prescription options for each category
+        var prescriptionData = {
+            dermatological: ["Dermatological 1", "Dermatological 2"],
+            cardiological: ["Cardiological 1", "Cardiological 2"],
+            muscles: ["Muscles 1", "Muscles 2"],
+            respiratory: ["Respiratory 1", "Respiratory 2"],
+            gastrointestinal: ["Gastrointestinal 1", "Gastrointestinal 2"]
+        };
+
+        // Function to populate the "Prescription Name" select options based on the selected category
+        function populatePrescriptionOptions(selectedCategory) {
+            var prescriptionSelect = $(this).closest('.table-row').find('select[name="prescription"]');
+            prescriptionSelect.empty();
+            var prescriptions = prescriptionData[selectedCategory] || [];
+            prescriptions.forEach(function (prescription) {
+                prescriptionSelect.append('<option value="' + prescription + '">' + prescription + '</option>');
+            });
+        }
+
+        // Function to add a new row to the table
+        function addTableRow() {
+            var newRow = '<tr class="table-row">' +
+                '<td>' +
+                '<select class="form-control" name="category">' +
+                '<option value="dermatological">Dermatological</option>' +
+                '<option value="cardiological">Cardiological</option>' +
+                '<option value="muscles">Muscles</option>' +
+                '<option value="respiratory">Respiratory</option>' +
+                '<option value="gastrointestinal">Gastrointestinal</option>' +
+                '</select>' +
+                '</td>' +
+                '<td>' +
+                '<select class="form-control" name="prescription">' +
+                '<option value="">Select Prescription</option>' + // Default option
+                '</select>' +
+                '</td>' +
+                '<td>' +
+                '<input class="form-control datepicker" type="text" name="date" />' +
+                '</td>' +
+                '<td>' +
+                '<button type="button" class="btn btn-danger delete-row">-</button>' +
+                '</td>' +
+                '</tr>';
+            $('#table-body').append(newRow);
+
+            // Initialize the Datepicker for the new row
+            $('.datepicker').datepicker({
+                format: 'dd/mm/yyyy',
+                autoclose: true,
+                todayHighlight: true
+            });
+        }
+
+        // Event handler for adding rows
+        $('#add-row').click(addTableRow);
+
+        // Event handler for deleting rows
+        $('#table-body').on('click', '.delete-row', function () {
+            $(this).closest('tr').remove();
+        });
+
+        // Event handler for category change
+        $('#table-body').on('change', 'select[name="category"]', function () {
+            var selectedCategory = $(this).val();
+            populatePrescriptionOptions.call(this, selectedCategory);
+        });
+
+        // Event handler for form submission
+        $('#submit-button').click(function () {
+            var jsonDataArray = [];
+
+            $('#table-body tr').each(function () {
+                var row = $(this);
+                var category = row.find('select[name="category"]').val();
+                var prescription = row.find('select[name="prescription"]').val();
+                var date = row.find('input[name="date"]').val();
+
+                if (category || prescription || date) {
+                    jsonDataArray.push({ category: category, prescription: prescription, date: date });
+                }
+            });
+
+            console.log(JSON.stringify(jsonDataArray));
+
+        });
+    });
+</script>
+</body>
+</html>
