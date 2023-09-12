@@ -44,9 +44,14 @@
                           th:text="${patient.comments}"></textarea>
 			</td>
 			<td>
-				<button class="btn btn-danger"
-				        onclick="removePatient(this.getAttribute('remove-patient-id'), this.getAttribute('remove-doctor-id'))"
+				<button class="btn btn-primary"
+				        onclick="addPrescription(this.getAttribute('add-prescription'), this.getAttribute('remove-doctor-id'))"
 				        th:attr="remove-patient-id=${patient.id}, remove-doctor-id=${doctorAccount.id}">Remove
+				</button>
+
+				<button class="btn btn-danger"
+						onclick="removePatient(this.getAttribute('remove-patient-id'), this.getAttribute('remove-doctor-id'))"
+						th:attr="remove-patient-id=${patient.id}, remove-doctor-id=${doctorAccount.id}">Remove
 				</button>
 			</td>
 		</tr>

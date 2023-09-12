@@ -20,8 +20,6 @@
 
 <div th:replace="fragments/navbar"></div>
 
-<button class="btn btn-secondary" onclick="notifyAndReloadParent()">Close Dialog</button>
-
 <!-- Add this code at the top of your HTML template to display the success message -->
 <div class="alert alert-success" id="successMessage" th:if="${successMessage}">
     <p th:text="${successMessage}"></p>
@@ -151,13 +149,19 @@
         console.log(doctorId)
     </script>
 
-	<script>
+<script>
+    window.addEventListener("beforeunload", (e) => {
+	    notifyAndReloadParent();
+    });
+
     function notifyAndReloadParent() {
 	    window.opener.location.reload();
-	    window.close();
     }
-</script>
+     document.getElementById("add-patient-button").addEventListener("click",()=>{
+	     notifyAndReloadParent();
+     })
 
+</script>
 </div>
 
 </body>

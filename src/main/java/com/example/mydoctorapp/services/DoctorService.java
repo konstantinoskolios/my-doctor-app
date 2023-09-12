@@ -16,11 +16,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.transaction.Transactional;
 import java.util.regex.Pattern;
 
 import static com.example.mydoctorapp.constants.Constants.DOCTOR_TEMPLATE_VALUE;
 import static com.example.mydoctorapp.constants.Constants.FAILURE_MESSAGE_ALERT;
 import static com.example.mydoctorapp.constants.Constants.GENERIC_ERROR_FOR_UI;
+import static com.example.mydoctorapp.constants.Constants.MAIN_TEMPLATE_VALUE;
 import static com.example.mydoctorapp.constants.Constants.REGEX_EMAIL_FORMAT;
 import static com.example.mydoctorapp.constants.Constants.SUCCESS_MESSAGE_ALERT;
 import static com.example.mydoctorapp.utils.MyDoctorAppUtils.getCurrentTimeInGMT3;
@@ -38,13 +40,19 @@ public class DoctorService {
     private final CitizenMapper citizenMapper;
 
     public String loginDoctor(String email, String password, Model model) {
-        log.info(String.format("Doctor with email: %s has successfully logged into the application at: %s", email, getCurrentTimeInGMT3()));
-        var dummyAcc = new DoctorAccount(email, password); //todo: replaced with actually data
-        model.addAttribute("doctorAccount", doctorMapper.toDto(dummyAcc));
-        var patientList = patientAccountRepository.findAllByDoctorId(dummyAcc.getId());
-
-        model.addAttribute("patientList", patientList);
-        return DOCTOR_TEMPLATE_VALUE;
+       try{
+            isValidEmailFormat(email);
+            isEmailExists(email);
+            var doctorAccount = retrieveDoctorAccount(email, password);
+            log.info(String.format("Doctor with email: %s has successfully logged into the application at: %s", email, getCurrentTimeInGMT3()));
+            model.addAttribute("doctorAccount", doctorMapper.toDto(doctorAccount));
+            var patientList = patientAccountRepository.findAllByDoctorId(doctorAccount.getId());
+            model.addAttribute("patientList", patientList);
+           return DOCTOR_TEMPLATE_VALUE;
+        }catch(Exception e) {
+           model.addAttribute("error", "An error occurred: " + e.getMessage());
+           return MAIN_TEMPLATE_VALUE;
+       }
     }
 
     private void isEmailExists(String email) {
@@ -55,8 +63,8 @@ public class DoctorService {
         });
     }
 
-    private void isValidCredentials(String email, String password) {
-        doctorAccountRepository.findDoctorAccountByEmailAndPass(email, password).orElseThrow(() -> {
+    private DoctorAccount retrieveDoctorAccount(String email, String password) {
+        return doctorAccountRepository.findDoctorAccountByEmailAndPass(email, password).orElseThrow(() -> {
             var errorMessage = String.format("Invalid login credentials for the doctor with email: %s", email);
             log.warn(errorMessage);
             throw new InvalidCredentialsException(errorMessage);
@@ -96,6 +104,10 @@ public class DoctorService {
         }
     }
 
+    /**
+     * In case an error occured we want to ensure that the record is immutable
+     */
+    @Transactional
     public void removePatient(DoctorViewDto doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
         try {
             patientAccountRepository.deleteById(doctorViewDto.getPatientId());

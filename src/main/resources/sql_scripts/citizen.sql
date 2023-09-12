@@ -12,3 +12,4 @@ CREATE TABLE IF NOT EXISTS citizen
 alter table citizen
     add column id serial primary key;
 
+
