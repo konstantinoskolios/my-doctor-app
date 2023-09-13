@@ -13,7 +13,13 @@
 </head>
 <body>
 
-<div th:replace="fragments/navbar"></div>
+<!--<div th:replace="fragments/navbar"></div>-->
+
+<!-- Display Thymeleaf error message in a Bootstrap alert -->
+<div class="alert alert-danger mt-3" id="error-message" style="display: none;">
+    <p></p>
+</div>
+
 
 <div class="container mt-5">
     <div class="row">
@@ -32,31 +38,9 @@
                     </tr>
                     </thead>
                     <tbody id="table-body">
-                    <tr class="table-row">
-                        <td>
-                            <select class="form-control" name="category">
-                                <option value="dermatological">Dermatological</option>
-                                <option value="cardiological">Cardiological</option>
-                                <option value="muscles">Muscles</option>
-                                <option value="respiratory">Respiratory</option>
-                                <option value="gastrointestinal">Gastrointestinal</option>
-                            </select>
-                        </td>
-                        <td>
-                            <select class="form-control" name="prescription">
-                                <option value="">Select Prescription</option> <!-- Default option -->
-                            </select>
-                        </td>
-                        <td>
-                            <input class="form-control datepicker" type="text" name="date" />
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-danger delete-row">-</button>
-                        </td>
-                    </tr>
                     </tbody>
                 </table>
-                <button type="button" class="btn btn-success" id="submit-button">Submit</button>
+                <button class="btn btn-success" id="submit-button" style="display: none;" type="button">Submit</button>
             </form>
         </div>
     </div>
@@ -67,10 +51,9 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<!-- Add Bootstrap Datepicker JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
-<script>
+<script th:inline="javascript">
     $(document).ready(function () {
         // Define a data structure with prescription options for each category
         var prescriptionData = {
@@ -90,6 +73,23 @@
                 prescriptionSelect.append('<option value="' + prescription + '">' + prescription + '</option>');
             });
         }
+
+        // Function to enable/disable the submit button based on the number of rows
+        function updateSubmitButtonState() {
+            var numRows = $('#table-body tr').length;
+            var submitButton = $('#submit-button');
+
+            if (numRows > 0) {
+                // Show the submit button
+                submitButton.css('display', 'block');
+            } else {
+                // Hide the submit button
+                submitButton.css('display', 'none');
+            }
+        }
+
+        // Call the function initially to set the initial state
+        updateSubmitButtonState();
 
         // Function to add a new row to the table
         function addTableRow() {
@@ -123,6 +123,9 @@
                 autoclose: true,
                 todayHighlight: true
             });
+
+            // Update the submit button state when adding a row
+            updateSubmitButtonState();
         }
 
         // Event handler for adding rows
@@ -131,6 +134,8 @@
         // Event handler for deleting rows
         $('#table-body').on('click', '.delete-row', function () {
             $(this).closest('tr').remove();
+            // Update the submit button state when deleting a row
+            updateSubmitButtonState();
         });
 
         // Event handler for category change
@@ -141,6 +146,12 @@
 
         // Event handler for form submission
         $('#submit-button').click(function () {
+            //todo: replace
+            // var doctorId = localStorage.getItem("doctorId")
+            // var patientId = localStorage.getItem("patientId")
+
+            var doctorId = 1
+            var patientId = 100
             var jsonDataArray = [];
 
             $('#table-body tr').each(function () {
@@ -150,14 +161,49 @@
                 var date = row.find('input[name="date"]').val();
 
                 if (category || prescription || date) {
-                    jsonDataArray.push({ category: category, prescription: prescription, date: date });
+                    jsonDataArray.push({category: category, prescription: prescription, date: date});
                 }
             });
 
-            console.log(JSON.stringify(jsonDataArray));
+            var postData = {
+                doctorId: doctorId,
+                patientId: patientId,
+                prescriptionsInformation: jsonDataArray
+            };
 
+            console.log(JSON.stringify(postData))
+
+            fetch('citizens/patient/attachPrescription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(postData),
+            }).then((response) => {
+                if (response.status === 200) {
+                    console.log("Success");
+                } else if (response.status === 400) {
+                    response.json().then((data) => {
+                        // Check if there are errors in the JSON response
+                        if (data.errors && data.errors.length > 0) {
+                            // Display the error message
+                            const errorMsg = "An error occurred for the Fields above: <br>"
+                            $('#error-message p').html(errorMsg + data.errors.join("<br>"));
+                            $('#error-message').show();
+                        } else {
+                            console.log("Bad Request");
+                        }
+                    }).catch((error) => {
+                        console.log('Error parsing JSON:', error);
+                    });
+                }
+            }).catch((error) => {
+                console.error('Error adding comment:', error);
+            });
         });
     });
+
+
 </script>
 </body>
 </html>

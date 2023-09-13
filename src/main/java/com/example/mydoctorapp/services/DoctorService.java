@@ -1,7 +1,11 @@
 package com.example.mydoctorapp.services;
 
+import com.example.mydoctorapp.dto.AttachPrescriptionDto;
 import com.example.mydoctorapp.dto.DoctorViewDto;
+import com.example.mydoctorapp.dto.PrescriptionInformationDto;
 import com.example.mydoctorapp.entities.DoctorAccount;
+import com.example.mydoctorapp.entities.PatientAccount;
+import com.example.mydoctorapp.entities.PrescriptionDetail;
 import com.example.mydoctorapp.exceptions.GuiException;
 import com.example.mydoctorapp.exceptions.InvalidCredentialsException;
 import com.example.mydoctorapp.exceptions.InvalidEmailFormatException;
@@ -10,6 +14,7 @@ import com.example.mydoctorapp.mapstruct.DoctorMapper;
 import com.example.mydoctorapp.repositories.CitizenRepository;
 import com.example.mydoctorapp.repositories.DoctorAccountRepository;
 import com.example.mydoctorapp.repositories.PatientAccountRepository;
+import com.example.mydoctorapp.repositories.PrescriptionDetailRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,13 +23,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.transaction.Transactional;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-import static com.example.mydoctorapp.constants.Constants.DOCTOR_TEMPLATE_VALUE;
-import static com.example.mydoctorapp.constants.Constants.FAILURE_MESSAGE_ALERT;
-import static com.example.mydoctorapp.constants.Constants.GENERIC_ERROR_FOR_UI;
-import static com.example.mydoctorapp.constants.Constants.MAIN_TEMPLATE_VALUE;
-import static com.example.mydoctorapp.constants.Constants.REGEX_EMAIL_FORMAT;
-import static com.example.mydoctorapp.constants.Constants.SUCCESS_MESSAGE_ALERT;
+import static com.example.mydoctorapp.constants.Constants.*;
 import static com.example.mydoctorapp.utils.MyDoctorAppUtils.getCurrentTimeInGMT3;
 
 @Service
@@ -33,9 +34,9 @@ import static com.example.mydoctorapp.utils.MyDoctorAppUtils.getCurrentTimeInGMT
 public class DoctorService {
 
     private final DoctorAccountRepository doctorAccountRepository;
-    //    private final DoctorPatientRelationRepository doctorPatientRelationRepository;
     private final PatientAccountRepository patientAccountRepository;
     private final CitizenRepository citizenRepository;
+    private final PrescriptionDetailRepository prescriptionDetailRepository;
     private final DoctorMapper doctorMapper;
     private final CitizenMapper citizenMapper;
 
@@ -124,4 +125,27 @@ public class DoctorService {
         model.addAttribute("doctorAccount", doctorMapper.toDto(doctorAccount));
         model.addAttribute("patientList", patientList);
     }
+
+
+    @Transactional
+    public void attachPrescriptions(AttachPrescriptionDto input) {
+        var patientAccount = patientAccountRepository.findByIdAndDoctorId(input.getPatientId(), input.getDoctorId()).orElseThrow(() -> new GuiException("Patient not Found"));
+
+        var prescriptionDetails = input
+                .getPrescriptionsInformation()
+                .stream()
+                .map(prescription -> constructPrescriptionDetail(patientAccount, prescription)).collect(Collectors.toList());
+        prescriptionDetailRepository.saveAllAndFlush(prescriptionDetails);
+    }
+
+    private PrescriptionDetail constructPrescriptionDetail(PatientAccount patientAccount, PrescriptionInformationDto prescription) {
+        return PrescriptionDetail.builder()
+                .patientId(patientAccount.getId())
+                .doctorId(patientAccount.getDoctorId())
+                .category(prescription.getCategory())
+                .prescriptionName(prescription.getPrescriptionName())
+                .date(prescription.getDate())
+                .build();
+    }
+
 }

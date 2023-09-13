@@ -9,3 +9,6 @@ CREATE TABLE IF NOT EXISTS doctor_account
 );
 
 
+insert into doctor_account(id, email, pass, first_name, last_name, speciality)
+values (1, 'johnsmith@mydoctorapp.com', '1234', 'John', 'Smith', 'Cardiologist');
+
