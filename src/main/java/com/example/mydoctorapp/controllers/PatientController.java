@@ -12,6 +12,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
+import static com.example.mydoctorapp.constants.Constants.DOCTOR_TEMPLATE_VALUE;
+import static com.example.mydoctorapp.constants.Constants.PRESCRIPTIONS_TEMPLATE_VALUE;
+
 @Controller
 @RequestMapping("/citizens") //todo: lets review it after, patient/citizen
 @RequiredArgsConstructor
@@ -32,19 +35,25 @@ public class PatientController {
     @PostMapping("patient/addComment")
     public String addComment(@RequestBody DoctorViewDto doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
         doctorService.addComment(doctorViewDto, redirectAttributes, model);
-        return "doctor_view";
+        return DOCTOR_TEMPLATE_VALUE;
     }
 
     @DeleteMapping("patient/removePatient")
     public String removePatient(@RequestBody DoctorViewDto doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
         doctorService.removePatient(doctorViewDto, redirectAttributes, model);
-        return "doctor_view";
+        return DOCTOR_TEMPLATE_VALUE;
     }
 
 
     @PostMapping("patient/attachPrescription")
     public String attachPrescription(@RequestBody @Valid AttachPrescriptionDto attachPrescriptionDto) {
         doctorService.attachPrescriptions(attachPrescriptionDto);
-        return "prescriptions_view";
+        return PRESCRIPTIONS_TEMPLATE_VALUE;
+    }
+
+    @GetMapping("patient/getPrescriptions")
+    public String getPrescriptions(DoctorViewDto doctorViewDto){
+        log.info("{}",doctorViewDto);
+        return PRESCRIPTIONS_TEMPLATE_VALUE;
     }
 }

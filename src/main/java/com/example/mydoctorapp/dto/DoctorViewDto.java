@@ -17,4 +17,5 @@ public class DoctorViewDto {
     @NotBlank
     private Long doctorId;
     private String comment;
+    private String patientFullName;
 }

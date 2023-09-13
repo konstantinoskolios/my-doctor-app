@@ -127,7 +127,7 @@ public class DoctorService {
     }
 
 
-    @Transactional
+//    @Transactional
     public void attachPrescriptions(AttachPrescriptionDto input) {
         var patientAccount = patientAccountRepository.findByIdAndDoctorId(input.getPatientId(), input.getDoctorId()).orElseThrow(() -> new GuiException("Patient not Found"));
 
@@ -135,7 +135,7 @@ public class DoctorService {
                 .getPrescriptionsInformation()
                 .stream()
                 .map(prescription -> constructPrescriptionDetail(patientAccount, prescription)).collect(Collectors.toList());
-        prescriptionDetailRepository.saveAllAndFlush(prescriptionDetails);
+        prescriptionDetailRepository.saveAll(prescriptionDetails);
     }
 
     private PrescriptionDetail constructPrescriptionDetail(PatientAccount patientAccount, PrescriptionInformationDto prescription) {
