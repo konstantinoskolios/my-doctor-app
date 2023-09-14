@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS citizen
 (
+    id                     serial primary key,
     first_name             VARCHAR(30),
     last_name              VARCHAR(30),
     father_first_name      VARCHAR(30),
