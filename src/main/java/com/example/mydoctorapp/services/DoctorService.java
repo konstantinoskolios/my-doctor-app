@@ -148,4 +148,7 @@ public class DoctorService {
                 .build();
     }
 
+    public void getPrescriptions(DoctorViewDto doctorViewDto) {
+//        prescriptionDetailRepository.findallby
+    }
 }

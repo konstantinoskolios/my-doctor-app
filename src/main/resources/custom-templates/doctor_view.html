@@ -13,10 +13,10 @@
 
 <h1 th:text="'Welcome Dr. ' + ${doctorAccount.firstName} + ' ' + ${doctorAccount.lastName} + ', ' + ${doctorAccount.speciality}"></h1>
 
-<div class="container mt-4">
+<div class="container mt-2">
 	<h2>Patients</h2>
 	<table class="table table-bordered">
-		<thead>
+		<thead class="thead-light">
 		<tr>
 			<th>First Name</th>
 			<th>Last Name</th>
@@ -44,15 +44,28 @@
                           th:text="${patient.comments}"></textarea>
 			</td>
 			<td>
-				<button class="btn btn-primary"
-				        onclick="addPrescription(this.getAttribute('add-prescription'), this.getAttribute('remove-doctor-id'))"
-				        th:attr="remove-patient-id=${patient.id}, remove-doctor-id=${doctorAccount.id}">Remove
-				</button>
+				<div aria-label="Patient Actions" class="btn-group" role="group">
+					<button class="btn btn-primary mr-2"
+							onclick="addPrescription(
+									this.getAttribute('add-prescription-patient-id'),
+									this.getAttribute('add-prescription-doctor-id'),
+									this.getAttribute('add-prescription-patient-first-name'),
+									this.getAttribute('add-prescription-patient-last-name')
+									)"
+							th:attr="
+							add-prescription-patient-id=${patient.id},
+							add-prescription-doctor-id=${doctorAccount.id},
+							add-prescription-patient-first-name=${patient.firstName},
+							add-prescription-patient-last-name=${patient.lastName}
+									">Add Prescription
+					</button>
 
-				<button class="btn btn-danger"
-						onclick="removePatient(this.getAttribute('remove-patient-id'), this.getAttribute('remove-doctor-id'))"
-						th:attr="remove-patient-id=${patient.id}, remove-doctor-id=${doctorAccount.id}">Remove
-				</button>
+					<button class="btn btn-danger"
+							onclick="removePatient(this.getAttribute('remove-patient-id'), this.getAttribute('remove-doctor-id'))"
+							th:attr="remove-patient-id=${patient.id}, remove-doctor-id=${doctorAccount.id}"> Remove
+						Patient
+					</button>
+				</div>
 			</td>
 		</tr>
 		</tbody>
@@ -99,6 +112,38 @@
 						// Handle errors here if needed
 						console.error('Failed to remove patient:', response.statusText);
 					}
+				})
+				.catch(error => {
+					// Handle fetch errors here
+					console.error('Fetch error:', error);
+				});
+	}
+</script>
+
+<script>
+	function addPrescription(patientId, doctorId, firstName, lastName) {
+		const fullName = firstName + ' ' + lastName;
+
+		fetch(`citizens/patient/getPrescriptions?patientId=${patientId}&doctorId=${doctorId}&patientFullName=${fullName}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+		})
+				.then(response => {
+					if (response.ok) {
+						// The request was successful, so you can handle the response here
+						// For example, you can parse the JSON response if it's JSON data
+						return response.json();
+					} else {
+						// Handle errors here if needed
+						console.error('Failed to get prescriptions:', response.statusText);
+					}
+				})
+				.then(data => {
+					// Handle the data from the successful response here
+					// For example, you can update the page with the data
+					console.log('Prescriptions data:', data);
 				})
 				.catch(error => {
 					// Handle fetch errors here
