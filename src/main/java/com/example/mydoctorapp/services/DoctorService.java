@@ -6,6 +6,7 @@ import com.example.mydoctorapp.dto.PrescriptionInformationDto;
 import com.example.mydoctorapp.entities.DoctorAccount;
 import com.example.mydoctorapp.entities.PatientAccount;
 import com.example.mydoctorapp.entities.PrescriptionDetail;
+import com.example.mydoctorapp.enumerations.PrescriptionCategoryEnum;
 import com.example.mydoctorapp.exceptions.GuiException;
 import com.example.mydoctorapp.exceptions.InvalidCredentialsException;
 import com.example.mydoctorapp.exceptions.InvalidEmailFormatException;
@@ -22,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -127,7 +129,7 @@ public class DoctorService {
     }
 
 
-//    @Transactional
+    @Transactional
     public void attachPrescriptions(AttachPrescriptionDto input) {
         var patientAccount = patientAccountRepository.findByIdAndDoctorId(input.getPatientId(), input.getDoctorId()).orElseThrow(() -> new GuiException("Patient not Found"));
 
@@ -135,6 +137,7 @@ public class DoctorService {
                 .getPrescriptionsInformation()
                 .stream()
                 .map(prescription -> constructPrescriptionDetail(patientAccount, prescription)).collect(Collectors.toList());
+        prescriptionDetailRepository.deleteByPatientIdAndDoctorId(input.getPatientId(), input.getDoctorId());
         prescriptionDetailRepository.saveAll(prescriptionDetails);
     }
 
@@ -143,12 +146,27 @@ public class DoctorService {
                 .patientId(patientAccount.getId())
                 .doctorId(patientAccount.getDoctorId())
                 .category(prescription.getCategory())
-                .prescriptionName(prescription.getPrescriptionName())
+                .prescription(prescription.getPrescriptionName())
                 .date(prescription.getDate())
                 .build();
     }
 
-    public void getPrescriptions(DoctorViewDto doctorViewDto) {
-//        prescriptionDetailRepository.findallby
+    public void getPrescriptions(DoctorViewDto doctorViewDto, Model model) {
+
+        var prescriptionsDetails = prescriptionDetailRepository.findAllByPatientIdAndDoctorId(doctorViewDto.getPatientId(), doctorViewDto.getDoctorId());
+
+        var categories = Arrays.stream(PrescriptionCategoryEnum.values())
+                .map(Enum::name)
+                .collect(Collectors.toList());
+
+        var prescriptions = Arrays.stream(PrescriptionCategoryEnum.values())
+                .flatMap(category -> Arrays.stream(category.getExamTypes()))
+                .collect(Collectors.toList());
+
+        model.addAttribute("categories", categories);
+        model.addAttribute("prescriptions", prescriptions);
+        model.addAttribute("prescriptionsDetails", prescriptionsDetails);
     }
+
+
 }

@@ -52,9 +52,8 @@ public class PatientController {
     }
 
     @GetMapping("patient/getPrescriptions")
-    public String getPrescriptions(DoctorViewDto doctorViewDto){
-        doctorService.getPrescriptions(doctorViewDto);
-        log.info("{}",doctorViewDto);
+    public String getPrescriptions(DoctorViewDto doctorViewDto, Model model) {
+        doctorService.getPrescriptions(doctorViewDto, model);
         return PRESCRIPTIONS_TEMPLATE_VALUE;
     }
 }

@@ -10,7 +10,4 @@ CREATE TABLE IF NOT EXISTS citizen
     birthdate              VARCHAR(255)
 );
 
-alter table citizen
-    add column id serial primary key;
-
 

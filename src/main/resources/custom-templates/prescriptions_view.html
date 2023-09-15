@@ -20,11 +20,10 @@
     <p></p>
 </div>
 
-
 <div class="container mt-5">
     <div class="row">
         <div class="col-12">
-            <h3 class="text-center text-primary">John Smith</h3>
+            <h3 class="text-center text-primary" id="displayLocalStorageFullName"></h3>
             <form id="data-form">
                 <table class="table table-hover">
                     <thead>
@@ -38,6 +37,33 @@
                     </tr>
                     </thead>
                     <tbody id="table-body">
+                    <tr th:each="item : ${prescriptionsDetails}">
+                        <td>
+                            <!-- Bind the 'category' data -->
+                            <select class="form-control" name="category">
+                                <option th:each="category : ${categories}"
+                                        th:selected="${category == item.category}"
+                                        th:text="${category}"
+                                        th:value="${category}"></option>
+                            </select>
+                        </td>
+                        <td>
+                            <!-- Bind the 'prescription' data -->
+                            <select class="form-control" name="prescription">
+                                <option th:each="prescription : ${prescriptions}"
+                                        th:selected="${prescription == item.prescription}"
+                                        th:text="${prescription}"
+                                        th:value="${prescription}"></option>
+                            </select>
+                        </td>
+                        <td>
+                            <!-- Bind the 'date' data -->
+                            <input class="form-control datepicker" name="date" th:value="${item.date}" type="text"/>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger delete-row" type="button">Delete</button>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
                 <button class="btn btn-success" id="submit-button" style="display: none;" type="button">Submit</button>
@@ -52,16 +78,15 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-
 <script th:inline="javascript">
+    const fullNameValue = localStorage.getItem("fullName")
+    document.getElementById("displayLocalStorageFullName").textContent = "Patient Name: " + fullNameValue
     $(document).ready(function () {
         // Define a data structure with prescription options for each category
         var prescriptionData = {
-            dermatological: ["Dermatological 1", "Dermatological 2"],
-            cardiological: ["Cardiological 1", "Cardiological 2"],
-            muscles: ["Muscles 1", "Muscles 2"],
-            respiratory: ["Respiratory 1", "Respiratory 2"],
-            gastrointestinal: ["Gastrointestinal 1", "Gastrointestinal 2"]
+            Cardiovascular: ["Echocardiogram", "Electrocardiogram (ECG or EKG)", "Stress Test", "Holter Monitor", "Cardiac Catheterization"],
+            Respiratory: ["Pulmonary Function Test (PFT)", "Chest X-ray", "CT Scan of the Chest", "Bronchoscopy", "Sputum Culture"],
+            Metabolic: ["HIV Test", "Hepatitis Panel", "STI Screening", "Tuberculin Skin Test (TST)", "COVID-19 PCR Test"]
         };
 
         // Function to populate the "Prescription Name" select options based on the selected category
@@ -96,11 +121,9 @@
             var newRow = '<tr class="table-row">' +
                 '<td>' +
                 '<select class="form-control" name="category">' +
-                '<option value="dermatological">Dermatological</option>' +
-                '<option value="cardiological">Cardiological</option>' +
-                '<option value="muscles">Muscles</option>' +
-                '<option value="respiratory">Respiratory</option>' +
-                '<option value="gastrointestinal">Gastrointestinal</option>' +
+                '<option value="Cardiovascular">Cardiovascular</option>' +
+                '<option value="Respiratory">Respiratory</option>' +
+                '<option value="Metabolic">Infectious Diseases</option>' +
                 '</select>' +
                 '</td>' +
                 '<td>' +
@@ -147,11 +170,8 @@
         // Event handler for form submission
         $('#submit-button').click(function () {
             //todo: replace
-            // var doctorId = localStorage.getItem("doctorId")
-            // var patientId = localStorage.getItem("patientId")
-
-            var doctorId = 1
-            var patientId = 100
+            var doctorId = localStorage.getItem("doctorId")
+            var patientId = localStorage.getItem("patientId")
             var jsonDataArray = [];
 
             $('#table-body tr').each(function () {
@@ -173,7 +193,7 @@
 
             console.log(JSON.stringify(postData))
 
-            fetch('citizens/patient/attachPrescription', {
+            fetch('attachPrescription', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -182,6 +202,7 @@
             }).then((response) => {
                 if (response.status === 200) {
                     console.log("Success");
+                    window.close()
                 } else if (response.status === 400) {
                     response.json().then((data) => {
                         // Check if there are errors in the JSON response

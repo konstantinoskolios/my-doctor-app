@@ -122,33 +122,15 @@
 
 <script>
 	function addPrescription(patientId, doctorId, firstName, lastName) {
-		const fullName = firstName + ' ' + lastName;
 
-		fetch(`citizens/patient/getPrescriptions?patientId=${patientId}&doctorId=${doctorId}&patientFullName=${fullName}`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-		})
-				.then(response => {
-					if (response.ok) {
-						// The request was successful, so you can handle the response here
-						// For example, you can parse the JSON response if it's JSON data
-						return response.json();
-					} else {
-						// Handle errors here if needed
-						console.error('Failed to get prescriptions:', response.statusText);
-					}
-				})
-				.then(data => {
-					// Handle the data from the successful response here
-					// For example, you can update the page with the data
-					console.log('Prescriptions data:', data);
-				})
-				.catch(error => {
-					// Handle fetch errors here
-					console.error('Fetch error:', error);
-				});
+		const fullName = firstName + ' ' + lastName
+
+		localStorage.setItem("doctorId", doctorId)
+		localStorage.setItem("patientId", patientId)
+		localStorage.setItem("fullName", fullName)
+		const url = `/citizens/patient/getPrescriptions?patientId=${patientId}&doctorId=${doctorId}`;
+		window.open(url, "AddPrescriptionDialog", "width=800,height=600")
+
 	}
 </script>
 
