@@ -11,12 +11,12 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AttachPrescriptionDto {
+public class AttachPrescriptionDTO {
     @NotNull
     private Long doctorId;
     @NotNull
     private Long patientId;
     @NotNull
     @Valid
-    private List<PrescriptionInformationDto> prescriptionsInformation;
+    private List<PrescriptionInformationDTO> prescriptionsInformation;
 }

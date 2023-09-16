@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DoctorViewDto {
+public class DoctorViewDTO {
     @NotBlank
     private Long patientId;
     @NotBlank

@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PrescriptionInformationDto {
+public class PrescriptionInformationDTO {
     @NotBlank
     private String category;
     @JsonProperty("prescription")
