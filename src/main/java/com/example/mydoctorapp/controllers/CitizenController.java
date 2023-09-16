@@ -1,5 +1,6 @@
 package com.example.mydoctorapp.controllers;
 
+import com.example.mydoctorapp.dto.CitizenViewDTO;
 import com.example.mydoctorapp.services.CitizenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,12 @@ public class CitizenController {
                          @RequestParam(name = "searchBy", required = false) String searchBy,
                          Model model) {
         return citizenService.getAllCitizens(page, size, sortField, sortDir, model, searchBy);
+    }
+
+
+    @GetMapping
+    public String citizenView(CitizenViewDTO citizenViewDTO) {
+        return citizenService.getCitizenInformation(citizenViewDTO);
     }
 
 

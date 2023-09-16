@@ -1,8 +1,8 @@
 package com.example.mydoctorapp.services;
 
-import com.example.mydoctorapp.dto.AttachPrescriptionDto;
-import com.example.mydoctorapp.dto.DoctorViewDto;
-import com.example.mydoctorapp.dto.PrescriptionInformationDto;
+import com.example.mydoctorapp.dto.AttachPrescriptionDTO;
+import com.example.mydoctorapp.dto.DoctorViewDTO;
+import com.example.mydoctorapp.dto.PrescriptionInformationDTO;
 import com.example.mydoctorapp.entities.DoctorAccount;
 import com.example.mydoctorapp.entities.PatientAccount;
 import com.example.mydoctorapp.entities.PrescriptionDetail;
@@ -94,7 +94,7 @@ public class DoctorService {
         }
     }
 
-    public void addComment(DoctorViewDto doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
+    public void addComment(DoctorViewDTO doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
         try {
             var patientAccount = patientAccountRepository.findByIdAndDoctorId(doctorViewDto.getPatientId(), doctorViewDto.getDoctorId()).orElseThrow(GuiException::new);
             patientAccount.setComments(doctorViewDto.getComment());
@@ -111,7 +111,7 @@ public class DoctorService {
      * In case an error occured we want to ensure that the record is immutable
      */
     @Transactional
-    public void removePatient(DoctorViewDto doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
+    public void removePatient(DoctorViewDTO doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
         try {
             patientAccountRepository.deleteById(doctorViewDto.getPatientId());
             constructDoctorTabAttributes(doctorViewDto.getDoctorId(), model);
@@ -130,7 +130,7 @@ public class DoctorService {
 
 
     @Transactional
-    public void attachPrescriptions(AttachPrescriptionDto input) {
+    public void attachPrescriptions(AttachPrescriptionDTO input) {
         var patientAccount = patientAccountRepository.findByIdAndDoctorId(input.getPatientId(), input.getDoctorId()).orElseThrow(() -> new GuiException("Patient not Found"));
 
         var prescriptionDetails = input
@@ -141,7 +141,7 @@ public class DoctorService {
         prescriptionDetailRepository.saveAll(prescriptionDetails);
     }
 
-    private PrescriptionDetail constructPrescriptionDetail(PatientAccount patientAccount, PrescriptionInformationDto prescription) {
+    private PrescriptionDetail constructPrescriptionDetail(PatientAccount patientAccount, PrescriptionInformationDTO prescription) {
         return PrescriptionDetail.builder()
                 .patientId(patientAccount.getId())
                 .doctorId(patientAccount.getDoctorId())
@@ -151,7 +151,7 @@ public class DoctorService {
                 .build();
     }
 
-    public void getPrescriptions(DoctorViewDto doctorViewDto, Model model) {
+    public void getPrescriptions(DoctorViewDTO doctorViewDto, Model model) {
 
         var prescriptionsDetails = prescriptionDetailRepository.findAllByPatientIdAndDoctorId(doctorViewDto.getPatientId(), doctorViewDto.getDoctorId());
 

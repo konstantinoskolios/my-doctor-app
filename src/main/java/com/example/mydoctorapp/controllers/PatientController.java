@@ -1,7 +1,7 @@
 package com.example.mydoctorapp.controllers;
 
-import com.example.mydoctorapp.dto.AttachPrescriptionDto;
-import com.example.mydoctorapp.dto.DoctorViewDto;
+import com.example.mydoctorapp.dto.AttachPrescriptionDTO;
+import com.example.mydoctorapp.dto.DoctorViewDTO;
 import com.example.mydoctorapp.services.DoctorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,26 +33,26 @@ public class PatientController {
     }
 
     @PostMapping("patient/addComment")
-    public String addComment(@RequestBody DoctorViewDto doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
+    public String addComment(@RequestBody DoctorViewDTO doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
         doctorService.addComment(doctorViewDto, redirectAttributes, model);
         return DOCTOR_TEMPLATE_VALUE;
     }
 
     @DeleteMapping("patient/removePatient")
-    public String removePatient(@RequestBody DoctorViewDto doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
+    public String removePatient(@RequestBody DoctorViewDTO doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
         doctorService.removePatient(doctorViewDto, redirectAttributes, model);
         return DOCTOR_TEMPLATE_VALUE;
     }
 
 
     @PostMapping("patient/attachPrescription")
-    public String attachPrescription(@RequestBody @Valid AttachPrescriptionDto attachPrescriptionDto) {
+    public String attachPrescription(@RequestBody @Valid AttachPrescriptionDTO attachPrescriptionDto) {
         doctorService.attachPrescriptions(attachPrescriptionDto);
         return PRESCRIPTIONS_TEMPLATE_VALUE;
     }
 
     @GetMapping("patient/getPrescriptions")
-    public String getPrescriptions(DoctorViewDto doctorViewDto, Model model) {
+    public String getPrescriptions(DoctorViewDTO doctorViewDto, Model model) {
         doctorService.getPrescriptions(doctorViewDto, model);
         return PRESCRIPTIONS_TEMPLATE_VALUE;
     }

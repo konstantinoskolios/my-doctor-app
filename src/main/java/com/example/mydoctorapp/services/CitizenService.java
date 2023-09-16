@@ -1,7 +1,9 @@
 package com.example.mydoctorapp.services;
 
+import com.example.mydoctorapp.dto.CitizenViewDTO;
 import com.example.mydoctorapp.entities.Citizen;
 import com.example.mydoctorapp.repositories.CitizenRepository;
+import com.example.mydoctorapp.repositories.PrescriptionDetailRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -10,12 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import static com.example.mydoctorapp.constants.Constants.CITIZENS;
-import static com.example.mydoctorapp.constants.Constants.CITIZENS_TEMPLATE_VALUE;
-import static com.example.mydoctorapp.constants.Constants.END_ITEM;
-import static com.example.mydoctorapp.constants.Constants.ONE_VALUE;
-import static com.example.mydoctorapp.constants.Constants.SORT_ASCENDING;
-import static com.example.mydoctorapp.constants.Constants.START_ITEM;
+import static com.example.mydoctorapp.constants.Constants.*;
 import static com.example.mydoctorapp.specifications.CitizenSpecification.constructCitizenSpecification;
 
 @Service
@@ -25,6 +22,7 @@ public class CitizenService {
 
 
     private final CitizenRepository citizenRepository;
+    private final PrescriptionDetailRepository prescriptionDetailRepository;
 
     public String getAllCitizens(int page, int size, String sortField, String sortDir, Model model, String searchBy) {
         var pageable = PageRequest.of(page, size, sortDir.equals(SORT_ASCENDING) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending());
@@ -41,4 +39,7 @@ public class CitizenService {
         model.addAttribute(END_ITEM, endItem);
     }
 
+    public String getCitizenInformation(CitizenViewDTO citizenViewDTO) {
+        return "";
+    }
 }
