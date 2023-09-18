@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 public enum DateFormatPattern {
     GMT_FORMAT("dd-MM-yyyy hh:mm:ss");
     private String pattern;
-
 }

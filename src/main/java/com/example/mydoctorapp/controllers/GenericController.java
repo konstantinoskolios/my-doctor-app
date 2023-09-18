@@ -16,6 +16,4 @@ public class GenericController {
     public String userAdminPage() {
         return MAIN_TEMPLATE_VALUE;
     }
-
-
 }

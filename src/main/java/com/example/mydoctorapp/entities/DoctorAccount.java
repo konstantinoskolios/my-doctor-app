@@ -4,12 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,13 +22,4 @@ public class DoctorAccount {
     private String firstName;
     private String lastName;
     private String speciality;
-
-    public DoctorAccount(String email, String pass) {
-        this.id = 1000L;
-        this.email = email;
-        this.pass = pass;
-        this.firstName = "Nikos";
-        this.lastName = "Koukos";
-        this.speciality = "Pa8ologos";
-    }
 }

@@ -34,7 +34,6 @@ import static com.example.mydoctorapp.utils.MyDoctorAppUtils.getCurrentTimeInGMT
 @Slf4j
 @RequiredArgsConstructor
 public class DoctorService {
-
     private final DoctorAccountRepository doctorAccountRepository;
     private final PatientAccountRepository patientAccountRepository;
     private final CitizenRepository citizenRepository;
@@ -168,6 +167,4 @@ public class DoctorService {
         model.addAttribute("prescriptions", prescriptions);
         model.addAttribute("prescriptionsDetails", prescriptionsDetails);
     }
-
-
 }

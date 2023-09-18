@@ -6,12 +6,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class InvalidCredentialsException extends RuntimeException {
-
     public InvalidCredentialsException(String message) {
         super(message);
-    }
-
-    public InvalidCredentialsException() {
-        super("Invalid credentials. Please try again.");
     }
 }

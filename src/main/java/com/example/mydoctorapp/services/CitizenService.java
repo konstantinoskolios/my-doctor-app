@@ -24,8 +24,6 @@ import static com.example.mydoctorapp.specifications.CitizenSpecification.constr
 @Slf4j
 @RequiredArgsConstructor
 public class CitizenService {
-
-
     private final CitizenRepository citizenRepository;
     private final PrescriptionDetailRepository prescriptionDetailRepository;
     private final PrescriptionMapper prescriptionMapper;
@@ -74,7 +72,6 @@ public class CitizenService {
             return MAIN_TEMPLATE_VALUE;
         }
     }
-//    	Geriatric	Skin Cancer Screening	03/10/2023
 
     private String constructDoctorFullName(Long doctorId) {
         var doctorAccount = doctorAccountRepository.findById(doctorId).orElseThrow(
