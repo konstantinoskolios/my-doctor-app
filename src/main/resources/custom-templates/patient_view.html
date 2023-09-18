@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Prescriptions</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/hover-icons.css}"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet"
+          type="text/css"/>
+
+    <style>
+        tbody tr:hover {
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<body>
+
+<div th:replace="fragments/navbar"></div>
+
+<!-- Add this code at the top of your HTML template to display the success message -->
+<div class="alert alert-success" id="successMessage" th:if="${successMessage}">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div class="alert alert-danger" id="failureMessage" th:if="${failureMessage}">
+    <p th:text="${failureMessage}"></p>
+</div>
+
+<div class="container">
+    <h1 th:text="'Prescriptions of ' +${patientName}"></h1>
+
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Doctor</th>
+            <th scope="col">Category</th>
+            <th scope="col">Prescription</th>
+            <th scope="col">Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="prescription: ${prescriptions}">
+            <td th:text="${prescription.doctorInformation}"></td>
+            <td th:text="${prescription.category}"></td>
+            <td th:text="${prescription.prescriptionName}"></td>
+            <td th:text="${prescription.date}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:if="${successMessage}">
+        (() => {
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 2000);
+        })();
+    </script>
+
+    <script th:if="${failureMessage}">
+        (() => {
+            setTimeout(() => {
+                document.getElementById('failureMessage').style.display = 'none';
+            }, 4000);
+        })();
+    </script>
+
+</div>
+
+</body>
+</html>

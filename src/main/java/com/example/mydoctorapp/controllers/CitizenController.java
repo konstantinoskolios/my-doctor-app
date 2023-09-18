@@ -22,19 +22,20 @@ public class CitizenController {
 
     @GetMapping(value = "/all")
     @ResponseStatus(HttpStatus.OK)
-    public String getAll(@RequestParam(name = "page", defaultValue = "0") int page,
-                         @RequestParam(name = "size", defaultValue = "10") int size,
-                         @RequestParam(name = "sortField", defaultValue = "firstName") String sortField,
-                         @RequestParam(name = "sortDir", defaultValue = "asc") String sortDir,
-                         @RequestParam(name = "searchBy", required = false) String searchBy,
-                         Model model) {
+    public String getAllCitizens(@RequestParam(name = "page", defaultValue = "0") int page,
+                                 @RequestParam(name = "size", defaultValue = "10") int size,
+                                 @RequestParam(name = "sortField", defaultValue = "firstName") String sortField,
+                                 @RequestParam(name = "sortDir", defaultValue = "asc") String sortDir,
+                                 @RequestParam(name = "searchBy", required = false) String searchBy,
+                                 Model model) {
         return citizenService.getAllCitizens(page, size, sortField, sortDir, model, searchBy);
     }
 
 
-    @GetMapping
-    public String citizenView(CitizenViewDTO citizenViewDTO) {
-        return citizenService.getCitizenInformation(citizenViewDTO);
+    @GetMapping("information")
+    //fixme: need to add @Valid annotation to enable validations, for now is off cause there not need to implement logic for view side.
+    public String getCitizenInformation(CitizenViewDTO citizenViewDTO, Model model) {
+        return citizenService.getCitizenInformation(citizenViewDTO, model);
     }
 
 

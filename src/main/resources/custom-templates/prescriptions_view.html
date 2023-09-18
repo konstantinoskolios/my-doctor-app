@@ -86,7 +86,12 @@
         var prescriptionData = {
             Cardiovascular: ["Echocardiogram", "Electrocardiogram (ECG or EKG)", "Stress Test", "Holter Monitor", "Cardiac Catheterization"],
             Respiratory: ["Pulmonary Function Test (PFT)", "Chest X-ray", "CT Scan of the Chest", "Bronchoscopy", "Sputum Culture"],
-            Metabolic: ["HIV Test", "Hepatitis Panel", "STI Screening", "Tuberculin Skin Test (TST)", "COVID-19 PCR Test"]
+            Metabolic: ["HIV Test", "Hepatitis Panel", "STI Screening", "Tuberculin Skin Test (TST)", "COVID-19 PCR Test"],
+            Cancer: ["Mammogram", "Pap Smear", "Colonoscopy", "Prostate-Specific Antigen (PSA) Test", "Skin Cancer Screening"],
+            Gynecological: ["Pelvic Exam", "Breast MRI", "Transvaginal Ultrasound", "Prenatal Testing (Ultrasound)", "Hysteroscopy"],
+            Andrological: ["Testosterone Level Test", "Prostate Biopsy", "Seminal Analysis", "Male Hormone Profile", "Erectile Function Assessment"],
+            Pediatric: ["Pediatric Well-Child Visit", "Childhood Immunizations", "Developmental Screening", "Lead Screening", "Newborn Screening"],
+            Geriatric: ["Geriatric Assessment", "Osteoarthritis Evaluation", "Dementia Screening", "Frailty Assessment", "Polypharmacy Review"],
         };
 
         // Function to populate the "Prescription Name" select options based on the selected category
@@ -123,7 +128,12 @@
                 '<select class="form-control" name="category">' +
                 '<option value="Cardiovascular">Cardiovascular</option>' +
                 '<option value="Respiratory">Respiratory</option>' +
-                '<option value="Metabolic">Infectious Diseases</option>' +
+                '<option value="Metabolic">Metabolic</option>' +
+                '<option value="Cancer">Cancer</option>' +
+                '<option value="Gynecological">Gynecological</option>' +
+                '<option value="Andrological">Andrological</option>' +
+                '<option value="Pediatric">Pediatric</option>' +
+                '<option value="Geriatric">Geriatric</option>' +
                 '</select>' +
                 '</td>' +
                 '<td>' +

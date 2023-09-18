@@ -20,4 +20,5 @@ public class PrescriptionInformationDTO {
     private String prescriptionName;
     @NotBlank
     private String date;
+    private String doctorInformation;
 }

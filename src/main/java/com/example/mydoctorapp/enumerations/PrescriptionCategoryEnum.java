@@ -29,39 +29,14 @@ public enum PrescriptionCategoryEnum {
             "Hemoglobin A1c (HbA1c)",
             "Liver Function Test"
     }),
-
-    Cancer(new String[]{
-            "Mammogram",
-            "Pap Smear",
-            "Colonoscopy",
-            "Prostate-Specific Antigen (PSA) Test",
-            "Skin Cancer Screening"
-    }),
+    Cancer(new String[]{"Mammogram", "Pap Smear", "Colonoscopy", "Prostate-Specific Antigen (PSA) Test", "Skin Cancer Screening"}),
 
 
-    Gynecological(new String[]{
-            "Pelvic Exam",
-            "Breast MRI",
-            "Transvaginal Ultrasound",
-            "Prenatal Testing (Ultrasound)",
-            "Hysteroscopy"
-    }),
+    Gynecological(new String[]{"Pelvic Exam", "Breast MRI", "Transvaginal Ultrasound", "Prenatal Testing (Ultrasound)", "Hysteroscopy"}),
 
-    Andrological(new String[]{
-            "Testosterone Level Test",
-            "Prostate Biopsy",
-            "Seminal Analysis",
-            "Male Hormone Profile",
-            "Erectile Function Assessment"
-    }),
+    Andrological(new String[]{"Testosterone Level Test", "Prostate Biopsy", "Seminal Analysis", "Male Hormone Profile", "Erectile Function Assessment"}),
 
-    Pediatric(new String[]{
-            "Pediatric Well-Child Visit",
-            "Childhood Immunizations",
-            "Developmental Screening",
-            "Lead Screening",
-            "Newborn Screening"
-    }),
+    Pediatric(new String[]{"Pediatric Well-Child Visit", "Childhood Immunizations", "Developmental Screening", "Lead Screening", "Newborn Screening"}),
 
     Geriatric(new String[]{
             "Geriatric Assessment",

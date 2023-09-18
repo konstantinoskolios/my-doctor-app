@@ -85,7 +85,8 @@ public class DoctorService {
             log.info("Citizen id: {} doctorId : {}", citizenId, doctorId);
             var citizenInfo = citizenRepository.findById(citizenId).orElseThrow(GuiException::new);
             var patient = citizenMapper.citizenToPatientAccount(citizenInfo, doctorId);
-            if (patientAccountRepository.existsById(patient.getId())) throw new GuiException("Patient has already been added, if not showing refresh the doctor page");
+            if (patientAccountRepository.existsByIdAndDoctorId(patient.getId(), patient.getDoctorId()))
+                throw new GuiException("Patient has already been added, if not showing refresh the doctor page");
             patientAccountRepository.save(patient);
             redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE_ALERT, "Patient has been added successfully");
         } catch (Exception e) {

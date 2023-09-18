@@ -14,6 +14,7 @@ public class Constants {
     public static final String MAIN_TEMPLATE_VALUE = "main_view";
     public static final String DOCTOR_TEMPLATE_VALUE = "doctor_view";
     public static final String PRESCRIPTIONS_TEMPLATE_VALUE = "prescriptions_view";
+    public static final String PATIENT_TEMPLATE_VALUE = "patient_view";
     public static final String SORT_ASCENDING = "asc";
     public static final String START_ITEM = "startItem";
     public static final String END_ITEM = "endItem";
