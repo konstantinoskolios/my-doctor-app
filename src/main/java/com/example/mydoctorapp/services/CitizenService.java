@@ -63,9 +63,9 @@ public class CitizenService {
                             }
                     ).collect(Collectors.toList());
 
-
+            var patientFullName = patient.getFirstName().concat(" ").concat(patient.getLastName());
             model.addAttribute("prescriptions", prescriptionInformationDTOS);
-            model.addAttribute("patientName", "Nikos Koukos");
+            model.addAttribute("patientName", patientFullName);
             return PATIENT_TEMPLATE_VALUE;
         } catch (Exception e) {
             model.addAttribute("error", "An error occurred: " + e.getMessage());
