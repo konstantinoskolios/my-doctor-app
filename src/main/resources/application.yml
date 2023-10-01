@@ -2,8 +2,9 @@ server:
   port: 8500
 
 spring:
-  jpa:
-    show-sql: true
+#  enable jpa.show-sql only for debug testing/debugging proposes
+#  jpa:
+#    show-sql: true
   thymeleaf:
     prefix: classpath:/custom-templates/
     cache: false

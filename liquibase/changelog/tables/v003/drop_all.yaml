@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: drop_all_tables
+      author: Kon
+      changes:
+        - dropTable:
+            tableName: citizen
+        - dropTable:
+           tableName: doctor_account

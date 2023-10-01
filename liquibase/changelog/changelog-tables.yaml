@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - includeAll:
+      path: tables/v001/
+  - include:
+      file: tables/v002/citizen.yaml
+  - include:
+      file: tables/v003/drop_all.yaml
