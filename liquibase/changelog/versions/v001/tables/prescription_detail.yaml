@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-prescription-detail-table
+      author: Konstantinos_Kolios
+      changes:
+        - createTable:
+            tableName: prescription_detail
+            columns:
+              - column:
+                  name: patient_id
+                  type: BIGINT
+              - column:
+                  name: doctor_id
+                  type: BIGINT
+              - column:
+                  name: category
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: prescription
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+            constraints:
+              primaryKey:
+                columnNames: "patient_id, doctor_id, prescription, date"
+              uniqueConstraints:
+                - uniqueConstraint:
+                    columnNames: "patient_id, doctor_id, prescription, date"

@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-patient-account-table
+      author: Konstantinos_Kolios
+      changes:
+        - createTable:
+            tableName: patient_account
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: first_name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: father_first_name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tax_number
+                  type: VARCHAR(9)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: social_security_number
+                  type: VARCHAR(11)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: phone_number
+                  type: VARCHAR(10)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: birthdate
+                  type: VARCHAR(16)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comments
+                  type: VARCHAR(255)
+              - column:
+                  name: prescriptions_ids
+                  type: VARCHAR(255)
+              - column:
+                  name: doctor_id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+

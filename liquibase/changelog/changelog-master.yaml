@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: changelog-tables.yaml
+#  - include:
+#      file: changelog-grants.yaml

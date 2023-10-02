@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-doctor-account-table
+      author: Konstantinos_Kolios
+      changes:
+        - createTable:
+            tableName: doctor_account
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: email
+                  type: VARCHAR(50)
+                  constraints:
+                    unique: true
+              - column:
+                  name: pass
+                  type: VARCHAR(50)
+              - column:
+                  name: first_name
+                  type: VARCHAR(50)
+              - column:
+                  name: last_name
+                  type: VARCHAR(50)
+              - column:
+                  name: speciality
+                  type: VARCHAR(50)
