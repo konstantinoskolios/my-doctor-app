@@ -1,29 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-		<!-- Define a timestamp property with the current date in the desired format -->
-		<timestamp key="currentDate" datePattern="dd_MM_yyyy"/>
-		
-		<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-				<encoder>
-						<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-				</encoder>
+
+	<include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+	<springProperty scope="context" name="application_name" source="spring.application.name"/>
+
+	<!-- Log configuration for Docker profile -->
+	<springProfile name="docker">
+
+		<appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+				<providers>
+					<timestamp>
+						<timeZone>UTC</timeZone>
+					</timestamp>
+					<version/>
+					<logLevel/>
+					<message/>
+					<loggerName/>
+					<threadName/>
+					<context/>
+					<pattern>
+						<omitEmptyFields>true</omitEmptyFields>
+						<pattern>
+							{
+							"trace": {
+							"trace_id": "%mdc{X-B3-TraceId}",
+							"span_id": "%mdc{X-B3-SpanId}",
+							"parent_span_id": "%mdc{X-B3-ParentSpanId}",
+							"exportable": "%mdc{X-Span-Export}"
+							}
+							}
+						</pattern>
+					</pattern>
+					<mdc>
+						<excludeMdcKeyName>traceId</excludeMdcKeyName>
+						<excludeMdcKeyName>spanId</excludeMdcKeyName>
+						<excludeMdcKeyName>parentId</excludeMdcKeyName>
+						<excludeMdcKeyName>spanExportable</excludeMdcKeyName>
+						<excludeMdcKeyName>X-B3-TraceId</excludeMdcKeyName>
+						<excludeMdcKeyName>X-B3-SpanId</excludeMdcKeyName>
+						<excludeMdcKeyName>X-B3-ParentSpanId</excludeMdcKeyName>
+						<excludeMdcKeyName>X-Span-Export</excludeMdcKeyName>
+					</mdc>
+					<stackTrace/>
+				</providers>
+			</encoder>
 		</appender>
-		
-		<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-				<!-- Use the currentDate property in the file name -->
-				<file>logs/${currentDate}_myapp.log</file>
-				<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-						<fileNamePattern>logs/${currentDate}_%d{yyyy_MM_dd}_myapp.v%i.log</fileNamePattern>
-						<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-								<maxFileSize>3GB</maxFileSize>
-						</timeBasedFileNamingAndTriggeringPolicy>
-				</rollingPolicy>
-				<encoder>
-						<pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-				</encoder>
-		</appender>
-		
+
 		<root level="INFO">
-				<appender-ref ref="CONSOLE"/>
-				<appender-ref ref="FILE"/>
+			<appender-ref ref="jsonConsoleAppender"/>
 		</root>
+
+	</springProfile>
+
+	<!-- Log configuration for non-Docker profile -->
+	<springProfile name="!docker">
+
+		<property name="CONSOLE_LOG_PATTERN"
+				  value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+
+		<appender name="flatConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder>
+				<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+				<charset>utf8</charset>
+			</encoder>
+		</appender>
+
+		<root level="INFO">
+			<appender-ref ref="flatConsoleAppender"/>
+		</root>
+
+	</springProfile>
+
 </configuration>
