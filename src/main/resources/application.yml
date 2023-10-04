@@ -14,5 +14,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: pgtest
     password: pgtest
+    driver-class-name: org.postgresql.Driver
   liquibase:
     enabled: false # disable liquibase to allow manual control
+#  jpa:
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
