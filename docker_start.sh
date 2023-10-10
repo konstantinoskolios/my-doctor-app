@@ -1,25 +1,22 @@
 #!/bin/bash
 
-# shellcheck disable=SC2164
-cd ../docker
-pwd
 
 # Stop and remove Docker Compose containers
 docker-compose down --remove-orphans
 
-docker volume prune
-docker system prune
-
+docker volume prune -f
+docker system prune -f
 
 # Start Docker Compose
-docker-compose up -d
+docker-compose up --remove-orphans -d
 
 # Check if Docker Compose failed
 if [ $? -ne 0 ]; then
     echo "Docker Compose encountered an error."
 fi
 
-cd ../liquibase/changelog
+# shellcheck disable=SC2164
+cd liquibase/changelog
 
 liquibase update
 
