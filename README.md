@@ -1,4 +1,10 @@
-# Liquibase Documentation by Konstantinos Kolios
+# Project Overview and Technology Stack Documentation
+
+Author: Konstantinos Kolios
+
+This documentation provides an in-depth overview of the project and the technologies used.
+
+# Liquibase Documentation
 
 ## Introduction
 
