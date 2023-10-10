@@ -4,4 +4,4 @@ filebeat.inputs:
       - c:\logs\*.log
 
 output.logstash:
-  hosts: ["localhost:5044"]
+  hosts: [ "localhost:5044" ]

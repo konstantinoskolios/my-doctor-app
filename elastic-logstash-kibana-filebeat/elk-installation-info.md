@@ -1,12 +1,14 @@
 # Running the ELK Stack Application
 
-In this guide, we'll explore two methods to run the ELK Stack application: one using Docker (for Linux systems) and another for manual setup (for Windows systems).
+In this guide, we'll explore two methods to run the ELK Stack application: one using Docker (for Linux systems) and
+another for manual setup (for Windows systems).
 
 ## Using Docker (Linux System)
 
 1. Locate the `docker-compose.yml` file in your project directory.
 
-2. Uncomment all necessary lines within the `docker-compose.yml` file to pull images for Elastic, Logstash, and other components.
+2. Uncomment all necessary lines within the `docker-compose.yml` file to pull images for Elastic, Logstash, and other
+   components.
 
 3. Run the script called `docker_start.sh`
 
@@ -34,11 +36,13 @@ For successful manual setup of the ELK Stack on a Windows machine, follow these 
 
     - For `logstash.conf`:
         - Go to `C:\Program Files\elk\logstash-7.17.8\config`.
-        - Copy and paste the `logstash.conf` file from your project's directory (`my-doctor-app/elastic-logstash-kibana-filebeat`).
+        - Copy and paste the `logstash.conf` file from your project's
+          directory (`my-doctor-app/elastic-logstash-kibana-filebeat`).
 
     - For `filebeat.yml`:
         - Go to `C:\Program Files\Filebeat`.
-        - Copy and paste the `filebeat.yml` file from your project's directory (`my-doctor-app/elastic-logstash-kibana-filebeat`).
+        - Copy and paste the `filebeat.yml` file from your project's
+          directory (`my-doctor-app/elastic-logstash-kibana-filebeat`).
 
 ### Step 3: Install and Configure Filebeat
 
@@ -67,9 +71,9 @@ If required, you can set the execution policy for PowerShell by following these 
    ```powershell
    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
 
-
 With these steps, you should be able to successfully set up and run the ELK Stack on your Windows machine.
 
 ### Step 5: Run Elk Script
 
-Execute the script located at `my-doctor-app/powershell_scripts/elk_stack.ps1`. You can refer to `powershell.md` for further guidance on working with the ELK Stack.
+Execute the script located at `my-doctor-app/powershell_scripts/elk_stack.ps1`. You can refer to `powershell.md` for
+further guidance on working with the ELK Stack.
