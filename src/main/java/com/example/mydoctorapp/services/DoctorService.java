@@ -42,7 +42,7 @@ public class DoctorService {
     private final CitizenMapper citizenMapper;
 
     public String loginDoctor(String email, String password, Model model) {
-       try{
+        try {
             isValidEmailFormat(email);
             isEmailExists(email);
             var doctorAccount = retrieveDoctorAccount(email, password);
@@ -50,11 +50,11 @@ public class DoctorService {
             model.addAttribute("doctorAccount", doctorMapper.toDto(doctorAccount));
             var patientList = patientAccountRepository.findAllByDoctorId(doctorAccount.getId());
             model.addAttribute("patientList", patientList);
-           return DOCTOR_TEMPLATE_VALUE;
-        }catch(Exception e) {
-           model.addAttribute("error", "An error occurred: " + e.getMessage());
-           return MAIN_TEMPLATE_VALUE;
-       }
+            return DOCTOR_TEMPLATE_VALUE;
+        } catch (Exception e) {
+            model.addAttribute("error", "An error occurred: " + e.getMessage());
+            return MAIN_TEMPLATE_VALUE;
+        }
     }
 
     private void isEmailExists(String email) {

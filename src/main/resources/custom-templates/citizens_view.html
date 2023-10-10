@@ -93,7 +93,7 @@
                 <form action="/citizens/add" method="post">
                     <input name="citizenId" th:value="${citizen.id}" type="hidden"/>
                     <input name="doctorId" th:value="${doctorId}" type="hidden"/>
-                    <button id ="add-patient-button" class="btn btn-primary" type="submit">Add Patient</button>
+                    <button class="btn btn-primary" id="add-patient-button" type="submit">Add Patient</button>
                 </form>
         </tr>
         </tbody>
@@ -144,24 +144,25 @@
         var doctorId = localStorage.getItem("doctorId")
         var doctorInputs = document.querySelectorAll('input[name="doctorId"]')
         doctorInputs.forEach((input) => {
-	        input.value = doctorId
+            input.value = doctorId
         })
         console.log(doctorId)
     </script>
 
-<script>
-    window.addEventListener("beforeunload", (e) => {
-	    notifyAndReloadParent();
-    });
+    <script>
+        window.addEventListener("beforeunload", (e) => {
+            notifyAndReloadParent();
+        });
 
-    function notifyAndReloadParent() {
-	    window.opener.location.reload();
-    }
-     document.getElementById("add-patient-button").addEventListener("click",()=>{
-	     notifyAndReloadParent();
-     })
+        function notifyAndReloadParent() {
+            window.opener.location.reload();
+        }
 
-</script>
+        document.getElementById("add-patient-button").addEventListener("click", () => {
+            notifyAndReloadParent();
+        })
+
+    </script>
 </div>
 
 </body>

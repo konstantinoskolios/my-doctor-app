@@ -2,9 +2,9 @@ server:
   port: 8500
 
 spring:
-#  enable jpa.show-sql only for debug testing/debugging proposes
-#  jpa:
-#    show-sql: true
+  #  enable jpa.show-sql only for debug testing/debugging proposes
+  #  jpa:
+  #    show-sql: true
   thymeleaf:
     prefix: classpath:/custom-templates/
     cache: false
@@ -14,5 +14,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: pgtest
     password: pgtest
+    driver-class-name: org.postgresql.Driver
   liquibase:
     enabled: false # disable liquibase to allow manual control
+#  jpa:
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect

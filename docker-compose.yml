@@ -1,0 +1,79 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:alpine
+    environment:
+      POSTGRES_DB: my_doctor_app
+      POSTGRES_USER: pgtest
+      POSTGRES_PASSWORD: pgtest
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+#    networks:
+#      - doctor-app-network
+
+volumes:
+  postgresdata:
+
+#  elasticsearch:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
+#    ports:
+#      - "9200:9200"
+#    environment:
+#      - "discovery.type=single-node"
+#    volumes:
+#      - ./elasticsearch/data:/usr/share/elasticsearch/data:rw              # Persistence data
+#      - elasticsearchData:/usr/share/elasticsearch/data:Z
+#    networks:
+#      - doctor-app-network
+
+#  logstash:
+#    image: docker.elastic.co/logstash/logstash:7.17.8
+#    ports:
+#      - "25826:25826"
+#      - "5044:5044"
+#      - "50000:50000/tcp"
+#      - "50000:50000/udp"
+#      - "9600:9600"
+#    volumes:
+#      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro                # Pipeline configuration
+#    restart: on-failure
+#    depends_on:
+#      - elasticsearch
+#    networks:
+#      - doctor-app-network
+#
+#  kibana:
+#    image: docker.elastic.co/kibana/kibana:7.17.8
+#    ports:
+#      - "5601:5601"
+#    restart: on-failure
+#    depends_on:
+#      - elasticsearch
+#    networks:
+#      - doctor-app-network
+#
+##  filebeat:
+##    image: docker.elastic.co/beats/filebeat:7.17.8
+##    volumes:
+##      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+##      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+##      - /var/run/docker.sock:/var/run/docker.sock:ro
+##      - ./filebeat/data:/usr/share/filebeat/data:rw
+##    user: root
+##    restart: on-failure
+##    depends_on:
+##      - logstash
+##    entrypoint: "filebeat -e -strict.perms=false"
+##    networks:
+##      - doctor-app-network
+#
+
+#  elasticsearchData:
+##  filebeatData:
+#
+#networks:
+#  doctor-app-network:
+#    driver: bridge

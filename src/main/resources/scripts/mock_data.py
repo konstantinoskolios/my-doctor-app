@@ -33,7 +33,7 @@ for _ in range(5000):
     VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
     cursor.execute(insert_query, (
-    first_name, last_name, father_first_name, tax_number, social_security_number, phone_number, birthdate))
+        first_name, last_name, father_first_name, tax_number, social_security_number, phone_number, birthdate))
 
 # Commit changes and close the connection
 conn.commit()
