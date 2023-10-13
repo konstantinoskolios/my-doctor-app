@@ -17,5 +17,9 @@ spring:
     driver-class-name: org.postgresql.Driver
   liquibase:
     enabled: false # disable liquibase to allow manual control
-#  jpa:
-#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*' # enable all actuator metrics
