@@ -23,7 +23,7 @@ services:
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
-      - ./monitoring/prometheus:/etc/prometheus
+      - ./global/monitoring/prometheus:/etc/prometheus
     networks:
       - doctor-app-network
 
