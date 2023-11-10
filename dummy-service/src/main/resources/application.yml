@@ -1,6 +1,0 @@
-server:
-  port: 8501
-
-spring:
-  application:
-    name: dummy-service
