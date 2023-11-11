@@ -34,7 +34,8 @@ dependencies {
             'io.micrometer:micrometer-registry-prometheus',
             'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:3.1.4',
             'org.springframework.cloud:spring-cloud-starter-config:3.1.4',
-            'org.springframework.cloud:spring-cloud-starter-bootstrap:3.1.4'
+            'org.springframework.cloud:spring-cloud-starter-bootstrap:3.1.4',
+            'org.springframework.cloud:spring-cloud-starter-bus-amqp:3.0.1'
 
     )
     compileOnly 'org.projectlombok:lombok'
