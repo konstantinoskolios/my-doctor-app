@@ -2,6 +2,8 @@ server:
   port: 8500
 
 spring:
+  application:
+    name: my-doctor-app-service
   #  enable jpa.show-sql only for debug testing/debugging proposes
   #  jpa:
   #    show-sql: true

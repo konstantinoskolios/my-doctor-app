@@ -17,3 +17,10 @@ spring:
 #          uri: file:///C:/Users/kkolios/Desktop/my-doctor-app/root/my-doctor-app/my-doctor-app-configurations #file way
           searchPaths: '{application}'
           default-label: 'main'
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
