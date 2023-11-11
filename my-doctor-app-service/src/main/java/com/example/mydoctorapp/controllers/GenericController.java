@@ -25,7 +25,7 @@ public class GenericController {
     @GetMapping("/helloWorld")
     public void helloWorld(){
        var result = webClient.get()
-               .uri("http://localhost:8501/dummy/test")
+               .uri("http://dummmy-service/dummy/test")
                .retrieve()
                .bodyToMono(String.class).block();
 

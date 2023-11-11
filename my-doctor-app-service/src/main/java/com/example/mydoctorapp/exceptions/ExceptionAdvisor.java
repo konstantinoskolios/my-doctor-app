@@ -1,8 +1,8 @@
 package com.example.mydoctorapp.exceptions;
 
 import com.example.mydoctorapp.exceptions.ui.ErrorResponseModel;
-import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,12 +24,12 @@ public class ExceptionAdvisor {
         return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
-        String errorMessage = "Resource not found: " + e.getMessage();
-        log.error(errorMessage, e);
-        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
-    }
+//    @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
+//    public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
+//        String errorMessage = "Resource not found: " + e.getMessage();
+//        log.error(errorMessage, e);
+//        return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+//    }
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<String> handleValidationException(ValidationException e) {
