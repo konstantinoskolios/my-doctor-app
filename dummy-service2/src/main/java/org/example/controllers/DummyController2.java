@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/dummy")
+@RequestMapping("/api/ds2")
 public class DummyController2 {
 
-    @GetMapping("test")
+    @GetMapping("/hello")
     public String helloWorld() {
         return "Hello world from another microservice2";
     }
