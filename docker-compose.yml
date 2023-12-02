@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: pgtest
       POSTGRES_PASSWORD: pgtest
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_doctor_app:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
