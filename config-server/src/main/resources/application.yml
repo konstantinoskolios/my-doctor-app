@@ -1,0 +1,26 @@
+server:
+  port: 8888
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/SylvanasGr/my-doctor-app-configurations #github way
+#          uri: file:///C:/Users/kkolios/Desktop/my-doctor-app/root/my-doctor-app/my-doctor-app-configurations #file way
+          searchPaths: '{application}'
+          default-label: 'main'
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: pgtest
       POSTGRES_PASSWORD: pgtest
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_doctor_app:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
@@ -23,7 +23,7 @@ services:
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
-      - ./monitoring/prometheus:/etc/prometheus
+      - ./global/monitoring/prometheus:/etc/prometheus
     networks:
       - doctor-app-network
 
@@ -52,12 +52,40 @@ services:
     networks:
       - doctor-app-network
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - doctor-app-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.5
+    ports:
+      - "8080:8080"
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    command: start-dev
+    networks:
+      - doctor-app-network
+    volumes:
+      - keycloak_data:/opt/jboss/keycloak/standalone/data
+
+
 volumes:
-  postgres_data:
+  postgres_data_doctor_app:
+  keycloak_data:
   grafana_data:
 
 networks:
   doctor-app-network:
+    driver: bridge
 
 #  elasticsearch:
 #    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8

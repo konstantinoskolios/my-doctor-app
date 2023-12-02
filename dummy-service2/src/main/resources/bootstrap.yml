@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: dummy-service2
+  cloud:
+    config:
+      uri: http://localhost:8888
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/doctor-app-realm
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
