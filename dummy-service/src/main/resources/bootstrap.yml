@@ -1,9 +1,4 @@
 spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8080/realms/doctor-app-realm
   application:
     name: dummy-service
   cloud:
@@ -16,6 +11,9 @@ spring:
     password: guest
 
 management:
+  endpoint:
+    gateway:
+      enabled: true
   endpoints:
     web:
       exposure:
@@ -23,4 +21,3 @@ management:
 
 server:
   port: 8200
-

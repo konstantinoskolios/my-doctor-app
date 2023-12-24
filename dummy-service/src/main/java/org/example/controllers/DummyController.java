@@ -27,8 +27,18 @@ public class DummyController {
     }
 
 
-    @GetMapping("/bye")
-    public String byeWorld(@RequestHeader("loggedInUser") String username) {
-        return "You logged in " + username;
+    @GetMapping("/public/bye")
+    public String byeWorld() {
+        return "You logged in ";
+    }
+
+    @GetMapping("/user/bye")
+    public String byeWorld2() {
+        return "You logged in with role user";
+    }
+
+    @GetMapping("/admin/bye")
+    public String byeWorld3() {
+        return "You logged in with role admin";
     }
 }
