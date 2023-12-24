@@ -23,6 +23,9 @@
 
 # Create User
 
+- create user: konstantinos-user
+- create admin: konstantinos-admin
+
 # Create Role
 
 - create role: admin
