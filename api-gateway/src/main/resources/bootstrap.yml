@@ -4,11 +4,6 @@ server:
 spring:
   application:
     name: api-gateway
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8080/realms/doctor-app-realm
   cloud:
     config:
       fail-fast: true

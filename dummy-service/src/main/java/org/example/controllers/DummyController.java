@@ -28,7 +28,7 @@ public class DummyController {
 
 
     @GetMapping("/bye")
-    public String byeWorld(@RequestHeader("Authorization") String authorizationToken) {
-        return "nice!\n".concat(authorizationToken);
+    public String byeWorld(@RequestHeader("loggedInUser") String username) {
+        return "You logged in " + username;
     }
 }
