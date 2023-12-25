@@ -38,3 +38,6 @@ out/
 .vscode/
 /elasticsearch/data
 /filebeat/data
+
+### Enviroment ###
+.env

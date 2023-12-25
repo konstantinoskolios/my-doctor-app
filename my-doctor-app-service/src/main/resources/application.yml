@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: my-doctor-app-service
+    name: doctor-app
   #  enable jpa.show-sql only for debug testing/debugging proposes
   #  jpa:
   #    show-sql: true
@@ -19,7 +19,26 @@ spring:
     driver-class-name: org.postgresql.Driver
   liquibase:
     enabled: false # disable liquibase to allow manual control
-
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8080/realms/doctor-app-realm
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/doctor-app-realm
+            user-name-attribute: ${jwt.auth.converter.principal-attribute}
+        registration:
+          keycloak:
+            client-id: ${spring.application.name}
+            client-secret: ${KEYCLOAK_CLIENT_SECRET}
+            scope: openid,profile,email
+jwt:
+  auth:
+    converter:
+      resource-id=: ${spring.application.name}
+      principal-attribute: preferred_username
 management:
   endpoints:
     web:
