@@ -24,3 +24,24 @@ databaseChangeLog:
               - column:
                   name: speciality
                   value: 'Cardiologist'
+        - insert:
+            tableName: doctor_account
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 2
+              - column:
+                  name: email
+                  value: 'petersmith@mydoctorapp.com'
+              - column:
+                  name: pass
+                  value: '1234'
+              - column:
+                  name: first_name
+                  value: 'Peter'
+              - column:
+                  name: last_name
+                  value: 'Smith'
+              - column:
+                  name: speciality
+                  value: 'Pathologist '

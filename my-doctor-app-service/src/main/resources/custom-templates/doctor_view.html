@@ -13,6 +13,22 @@
 
 <h1 th:text="'Welcome Dr. ' + ${doctorAccount.firstName} + ' ' + ${doctorAccount.lastName} + ', ' + ${doctorAccount.speciality}"></h1>
 
+<!-- Navigation Tabs -->
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#patients" id="patients-tab">Patients</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#calendar" id="calendar-tab">Calendar</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#notifications" id="notifications-tab">Notifications</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#payments" id="payments-tab">Payments</a>
+    </li>
+</ul>
+
 <div class="container mt-2">
     <h2>Patients</h2>
     <table class="table table-bordered">

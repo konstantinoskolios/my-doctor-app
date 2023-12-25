@@ -16,18 +16,23 @@ import com.example.mydoctorapp.repositories.CitizenRepository;
 import com.example.mydoctorapp.repositories.DoctorAccountRepository;
 import com.example.mydoctorapp.repositories.PatientAccountRepository;
 import com.example.mydoctorapp.repositories.PrescriptionDetailRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.example.mydoctorapp.constants.Constants.*;
+import static com.example.mydoctorapp.constants.Constants.DOCTOR_TEMPLATE_VALUE;
+import static com.example.mydoctorapp.constants.Constants.FAILURE_MESSAGE_ALERT;
+import static com.example.mydoctorapp.constants.Constants.GENERIC_ERROR_FOR_UI;
+import static com.example.mydoctorapp.constants.Constants.MAIN_TEMPLATE_VALUE;
+import static com.example.mydoctorapp.constants.Constants.REGEX_EMAIL_FORMAT;
+import static com.example.mydoctorapp.constants.Constants.SUCCESS_MESSAGE_ALERT;
 import static com.example.mydoctorapp.utils.MyDoctorAppUtils.getCurrentTimeInGMT3;
 
 @Service
