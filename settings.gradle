@@ -6,4 +6,5 @@ include 'discovery-server'
 include 'api-gateway'
 include 'config-server'
 include 'authorization-service'
+include 'spring-boot-keycloak-simple-ui'
 

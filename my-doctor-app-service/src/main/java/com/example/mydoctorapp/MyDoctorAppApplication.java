@@ -2,11 +2,13 @@ package com.example.mydoctorapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.PropertySource;
 
 import java.util.TimeZone;
 
 @SpringBootApplication
 //@EnableEurekaClient
+@PropertySource("classpath:.env")
 public class MyDoctorAppApplication {
 
     public static void main(String[] args) {
