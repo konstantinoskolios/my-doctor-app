@@ -17,6 +17,7 @@ public class SecurityConfig {
                 .authorizeExchange()
                 .pathMatchers("/api/*/admin/**").hasRole("admin")
                 .pathMatchers("/api/*/user/**").hasRole("user")
+                .pathMatchers("/api/*/doctorapp/**").hasRole("user")
                 .pathMatchers("/api/*/public/**").authenticated()
                 .anyExchange().permitAll()
                 .and()
