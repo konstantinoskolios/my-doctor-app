@@ -1,6 +1,9 @@
 package org.example.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +41,6 @@ public class DummyController {
     }
 
     @GetMapping("/admin/bye")
-    public String byeWorld3() {
-        return "You logged in with role admin";
-    }
+    public String byeWorld3() {return "You logged in with role user";}
+
 }

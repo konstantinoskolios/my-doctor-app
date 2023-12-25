@@ -1,0 +1,20 @@
+server:
+  port: 8666
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/springboot-microservice-realm
+#  security:
+#    oauth2:
+#      client:
+#        provider:
+#          AuthProvider:
+#            token-uri: http://localhost:8080/realms/springboot-microservice-realm/protocol/openid-connect/token
+#        registration:
+#          AuthProvider:
+#            authorization-grant-type: client_credentials
+#            client-id: microservice-auth
+#            client-secret: i9y07waNc2xWTfuRgE46yt6OKAq32T0t
