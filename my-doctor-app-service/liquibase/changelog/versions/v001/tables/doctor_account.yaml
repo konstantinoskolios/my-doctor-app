@@ -8,23 +8,15 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: serial
-                  constraints:
-                    primaryKey: true
+                  type: VARCHAR(255)
               - column:
                   name: email
                   type: VARCHAR(50)
                   constraints:
                     unique: true
               - column:
-                  name: pass
-                  type: VARCHAR(50)
-              - column:
-                  name: first_name
-                  type: VARCHAR(50)
-              - column:
-                  name: last_name
-                  type: VARCHAR(50)
+                  name: full_name
+                  type: VARCHAR(100)
               - column:
                   name: speciality
                   type: VARCHAR(50)

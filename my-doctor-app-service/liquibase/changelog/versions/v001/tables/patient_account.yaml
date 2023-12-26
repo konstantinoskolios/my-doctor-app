@@ -8,9 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: serial
-                  constraints:
-                    primaryKey: true
+                  type: VARCHAR(255)
               - column:
                   name: first_name
                   type: VARCHAR(50)
@@ -57,7 +55,4 @@ databaseChangeLog:
                   type: VARCHAR(255)
               - column:
                   name: doctor_id
-                  type: serial
-                  constraints:
-                    primaryKey: true
-
+                  type: VARCHAR(255)

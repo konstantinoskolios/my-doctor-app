@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "citizen")
 public class Citizen {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true, nullable = false)
     private String id;
     private String firstName;
     private String lastName;

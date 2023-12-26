@@ -75,7 +75,7 @@
 
 <script>
     function removePatient(patientId, doctorId) {
-	    fetch('citizens/patient/removePatient', {
+	    fetch('super-user/user/remove', {
 		    method: 'DELETE',
 		    headers: {
 			    'Content-Type': 'application/json',
@@ -109,7 +109,7 @@
 	    localStorage.setItem("doctorId", doctorId)
 	    localStorage.setItem("patientId", patientId)
 	    localStorage.setItem("fullName", fullName)
-	    const url = `/citizens/patient/getPrescriptions?patientId=${patientId}&doctorId=${doctorId}`;
+	    const url = `/user/getPrescriptions?patientId=${patientId}&doctorId=${doctorId}`;
 	    window.open(url, "AddPrescriptionDialog", "width=800,height=600")
 
     }
@@ -132,7 +132,7 @@
 				    var doctorId = textarea.getAttribute('text-area-doctor-id');
 				    var patientId = textarea.getAttribute('text-area-patient-id');
 
-				    fetch('citizens/patient/addComment', {
+				    fetch('super-user/add/comment', {
 					    method: 'POST',
 					    headers: {
 						    'Content-Type': 'application/json',

@@ -23,4 +23,6 @@ public class Constants {
     public static final String SUCCESS_MESSAGE_ALERT = "successMessage";
     public static final String FAILURE_MESSAGE_ALERT = "failureMessage";
     public static final String GENERIC_ERROR_FOR_UI = "An error occurred, please contact the support team";
+    public static final String ERROR_ATTRIBUTE = "error";
+    public static final String INDEX_VIEW = "index";
 }

@@ -8,10 +8,10 @@ databaseChangeLog:
             columns:
               - column:
                   name: patient_id
-                  type: BIGINT
+                  type: VARCHAR(255)
               - column:
                   name: doctor_id
-                  type: BIGINT
+                  type: VARCHAR(255)
               - column:
                   name: category
                   type: VARCHAR(50)

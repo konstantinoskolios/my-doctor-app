@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "patient_account")
 public class PatientAccount {
     @Id
+    @Column(unique = true, nullable = false)
     private String id;
     private String firstName;
     private String lastName;
@@ -28,5 +29,6 @@ public class PatientAccount {
     private String birthdate;
     private String comments;
     private String prescriptionsIds;
+    @Column(nullable = false)
     private String doctorId;
 }
