@@ -19,9 +19,9 @@ import lombok.NoArgsConstructor;
 @IdClass(PrescriptionDetailId.class)
 public class PrescriptionDetail {
     @Id
-    private Long patientId;
+    private String patientId;
     @Id
-    private Long doctorId;
+    private String doctorId;
     private String category;
     @Id
     private String prescription;

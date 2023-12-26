@@ -18,12 +18,9 @@ import lombok.NoArgsConstructor;
 public class DoctorAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     @Column(unique = true, nullable = false)
     private String email;
-    @Column(nullable = false)
-    private String pass;
-    private String firstName;
-    private String lastName;
+    private String fullName;
     private String speciality;
 }

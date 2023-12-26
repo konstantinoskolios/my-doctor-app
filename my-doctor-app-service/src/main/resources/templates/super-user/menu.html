@@ -1,0 +1,28 @@
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#patients" id="patients-tab">Patients</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#calendar" id="calendar-tab">Calendar</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#notifications" id="notifications-tab">Notifications</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#payments" id="payments-tab">Payments</a>
+    </li>
+</ul>
+
+
+<script>
+
+ // Attach event listener to tab links
+ $(document).ready(function () {
+	 $('.nav-link').on('click', function (e) {
+		 e.preventDefault(); // Prevent the default behavior of the link
+		 var tabId = $(this).attr('href'); // Get the target tab ID from the href attribute
+		 $('.tab-pane').removeClass('show active'); // Hide all tab content
+		 $(tabId).addClass('show active'); // Show the clicked tab
+	 });
+ });
+</script>

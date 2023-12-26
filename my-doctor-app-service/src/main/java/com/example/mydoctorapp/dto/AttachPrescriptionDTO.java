@@ -13,9 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 public class AttachPrescriptionDTO {
     @NotNull
-    private Long doctorId;
+    private String doctorId;
     @NotNull
-    private Long patientId;
+    private String patientId;
     @NotNull
     @Valid
     private List<PrescriptionInformationDTO> prescriptionsInformation;

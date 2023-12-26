@@ -1,0 +1,167 @@
+<div id="patients" class="tab-pane fade in show active">
+    <table class="table table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Tax Number</th>
+                <th>Social Security Number</th>
+                <th>Phone Number</th>
+                <th>Birthdate</th>
+                <th>Comments (<span style="font-size: x-small; font-weight: normal;">Press enter to save</span>)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Loop through the list of patients -->
+            <tr th:each="patient : ${patientList}">
+                <td th:text="${patient.firstName}"></td>
+                <td th:text="${patient.lastName}"></td>
+                <td th:text="${patient.taxNumber}"></td>
+                <td th:text="${patient.socialSecurityNumber}"></td>
+                <td th:text="${patient.phoneNumber}"></td>
+                <td th:text="${patient.birthdate}"></td>
+                <td>
+                    <textarea class="comment-textarea" cols="20" rows="2" th:attr="
+                    text-area-patient-id=${patient.id},
+                    text-area-doctor-id=${doctorAccount.id}"
+                              th:text="${patient.comments}"></textarea>
+                </td>
+                <td>
+                    <div aria-label="Patient Actions" class="btn-group" role="group">
+                        <button class="btn btn-primary mr-2"
+                                onclick="addPrescription(
+                                    this.getAttribute('add-prescription-patient-id'),
+                                    this.getAttribute('add-prescription-doctor-id'),
+                                    this.getAttribute('add-prescription-patient-first-name'),
+                                    this.getAttribute('add-prescription-patient-last-name')
+                                )"
+                                th:attr="
+                                add-prescription-patient-id=${patient.id},
+                                add-prescription-doctor-id=${doctorAccount.id},
+                                add-prescription-patient-first-name=${patient.firstName},
+                                add-prescription-patient-last-name=${patient.lastName}
+                                ">Add Prescription
+                        </button>
+
+                        <button class="btn btn-danger"
+                                onclick="removePatient(this.getAttribute('remove-patient-id'), this.getAttribute('remove-doctor-id'))"
+                                th:attr="remove-patient-id=${patient.id}, remove-doctor-id=${doctorAccount.id}"> Remove
+                            Patient
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button class="btn btn-success" onclick="openAddPatientDialog(this.getAttribute('data-doctor-id'))"
+            th:attr="data-doctor-id=${doctorAccount.id}">Add Patient
+    </button>
+</div>
+
+<script>
+    function openAddPatientDialog(doctorId) {
+	    console.log("doctorId:" + doctorId)
+	    // Set the doctorId in localStorage
+	    localStorage.setItem("doctorId", doctorId);
+	    // Construct the URL with the doctorId parameter
+	    var url = "http://localhost:8500/citizens/all";
+
+	    // Open a new window or modal dialog with the specified URL
+	    window.open(url, "AddPatientDialog", "width=800,height=600");
+    }
+</script>
+
+<script>
+    function removePatient(patientId, doctorId) {
+	    fetch('citizens/patient/removePatient', {
+		    method: 'DELETE',
+		    headers: {
+			    'Content-Type': 'application/json',
+		    },
+		    body: JSON.stringify({
+			    patientId: patientId,
+			    doctorId: doctorId
+		    })
+	    })
+			    .then(response => {
+				    if (response.ok) {
+					    // The request was successful, so reload the page
+					    window.location.reload();
+				    } else {
+					    // Handle errors here if needed
+					    console.error('Failed to remove patient:', response.statusText);
+				    }
+			    })
+			    .catch(error => {
+				    // Handle fetch errors here
+				    console.error('Fetch error:', error);
+			    });
+    }
+</script>
+
+<script>
+    function addPrescription(patientId, doctorId, firstName, lastName) {
+
+	    const fullName = firstName + ' ' + lastName
+
+	    localStorage.setItem("doctorId", doctorId)
+	    localStorage.setItem("patientId", patientId)
+	    localStorage.setItem("fullName", fullName)
+	    const url = `/citizens/patient/getPrescriptions?patientId=${patientId}&doctorId=${doctorId}`;
+	    window.open(url, "AddPrescriptionDialog", "width=800,height=600")
+
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+	    // Select all textarea elements with the 'comment-textarea' class
+	    var textareas = document.querySelectorAll('.comment-textarea');
+
+	    // Add an event listener to each textarea
+	    textareas.forEach((textarea) => {
+		    textarea.addEventListener('keydown', (event) => {
+			    // Check if the Enter key is pressed (key code 13)
+			    if (event.keyCode === 13 && !event.shiftKey) {
+				    event.preventDefault(); // Prevent the default Enter behavior (line break)
+
+				    // Get the textarea's value
+				    var comment = textarea.value;
+				    var doctorId = textarea.getAttribute('text-area-doctor-id');
+				    var patientId = textarea.getAttribute('text-area-patient-id');
+
+				    fetch('citizens/patient/addComment', {
+					    method: 'POST',
+					    headers: {
+						    'Content-Type': 'application/json',
+					    },
+					    body: JSON.stringify({
+						    patientId: patientId,
+						    doctorId: doctorId,
+						    comment: comment,
+					    }),
+				    }).then((response) => {
+					    if (response.status === 200) {
+						    textarea.value = comment; // Update the textarea with the new comment
+					    }
+				    })
+						    .catch((error) => {
+							    console.error('Error adding comment:', error);
+						    });
+			    }
+		    });
+	    });
+
+	    // Add a click event listener to a button with a specific ID (replace 'your-button-id' with the actual ID)
+	    var button = document.getElementById('add-patient-button');
+	    if (button) {
+		    button.addEventListener('click', () => {
+			    // Handle the button click event here
+			    // You can perform actions when the button is clicked
+			    console.log('Button clicked');
+		    });
+	    }
+    });
+</script>

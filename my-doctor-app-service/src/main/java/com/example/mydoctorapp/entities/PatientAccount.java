@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "patient_account")
 public class PatientAccount {
     @Id
-    private Long id;
+    private String id;
     private String firstName;
     private String lastName;
     private String fatherFirstName;
@@ -28,5 +28,5 @@ public class PatientAccount {
     private String birthdate;
     private String comments;
     private String prescriptionsIds;
-    private Long doctorId;
+    private String doctorId;
 }

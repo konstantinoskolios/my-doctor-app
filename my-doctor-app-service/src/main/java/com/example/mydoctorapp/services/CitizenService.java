@@ -73,7 +73,7 @@ public class CitizenService {
         }
     }
 
-    private String constructDoctorFullName(Long doctorId) {
+    private String constructDoctorFullName(String doctorId) {
         var doctorAccount = doctorAccountRepository.findById(doctorId).orElseThrow(
                 () -> {
                     var errorMessage = "An business error occurred, Reason: Doctor Account is not found, please contact with the support team.";
@@ -82,6 +82,6 @@ public class CitizenService {
                 }
         );
 
-        return doctorAccount.getFirstName().concat(" ").concat(doctorAccount.getLastName().concat(" ,").concat(doctorAccount.getSpeciality()));
+        return doctorAccount.getFullName().concat(" ,").concat(doctorAccount.getSpeciality());
     }
 }

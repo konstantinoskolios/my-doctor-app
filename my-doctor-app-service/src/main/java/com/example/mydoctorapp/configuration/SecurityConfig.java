@@ -30,6 +30,7 @@ public class SecurityConfig {
 
     public static final String DOCTOR_APP_USER = "doctor-app-user";
     public static final String DOCTOR_APP_ADMIN = "doctor-app-admin";
+    public static final String DOCTOR_APP_SUPER_USER = "doctor-app-super-user";
 
     @Value("${jwt.auth.converter.principal-attribute}")
     private String principalAttribute;
@@ -38,10 +39,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                        .requestMatchers("/", "/login", "/public").permitAll()
                         .requestMatchers( "/user/**").hasRole(DOCTOR_APP_USER)
                         .requestMatchers("/admin/**").hasRole(DOCTOR_APP_ADMIN)
-                        .requestMatchers("/citizens/**").hasAnyRole(DOCTOR_APP_USER,DOCTOR_APP_ADMIN)
-                        .requestMatchers("/", "/login", "/public").permitAll()
+                        .requestMatchers("/super-user/**").hasRole(DOCTOR_APP_SUPER_USER)
                         .requestMatchers(HttpMethod.GET,"/oauth2/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2Login -> oauth2Login.loginPage("/login").defaultSuccessUrl("/"))

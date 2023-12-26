@@ -9,6 +9,10 @@
 
 <div th:insert="~{fragments/header :: header}"></div>
 
+<div class="ui error message" th:if="${error}">
+    <p th:text="${error}"></p>
+</div>
+
 <main>
     <div class="ui basic segment">
         <div class="ui huge center aligned header">

@@ -19,11 +19,15 @@ import com.example.mydoctorapp.repositories.PrescriptionDetailRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.InvalidDataAccessResourceUsageException;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -33,6 +37,7 @@ import static com.example.mydoctorapp.constants.Constants.GENERIC_ERROR_FOR_UI;
 import static com.example.mydoctorapp.constants.Constants.MAIN_TEMPLATE_VALUE;
 import static com.example.mydoctorapp.constants.Constants.REGEX_EMAIL_FORMAT;
 import static com.example.mydoctorapp.constants.Constants.SUCCESS_MESSAGE_ALERT;
+import static com.example.mydoctorapp.entities.DoctorAccount_.email;
 import static com.example.mydoctorapp.utils.MyDoctorAppUtils.getCurrentTimeInGMT3;
 
 @Service
@@ -46,41 +51,51 @@ public class DoctorService {
     private final DoctorMapper doctorMapper;
     private final CitizenMapper citizenMapper;
 
-    public String loginDoctor(String email, String password, Model model) {
+
+//    @Transactional #problem with redirect
+    public String loginSuperUser(Model model, OidcUser user) {
         try {
-            isValidEmailFormat(email);
-            isEmailExists(email);
-            var doctorAccount = retrieveDoctorAccount(email, password);
+            isValidEmailFormat(user.getEmail(),user.getEmailVerified());
+            var doctorAccount = updateSuperUserInfo(user);
             log.info(String.format("Doctor with email: %s has successfully logged into the application at: %s", email, getCurrentTimeInGMT3()));
-            model.addAttribute("doctorAccount", doctorMapper.toDto(doctorAccount));
-            var patientList = patientAccountRepository.findAllByDoctorId(doctorAccount.getId());
-            model.addAttribute("patientList", patientList);
-            return DOCTOR_TEMPLATE_VALUE;
-        } catch (Exception e) {
-            model.addAttribute("error", "An error occurred: " + e.getMessage());
-            return MAIN_TEMPLATE_VALUE;
+//            var patientList = patientAccountRepository.findAllByDoctorId(doctorAccount.getId()); todo: enable when ready
+            model.addAttribute("doctorAccount", doctorAccount);
+            model.addAttribute("patientList", List.of(
+                    new PatientAccount("1", "John", "Doe", "John Sr.", "123456", "SSN123", "555-1234", "1990-01-01", "Some comments", "prescription1,prescription2", "doctor1"),
+                    new PatientAccount("2", "Jane", "Doe", "Jane Sr.", "789012", "SSN456", "555-5678", "1985-05-15", "Additional comments", "prescription3", "doctor2"),
+                    new PatientAccount("3", "Bob", "Smith", "Bob Sr.", "345678", "SSN789", "555-9876", "1982-11-30", "No comments", "prescription4", "doctor3")
+            ));
+            return "super_user_view";
+
+        } catch (InvalidDataAccessResourceUsageException e){
+            model.addAttribute("error","Something is wrong with schema or database, contact your administrators.");
+            return "index";
+        }
+        catch (Exception e) {
+            model.addAttribute("error", "An error occurred: " + e.getLocalizedMessage());
+            return "index";
         }
     }
 
-    private void isEmailExists(String email) {
-        doctorAccountRepository.findDoctorAccountByEmail(email).orElseThrow(() -> {
-            var errorMessage = String.format("No doctor account found with the provided email: %s", email);
-            log.warn(String.format(errorMessage));
-            throw new InvalidCredentialsException(errorMessage);
-        });
+    private DoctorAccount updateSuperUserInfo(OidcUser user) {
+        var name = user.getFullName();
+        var email = user.getEmail();
+        var subId = user.getSubject();
+        var speciality = user.getClaims().get("speciality").toString(); //custom attribute by keycloak, business wise this value must never be null so that explains why avoid to check for null pointer.
+//        return doctorAccountRepository.save(new DoctorAccount(subId,name,email,speciality)); //todo: enable when ready
+        return new DoctorAccount(subId,name,email,speciality);
     }
 
-    private DoctorAccount retrieveDoctorAccount(String email, String password) {
-        return doctorAccountRepository.findDoctorAccountByEmailAndPass(email, password).orElseThrow(() -> {
+    private DoctorAccount retrieveDoctorAccount(String email) {
+        return doctorAccountRepository.findDoctorAccountByEmail(email).orElseThrow(() -> {
             var errorMessage = String.format("Invalid login credentials for the doctor with email: %s", email);
             log.warn(errorMessage);
             throw new InvalidCredentialsException(errorMessage);
         });
     }
-
-    private void isValidEmailFormat(String email) {
+    private void isValidEmailFormat(String email,boolean verifiedEmail) {
         var emailPattern = Pattern.compile(REGEX_EMAIL_FORMAT).matcher(email).matches();
-        if (!emailPattern) throw new InvalidEmailFormatException(email);
+        if (!emailPattern || !verifiedEmail ) throw new InvalidEmailFormatException(email);
     }
 
     public void addPatient(Long citizenId, Long doctorId, RedirectAttributes redirectAttributes) {
@@ -126,7 +141,7 @@ public class DoctorService {
         }
     }
 
-    private void constructDoctorTabAttributes(Long doctorId, Model model) {
+    private void constructDoctorTabAttributes(String doctorId, Model model) {
         var doctorAccount = doctorAccountRepository.findById(doctorId).orElseThrow(GuiException::new);
         var patientList = patientAccountRepository.findAllByDoctorId(doctorId);
         model.addAttribute("doctorAccount", doctorMapper.toDto(doctorAccount));

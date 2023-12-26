@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DoctorViewDTO {
     @NotBlank
-    private Long patientId;
+    private String patientId;
     @NotBlank
-    private Long doctorId;
+    private String doctorId;
     private String comment;
     private String patientFullName;
 }

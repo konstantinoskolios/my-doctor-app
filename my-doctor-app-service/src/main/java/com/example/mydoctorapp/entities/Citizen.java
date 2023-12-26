@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 public class Citizen {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String firstName;
     private String lastName;
     private String fatherFirstName;
