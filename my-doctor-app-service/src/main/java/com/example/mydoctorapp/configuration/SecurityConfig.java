@@ -1,4 +1,4 @@
-package com.example.springbootkeycloaksimpleui.config;
+package com.example.mydoctorapp.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,19 +21,15 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.stream.Collectors;
+
+import static com.example.mydoctorapp.configuration.JwtRolesExtractor.extractRoles;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    public static final String SIMPLE_UI_ADMIN = "SIMPLE-UI-ADMIN";
-    public static final String SIMPLE_UI_USER = "SIMPLE-UI-USER";
-
-    @Value("${jwt.auth.converter.resource-id}")
-    private String resourceId;
+    public static final String DOCTOR_APP_USER = "doctor-app-user";
+    public static final String DOCTOR_APP_ADMIN = "doctor-app-admin";
 
     @Value("${jwt.auth.converter.principal-attribute}")
     private String principalAttribute;
@@ -42,14 +38,18 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers(HttpMethod.GET, "/admin-user-page").hasAnyRole(SIMPLE_UI_ADMIN, SIMPLE_UI_USER)
-                        .requestMatchers(HttpMethod.GET, "/admin-page").hasRole(SIMPLE_UI_ADMIN)
-                        .requestMatchers(HttpMethod.GET, "/user-page").hasRole(SIMPLE_UI_USER)
-                        .requestMatchers(HttpMethod.GET, "/", "/login", "/public-page").permitAll()
-                        .requestMatchers("/oauth2/**").permitAll()
+                        .requestMatchers( "/user/**").hasRole(DOCTOR_APP_USER)
+                        .requestMatchers("/admin/**").hasRole(DOCTOR_APP_ADMIN)
+                        .requestMatchers("/citizens/**").hasAnyRole(DOCTOR_APP_USER,DOCTOR_APP_ADMIN)
+                        .requestMatchers("/", "/login", "/public").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/oauth2/**").permitAll()
                         .anyRequest().authenticated())
+                .logout(logout ->
+                        logout
+                                .deleteCookies("JSESSIONID")
+                                .invalidateHttpSession(true)
+                                .logoutSuccessUrl("/"))
                 .oauth2Login(oauth2Login -> oauth2Login.loginPage("/login").defaultSuccessUrl("/"))
-                .logout(logout -> logout.logoutSuccessUrl("/").permitAll())
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }
@@ -66,19 +66,5 @@ public class SecurityConfig {
             String nameAttributeKey = principalAttribute == null ? JwtClaimNames.SUB : principalAttribute;
             return new DefaultOidcUser(authorities, oidcUser.getIdToken(), oidcUser.getUserInfo(), nameAttributeKey);
         };
-    }
-
-    private Collection<? extends GrantedAuthority> extractRoles(Jwt jwt) {
-        Map<String, Object> resourceAccess = jwt.getClaim("resource_access");
-        Map<String, Object> resource;
-        Collection<String> resourceRoles;
-        if (resourceAccess == null
-                || (resource = (Map<String, Object>) resourceAccess.get(resourceId)) == null
-                || (resourceRoles = (Collection<String>) resource.get("roles")) == null) {
-            return Collections.emptySet();
-        }
-        return resourceRoles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-                .collect(Collectors.toSet());
     }
 }

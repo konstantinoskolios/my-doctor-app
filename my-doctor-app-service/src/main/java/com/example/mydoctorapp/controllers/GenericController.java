@@ -14,8 +14,14 @@ public class GenericController {
 
     @GetMapping("/")
     public String userAdminPage() {
-        return MAIN_TEMPLATE_VALUE;
+        return "index";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return  "login";
+    }
+
 
 
 }

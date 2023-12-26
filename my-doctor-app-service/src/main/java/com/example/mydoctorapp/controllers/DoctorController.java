@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class DoctorController {
     private final DoctorService doctorService;
 
-    @PostMapping("/login")
-    public String loginDoctor(
-            @RequestParam String email,
-            @RequestParam String password,
-            Model model) {
-        return doctorService.loginDoctor(email, password, model);
-    }
+//    @PostMapping("/login")
+//    public String loginDoctor(
+//            @RequestParam String email,
+//            @RequestParam String password,
+//            Model model) {
+//        return doctorService.loginDoctor(email, password, model);
+//    }
 
 }
