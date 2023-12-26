@@ -6,11 +6,11 @@
 
 <header>
     <div class="ui massive menu">
-        <a class="item" th:href="@{/}">
+        <a class="item" th:href="@{/static}">
             <i class="cube camera icon"></i>
             Doctor App
         </a>
-        <a class="item" th:href="@{/public-page}">
+        <a class="item" th:href="@{/about}">
             About Project
         </a>
         <a class="item" sec:authorize="hasRole('doctor-app-admin')"

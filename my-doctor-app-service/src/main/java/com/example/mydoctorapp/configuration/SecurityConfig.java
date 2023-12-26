@@ -44,12 +44,8 @@ public class SecurityConfig {
                         .requestMatchers("/", "/login", "/public").permitAll()
                         .requestMatchers(HttpMethod.GET,"/oauth2/**").permitAll()
                         .anyRequest().authenticated())
-                .logout(logout ->
-                        logout
-                                .deleteCookies("JSESSIONID")
-                                .invalidateHttpSession(true)
-                                .logoutSuccessUrl("/"))
                 .oauth2Login(oauth2Login -> oauth2Login.loginPage("/login").defaultSuccessUrl("/"))
+                .logout(logout -> logout.logoutSuccessUrl("/"))
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
     }

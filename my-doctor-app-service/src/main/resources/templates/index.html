@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Doctor App</title>
@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<div th:insert="~{header :: header}"></div>
+<div th:insert="~{fragments/header :: header}"></div>
 
 <main>
     <div class="ui basic segment">

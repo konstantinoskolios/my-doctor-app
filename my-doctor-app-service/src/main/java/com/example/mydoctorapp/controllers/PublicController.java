@@ -5,12 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import static com.example.mydoctorapp.constants.Constants.MAIN_TEMPLATE_VALUE;
-
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class GenericController {
+public class PublicController {
 
     @GetMapping("/")
     public String userAdminPage() {
@@ -20,6 +18,11 @@ public class GenericController {
     @GetMapping("/login")
     public String login() {
         return  "login";
+    }
+
+    @GetMapping("/about")
+    public String about() {
+        return  "about";
     }
 
 
