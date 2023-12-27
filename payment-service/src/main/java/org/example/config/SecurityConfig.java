@@ -14,21 +14,20 @@ public class SecurityConfig {
     public static final String DOCTOR_APP_ADMIN = "doctor-app-admin";
     public static final String DOCTOR_APP_SUPER_USER = "doctor-app-super-user";
 
-
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity serverHttpSecurity) {
 
         serverHttpSecurity
-                .authorizeExchange()
-                .pathMatchers("/**").hasAnyRole(DOCTOR_APP_ADMIN,DOCTOR_APP_USER,DOCTOR_APP_SUPER_USER)
-                .anyExchange().permitAll()
-                .and()
-                .oauth2ResourceServer()
-                .jwt().jwtAuthenticationConverter(new KeycloakJwtConverter());
+                .authorizeExchange(ex -> ex
+                        .pathMatchers("/**").hasAnyRole(DOCTOR_APP_ADMIN, DOCTOR_APP_USER, DOCTOR_APP_SUPER_USER)
+                        .anyExchange().permitAll())
+                .oauth2ResourceServer(configurer -> configurer
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(new KeycloakJwtConverter())))
+                .csrf(ServerHttpSecurity.CsrfSpec::disable);
 
-        serverHttpSecurity.csrf().disable();
         return serverHttpSecurity.build();
     }
+
 }
 
 

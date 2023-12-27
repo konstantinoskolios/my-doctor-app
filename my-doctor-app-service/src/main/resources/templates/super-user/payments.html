@@ -27,5 +27,38 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
 	    // You may include additional JavaScript logic if needed
+	    document.getElementById('paymentsTab').addEventListener('click', () => {
+		    fetch('payments/getPayments')
+				    .then(res => res.json())
+				    .then(data => {
+					    updatePaymentsTab(data)
+				    }).catch(err => {
+			    console.log("Error fetching payments: ", err);
+		    });
+	    });
+
+	    var updatePaymentsTab = (paymentsList) => {
+		    const paymentsTabContent = document.getElementById('payments');
+
+		    paymentsTabContent.innerHTML = '';
+
+		    const table = document.createElement('table');
+		    table.className = 'table table-bordered';
+		    paymentsList.forEach(payment => {
+			    const row = table.insertRow();
+			    row.innerHTML = `
+                    <td>${payment.fullName}</td>
+                    <td>${payment.taxNumber}</td>
+                    <td>${payment.socialSecurityNumber}</td>
+                    <td>${payment.phoneNumber}</td>
+                    <td>${payment.date}</td>
+                    <td>${payment.totalAmount}</td>
+                `;
+		    });
+
+		    paymentsTabContent.appendChild(table);
+
+	    }
+
     });
 </script>
