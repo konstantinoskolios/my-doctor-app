@@ -1,4 +1,4 @@
-<div class="tab-pane fade in show active" id="patients">
+<div class="tab-pane fade in show active" id="payments">
     <table class="table table-bordered">
         <thead class="thead-light">
             <tr>
@@ -10,34 +10,9 @@
                 <th>Total Amount</th>
             </tr>
         </thead>
-        <tbody>
-            <!-- Loop through the list of payments -->
-            <tr th:each="payment : ${paymentsList}">
-                <td th:text="${payment.fullName}"></td>
-                <td th:text="${payment.taxNumber}"></td>
-                <td th:text="${payment.socialSecurityNumber}"></td>
-                <td th:text="${payment.phoneNumber}"></td>
-                <td th:text="${payment.date}"></td>
-                <td th:text="${payment.totalAmount}"></td>
-            </tr>
-        </tbody>
+	    <tbody id="paymentTableBody"></tbody>
     </table>
 </div>
-
-<!-- <form method="POST" action="https://site.auth.com/oauth/token"> &lt;!&ndash;layout:fragment="bodyContent" depth&ndash;&gt; -->
-<!--     <div class="container">         -->
-<!--       <h1>Login</h1> -->
-<!--       <label for="username">Username</label> -->
-<!--       <input type="text" id="username" name="username"><br> -->
-<!--       <label for="password">Password</label> -->
-<!--       <input type="password" id="password" name="password"><br> -->
-<!--       <input type="hidden" name="grant_type" value="code_authenticate"> -->
-<!--       <input type="hidden" name="client_id" value="XEeJYNqbZT_mIra2qJrh-ibkU-8xbyYnRQUFDZy5"> -->
-<!--       <input type="hidden" name="response_type" value="code"> -->
-<!--       <input type="hidden" name="redirect_uri" value="https://site.client.com"> -->
-<!--       <input type="submit" value="Login"> -->
-<!--     </div> -->
-<!-- </form> -->
 
 <script>
 
@@ -70,31 +45,47 @@
 				});
 
 				const paymentData = await paymentResponse.json();
+
 				updatePaymentsTab(paymentData);
 			} catch (error) {
 				console.log("Error: ", error);
 			}
 		});
 
-	    var updatePaymentsTab = (paymentsList) => {
-		    const paymentsTabContent = document.getElementById('payments');
+		var updatePaymentsTab = (paymentData) => {
+			const paymentTableBody = document.getElementById('paymentTableBody');
+			const totalAmountSumElement = document.getElementById('totalAmountSum');
 
-		    paymentsTabContent.innerHTML = '';
+			// Clear existing content
+			if (paymentTableBody.innerHTML.length > 2) {
+				paymentTableBody.innerHTML = ''
+			}
 
-		    const table = document.createElement('table');
-		    table.className = 'table table-bordered';
-		    paymentsList.forEach(payment => {
-			    const row = table.insertRow();
-			    row.innerHTML = `
-                    <td>${payment.fullName}</td>
-                    <td>${payment.taxNumber}</td>
-                    <td>${payment.socialSecurityNumber}</td>
-                    <td>${payment.phoneNumber}</td>
-                    <td>${payment.date}</td>
-                    <td>${payment.totalAmount}</td>
-                `;
-		    });
+			let totalSum = 0; // Variable to store the total sum
 
-		    paymentsTabContent.appendChild(table);
-	    };
+			// Create table rows in the tbody
+			paymentData.paymentsList.forEach(payment => {
+				const row = paymentTableBody.insertRow();
+				row.innerHTML = `
+                <td>${payment.fullName}</td>
+                <td>${payment.taxNumber}</td>
+                <td>${payment.socialSecurityNumber}</td>
+                <td>${payment.phoneNumber}</td>
+                <td>${payment.date}</td>
+                <td>${payment.totalAmount}</td>
+            `;
+
+				totalSum += parseFloat(payment.totalAmount);
+			});
+
+			const totalSumRow = paymentTableBody.insertRow();
+			totalSumRow.innerHTML = `
+        <td colspan="5"></td>
+        <td style="color: green">${totalSum.toFixed(2)}</td>
+    `;
+
+		};
 </script>
+
+</script>
+

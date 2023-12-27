@@ -63,5 +63,9 @@ dependencies {
 
     // Hibernate
     annotationProcessor 'org.hibernate.orm:hibernate-jpamodelgen'
+
+    //eureka
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.1.0'
+
 }
 

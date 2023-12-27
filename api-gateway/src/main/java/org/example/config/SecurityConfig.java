@@ -2,11 +2,16 @@ package org.example.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -24,16 +29,16 @@ public class SecurityConfig  implements WebFluxConfigurer {
                         .pathMatchers("/**").hasAnyRole(DOCTOR_APP_ADMIN, DOCTOR_APP_USER, DOCTOR_APP_SUPER_USER)
                         .anyExchange().permitAll())
                 .oauth2ResourceServer(configurer -> configurer
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(new KeycloakJwtConverter())));
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(new KeycloakJwtConverter())))
+                .cors(cors -> cors.configurationSource(req -> {
+                    var configuration = new CorsConfiguration();
+                    configuration.setAllowedOrigins(List.of("*"));
+                    configuration.setAllowedMethods(List.of("*"));
+                    configuration.setAllowedHeaders(List.of("*"));
+                    return configuration;
+                }))
+        ;
         return serverHttpSecurity.build();
     }
 
-
-    @Override
-    public void addCorsMappings(CorsRegistry corsRegistry) {
-        corsRegistry.addMapping("/**")
-                .allowedOrigins("http://localhost:8500")
-                .allowedMethods("*")
-                .maxAge(3600);
-    }
 }
