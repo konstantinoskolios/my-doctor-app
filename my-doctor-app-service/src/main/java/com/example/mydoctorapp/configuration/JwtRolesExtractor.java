@@ -15,6 +15,9 @@ public class JwtRolesExtractor {
     private static final String ROLES = "roles";
     private static final String REALM_ACCESS_CLAIM = "realm_access";
 
+    private JwtRolesExtractor() {
+    }
+
     public static Collection<? extends GrantedAuthority> extractRoles(Jwt jwt) {
         Map<String, Object> realmAccess = jwt.getClaim(REALM_ACCESS_CLAIM);
         Collection<String> resourceRoles;
@@ -25,8 +28,5 @@ public class JwtRolesExtractor {
                     .collect(Collectors.toSet());
 
         return Collections.emptySet();
-    }
-
-    private JwtRolesExtractor() {
     }
 }

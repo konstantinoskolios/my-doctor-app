@@ -93,48 +93,48 @@
 
 <script>
     function showErrorMessage(message) {
-        document.getElementById('errorMessageText').textContent = message;
-        $('#popupMessage').modal('show');
+	    document.getElementById('errorMessageText').textContent = message;
+	    $('#popupMessage').modal('show');
     }
 </script>
 
 <script th:inline="javascript">
     function submitDoctorLoginForm(event) {
-        console.log(event)
-        event.preventDefault();
+	    console.log(event)
+	    event.preventDefault();
 
-        $.ajax({
-            type: "POST",
-            url: "/login",
-            data: $("#doctorLoginForm").serialize(),
-            success: (res) => {
-                // console.log(res)
+	    $.ajax({
+		    type: "POST",
+		    url: "/login",
+		    data: $("#doctorLoginForm").serialize(),
+		    success: (res) => {
+			    // console.log(res)
 
-            },
-            error: (xhr, ajaxOptions, thrownError) => {
-                showErrorMessage(xhr.responseText);
-            }
-        });
+		    },
+		    error: (xhr, ajaxOptions, thrownError) => {
+			    showErrorMessage(xhr.responseText);
+		    }
+	    });
     }
 </script>
 
 <script th:inline="javascript">
     function submitCitizenLoginForm(event) {
-        console.log(event)
-        event.preventDefault();
+	    console.log(event)
+	    event.preventDefault();
 
-        $.ajax({
-            type: "GET",
-            url: "/citizens/information",
-            data: $("#submitCitizenLoginForm").serialize(),
-            success: (res) => {
-                // console.log(res)
+	    $.ajax({
+		    type: "GET",
+		    url: "/citizens/information",
+		    data: $("#submitCitizenLoginForm").serialize(),
+		    success: (res) => {
+			    // console.log(res)
 
-            },
-            error: (xhr, ajaxOptions, thrownError) => {
-                showErrorMessage(xhr.responseText);
-            }
-        });
+		    },
+		    error: (xhr, ajaxOptions, thrownError) => {
+			    showErrorMessage(xhr.responseText);
+		    }
+	    });
     }
 </script>
 

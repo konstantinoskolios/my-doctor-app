@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
-import static com.example.mydoctorapp.constants.Constants.*;
+import static com.example.mydoctorapp.constants.Constants.PHONE_NUMBER_LENGTH;
+import static com.example.mydoctorapp.constants.Constants.SOCIAL_SECURITY_NUMBER_LENGTH;
+import static com.example.mydoctorapp.constants.Constants.TAX_NUMBER_LENGTH;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CitizenSpecification {

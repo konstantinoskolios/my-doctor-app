@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DoctorAccountDTO {
     private String id;
-    private String firstName;
-    private String lastName;
+    private String fullName;
     private String speciality;
 }

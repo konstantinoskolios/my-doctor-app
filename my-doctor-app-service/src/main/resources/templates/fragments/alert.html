@@ -1,0 +1,43 @@
+<div class="custom-alert" th:fragment="alert" th:if="${successMessage or errorMessage}">
+    <p th:if="${successMessage}" th:text="${successMessage}"></p>
+    <p th:if="${errorMessage}" th:text="${errorMessage}"></p>
+</div>
+
+<script th:inline="javascript">
+    /* alert-fragment.js */
+    document.addEventListener('DOMContentLoaded', function () {
+	    // Close the alert on click
+	    document.querySelector('.custom-alert').addEventListener('click', function () {
+		    this.style.display = 'none';
+	    });
+    });
+</script>
+
+<style>
+    /* alert-fragment.css */
+    .custom-alert {
+	    position: fixed;
+	    top: 0;
+	    left: 0;
+	    right: 0;
+	    padding: 15px;
+	    text-align: center;
+	    display: none;
+	    cursor: pointer;
+    }
+
+    .custom-alert p {
+	    margin: 0;
+	    font-weight: bold;
+    }
+
+    .custom-alert.success {
+	    background-color: #4CAF50; /* Green background color */
+	    color: white; /* White text color */
+    }
+
+    .custom-alert.error {
+	    background-color: #f44336; /* Red background color */
+	    color: white; /* White text color */
+    }
+</style>

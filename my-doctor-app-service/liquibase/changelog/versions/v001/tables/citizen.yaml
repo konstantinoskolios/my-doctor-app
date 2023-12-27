@@ -8,7 +8,9 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: VARCHAR(255)
+                  type: serial
+                  constraints:
+                    primaryKey: true
               - column:
                   name: first_name
                   type: VARCHAR(30)

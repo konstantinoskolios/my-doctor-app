@@ -17,14 +17,13 @@ public class PublicController {
 
     @GetMapping("/login")
     public String login() {
-        return  "login";
+        return "login";
     }
 
     @GetMapping("/about")
     public String about() {
-        return  "about";
+        return "about";
     }
-
 
 
 }

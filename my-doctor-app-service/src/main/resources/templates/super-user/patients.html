@@ -1,4 +1,4 @@
-<div id="patients" class="tab-pane fade in show active">
+<div class="tab-pane fade in show active" id="patients">
     <table class="table table-bordered">
         <thead class="thead-light">
             <tr>
@@ -75,7 +75,7 @@
 
 <script>
     function removePatient(patientId, doctorId) {
-	    fetch('super-user/user/remove', {
+	    fetch('user/remove', {
 		    method: 'DELETE',
 		    headers: {
 			    'Content-Type': 'application/json',
@@ -87,15 +87,12 @@
 	    })
 			    .then(response => {
 				    if (response.ok) {
-					    // The request was successful, so reload the page
 					    window.location.reload();
 				    } else {
-					    // Handle errors here if needed
 					    console.error('Failed to remove patient:', response.statusText);
 				    }
 			    })
 			    .catch(error => {
-				    // Handle fetch errors here
 				    console.error('Fetch error:', error);
 			    });
     }
@@ -132,7 +129,7 @@
 				    var doctorId = textarea.getAttribute('text-area-doctor-id');
 				    var patientId = textarea.getAttribute('text-area-patient-id');
 
-				    fetch('super-user/add/comment', {
+				    fetch('user/add/comment', {
 					    method: 'POST',
 					    headers: {
 						    'Content-Type': 'application/json',

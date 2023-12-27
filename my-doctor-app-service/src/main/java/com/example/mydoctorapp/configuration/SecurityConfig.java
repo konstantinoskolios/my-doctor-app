@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -39,11 +38,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+//                        .antMatchers("/static/favicon.ico").permitAll()
                         .requestMatchers("/", "/login", "/public").permitAll()
-                        .requestMatchers( "/user/**").hasRole(DOCTOR_APP_USER)
+                        .requestMatchers("/user/**").hasRole(DOCTOR_APP_USER)
                         .requestMatchers("/admin/**").hasRole(DOCTOR_APP_ADMIN)
                         .requestMatchers("/super-user/**").hasRole(DOCTOR_APP_SUPER_USER)
-                        .requestMatchers(HttpMethod.GET,"/oauth2/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/oauth2/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2Login -> oauth2Login.loginPage("/login").defaultSuccessUrl("/"))
                 .logout(logout -> logout.logoutSuccessUrl("/"))

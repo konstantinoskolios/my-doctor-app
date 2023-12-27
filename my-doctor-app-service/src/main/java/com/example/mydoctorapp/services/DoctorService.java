@@ -3,13 +3,11 @@ package com.example.mydoctorapp.services;
 import com.example.mydoctorapp.dto.AttachPrescriptionDTO;
 import com.example.mydoctorapp.dto.DoctorViewDTO;
 import com.example.mydoctorapp.dto.PrescriptionInformationDTO;
-import com.example.mydoctorapp.entities.Citizen;
 import com.example.mydoctorapp.entities.DoctorAccount;
 import com.example.mydoctorapp.entities.PatientAccount;
 import com.example.mydoctorapp.entities.PrescriptionDetail;
 import com.example.mydoctorapp.enumerations.PrescriptionCategoryEnum;
 import com.example.mydoctorapp.exceptions.GuiException;
-import com.example.mydoctorapp.exceptions.InvalidCredentialsException;
 import com.example.mydoctorapp.exceptions.InvalidEmailFormatException;
 import com.example.mydoctorapp.mapstruct.CitizenMapper;
 import com.example.mydoctorapp.mapstruct.DoctorMapper;
@@ -21,27 +19,22 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
-import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.example.mydoctorapp.constants.Constants.DOCTOR_TEMPLATE_VALUE;
 import static com.example.mydoctorapp.constants.Constants.ERROR_ATTRIBUTE;
 import static com.example.mydoctorapp.constants.Constants.FAILURE_MESSAGE_ALERT;
 import static com.example.mydoctorapp.constants.Constants.GENERIC_ERROR_FOR_UI;
 import static com.example.mydoctorapp.constants.Constants.INDEX_VIEW;
-import static com.example.mydoctorapp.constants.Constants.MAIN_TEMPLATE_VALUE;
 import static com.example.mydoctorapp.constants.Constants.REGEX_EMAIL_FORMAT;
 import static com.example.mydoctorapp.constants.Constants.SUCCESS_MESSAGE_ALERT;
 import static com.example.mydoctorapp.entities.DoctorAccount_.email;
-import static com.example.mydoctorapp.entities.DoctorAccount_.fullName;
 import static com.example.mydoctorapp.utils.MyDoctorAppUtils.getCurrentTimeInGMT3;
 
 @Service
@@ -67,11 +60,10 @@ public class DoctorService {
             model.addAttribute("patientList", patientList);
             return "super_user_view";
 
-        }catch (GuiException e) {
-            model.addAttribute(ERROR_ATTRIBUTE,e.getMessage());
+        } catch (GuiException e) {
+            model.addAttribute(ERROR_ATTRIBUTE, e.getMessage());
             return INDEX_VIEW;
-        }
-        catch (InvalidDataAccessResourceUsageException e) {
+        } catch (InvalidDataAccessResourceUsageException e) {
             model.addAttribute(ERROR_ATTRIBUTE, "Something is wrong with schema or database, contact your administrators.");
             return INDEX_VIEW;
         } catch (Exception e) {
@@ -85,12 +77,12 @@ public class DoctorService {
         var email = user.getEmail();
         var subId = user.getSubject();
         var speciality = "";
-        try{
+        try {
             speciality = user.getClaims().get("speciality").toString();
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new GuiException("Please contact with administrator to add you a speciality.");
         }
-        return doctorAccountRepository.save(new DoctorAccount(subId,email,fullName,speciality));
+        return doctorAccountRepository.save(new DoctorAccount(subId, email, fullName, speciality));
     }
 
     private void isValidEmailFormat(String email, boolean verifiedEmail) {
@@ -98,11 +90,11 @@ public class DoctorService {
         if (!emailPattern || !verifiedEmail) throw new InvalidEmailFormatException(email);
     }
 
-    public void addPatient(Long citizenId, Long doctorId, RedirectAttributes redirectAttributes) {
+    public void addPatient(String citizenId, String doctorId, RedirectAttributes redirectAttributes) {
 
         try {
             log.info("Citizen id: {} doctorId : {}", citizenId, doctorId);
-            var citizenInfo = citizenRepository.findById(citizenId).orElseThrow(GuiException::new);
+            var citizenInfo = citizenRepository.findById(Long.valueOf(citizenId)).orElseThrow(GuiException::new);
             var patient = citizenMapper.citizenToPatientAccount(citizenInfo, doctorId);
             if (patientAccountRepository.existsByIdAndDoctorId(patient.getId(), patient.getDoctorId()))
                 throw new GuiException("Patient has already been added, if not showing refresh the doctor page");
@@ -114,24 +106,25 @@ public class DoctorService {
         }
     }
 
-    public void addComment(DoctorViewDTO doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
+    public String addComment(DoctorViewDTO doctorViewDto, Model model) {
         try {
             var patientAccount = patientAccountRepository.findByIdAndDoctorId(doctorViewDto.getPatientId(), doctorViewDto.getDoctorId()).orElseThrow(GuiException::new);
             patientAccount.setComments(doctorViewDto.getComment());
             patientAccountRepository.save(patientAccount);
-            redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE_ALERT, "Comment has been changed successfully");
+            model.addAttribute(SUCCESS_MESSAGE_ALERT, "Comment has been changed successfully");
             constructDoctorTabAttributes(doctorViewDto.getDoctorId(), model);
         } catch (Exception e) {
             log.error("An error occurred during edit of the comment of the patient: {} and exception: {}", e.getMessage(), e);
-            redirectAttributes.addFlashAttribute(FAILURE_MESSAGE_ALERT, GENERIC_ERROR_FOR_UI);
+            model.addAttribute(FAILURE_MESSAGE_ALERT, GENERIC_ERROR_FOR_UI);
         }
+        return "super_user_view";
     }
 
     /**
-     * In case an error occured we want to ensure that the record is immutable
+     * In case an error occurred we want to ensure that the record is immutable
      */
     @Transactional
-    public void removePatient(DoctorViewDTO doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
+    public String removePatient(DoctorViewDTO doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
         try {
             patientAccountRepository.deleteById(doctorViewDto.getPatientId());
             constructDoctorTabAttributes(doctorViewDto.getDoctorId(), model);
@@ -139,6 +132,7 @@ public class DoctorService {
             log.error("An error occurred removing the patient: {} with exception: {}", e.getMessage(), e);
             redirectAttributes.addFlashAttribute(FAILURE_MESSAGE_ALERT, GENERIC_ERROR_FOR_UI);
         }
+        return "super_user_view";
     }
 
     private void constructDoctorTabAttributes(String doctorId, Model model) {

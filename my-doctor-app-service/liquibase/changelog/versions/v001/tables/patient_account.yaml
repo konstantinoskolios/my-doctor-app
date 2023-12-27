@@ -9,6 +9,8 @@ databaseChangeLog:
               - column:
                   name: id
                   type: VARCHAR(255)
+                  constraints:
+                    nullable: false
               - column:
                   name: first_name
                   type: VARCHAR(50)

@@ -10,8 +10,8 @@
 
     <style>
         tbody tr:hover {
-            background-color: #f5f5f5;
-            cursor: pointer;
+	        background-color: #f5f5f5;
+	        cursor: pointer;
         }
     </style>
 </head>
@@ -33,7 +33,7 @@
 <div class="container">
     <h1>Citizen Search</h1>
 
-    <!-- Sort and Order Form -->
+	<!-- Sort and Order Form -->
     <form class="mb-3" method="GET" th:action="@{/citizens/all}">
         <div class="form-row align-items-center">
             <div class="col-auto">
@@ -57,7 +57,7 @@
         </div>
     </form>
 
-    <!-- Search Form -->
+	<!-- Search Form -->
     <form class="mb-3" method="GET" th:action="@{/citizens/all}">
         <div class="input-group">
             <input class="form-control" name="searchBy" placeholder="Search by Tax, Mobile, or Social Number"
@@ -90,7 +90,7 @@
             <td th:text="${citizen.phoneNumber}"/>
             <td th:text="${citizen.birthdate}"/>
             <td>
-                <form action="/citizens/add" method="post">
+                <form action="/super-user/user/add" method="post">
                     <input name="citizenId" th:value="${citizen.id}" type="hidden"/>
                     <input name="doctorId" th:value="${doctorId}" type="hidden"/>
                     <button class="btn btn-primary" id="add-patient-button" type="submit">Add Patient</button>
@@ -99,7 +99,7 @@
         </tbody>
     </table>
 
-    <!-- Pagination -->
+	<!-- Pagination -->
     <ul class="pagination">
         <li class="page-item" th:if="${citizens.hasPrevious()}">
             <a class="page-link" th:href="@{/citizens/all(page=0)}">First</a>
@@ -115,7 +115,7 @@
         </li>
     </ul>
 
-    <!-- Display current page and items -->
+	<!-- Display current page and items -->
     <div class="text-center mt-3">
         <p class="mb-0" th:text="'Page ' + ${citizens.number + 1} + ' of ' + ${citizens.totalPages}"></p>
         <p class="mb-0"
@@ -126,17 +126,17 @@
 
     <script th:if="${successMessage}">
         (() => {
-            setTimeout(() => {
-                document.getElementById('successMessage').style.display = 'none';
-            }, 2000);
+	        setTimeout(() => {
+		        document.getElementById('successMessage').style.display = 'none';
+	        }, 2000);
         })();
     </script>
 
     <script th:if="${failureMessage}">
         (() => {
-            setTimeout(() => {
-                document.getElementById('failureMessage').style.display = 'none';
-            }, 4000);
+	        setTimeout(() => {
+		        document.getElementById('failureMessage').style.display = 'none';
+	        }, 4000);
         })();
     </script>
 
@@ -144,22 +144,22 @@
         var doctorId = localStorage.getItem("doctorId")
         var doctorInputs = document.querySelectorAll('input[name="doctorId"]')
         doctorInputs.forEach((input) => {
-            input.value = doctorId
+	        input.value = doctorId
         })
         console.log(doctorId)
     </script>
 
     <script>
         window.addEventListener("beforeunload", (e) => {
-            notifyAndReloadParent();
+	        notifyAndReloadParent();
         });
 
         function notifyAndReloadParent() {
-            window.opener.location.reload();
+	        window.opener.location.reload();
         }
 
         document.getElementById("add-patient-button").addEventListener("click", () => {
-            notifyAndReloadParent();
+	        notifyAndReloadParent();
         })
 
     </script>
