@@ -1,5 +1,6 @@
 rootProject.name = 'my-doctor-app'
 include 'payment-service'
+include 'notification-service'
 include 'my-doctor-app-service'
 include 'discovery-server'
 include 'api-gateway'
