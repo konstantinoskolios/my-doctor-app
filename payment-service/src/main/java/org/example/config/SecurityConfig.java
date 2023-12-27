@@ -21,8 +21,6 @@ public class SecurityConfig {
                 .authorizeExchange(ex -> ex
                         .pathMatchers("/**").hasAnyRole(DOCTOR_APP_ADMIN, DOCTOR_APP_USER, DOCTOR_APP_SUPER_USER)
                         .anyExchange().permitAll())
-                .oauth2ResourceServer(configurer -> configurer
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(new KeycloakJwtConverter())))
                 .csrf(ServerHttpSecurity.CsrfSpec::disable);
 
         return serverHttpSecurity.build();

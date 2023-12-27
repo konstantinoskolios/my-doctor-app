@@ -7,7 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 import java.util.TimeZone;
 
 @SpringBootApplication
-//@EnableEurekaClient
 @PropertySource("classpath:.env")
 public class MyDoctorAppApplication {
 

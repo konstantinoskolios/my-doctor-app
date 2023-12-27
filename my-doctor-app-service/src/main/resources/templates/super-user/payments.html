@@ -24,18 +24,57 @@
     </table>
 </div>
 
+<!-- <form method="POST" action="https://site.auth.com/oauth/token"> &lt;!&ndash;layout:fragment="bodyContent" depth&ndash;&gt; -->
+<!--     <div class="container">         -->
+<!--       <h1>Login</h1> -->
+<!--       <label for="username">Username</label> -->
+<!--       <input type="text" id="username" name="username"><br> -->
+<!--       <label for="password">Password</label> -->
+<!--       <input type="password" id="password" name="password"><br> -->
+<!--       <input type="hidden" name="grant_type" value="code_authenticate"> -->
+<!--       <input type="hidden" name="client_id" value="XEeJYNqbZT_mIra2qJrh-ibkU-8xbyYnRQUFDZy5"> -->
+<!--       <input type="hidden" name="response_type" value="code"> -->
+<!--       <input type="hidden" name="redirect_uri" value="https://site.client.com"> -->
+<!--       <input type="submit" value="Login"> -->
+<!--     </div> -->
+<!-- </form> -->
+
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-	    // You may include additional JavaScript logic if needed
-	    document.getElementById('paymentsTab').addEventListener('click', () => {
-		    fetch('payments/getPayments')
-				    .then(res => res.json())
-				    .then(data => {
-					    updatePaymentsTab(data)
-				    }).catch(err => {
-			    console.log("Error fetching payments: ", err);
-		    });
-	    });
+
+		document.addEventListener('DOMContentLoaded', async () => {
+			try {
+				// Fetch OAuth2 token first
+				const tokenResponse = await fetch('http://localhost:8080/realms/doctor-app-realm/protocol/openid-connect/token', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+					body: new URLSearchParams({
+						'grant_type': 'client_credentials',
+						'client_id': 'doctor-app',
+						'client_secret': '07YgTOkhoVLy8jrHs0wEIHGqcJHmgevs'
+					}),
+				});
+
+				console.log("Part 1 Completed!")
+
+				const tokenData = await tokenResponse.json();
+				const accessToken = tokenData.access_token;
+
+				// Fetch payment data using the obtained token
+				const paymentResponse = await fetch('http://localhost:9999/api/payment/retrieve', {
+					headers: {
+						'Authorization': 'Bearer ' + accessToken,
+						'Content-Type': 'application/json',
+					},
+				});
+
+				const paymentData = await paymentResponse.json();
+				updatePaymentsTab(paymentData);
+			} catch (error) {
+				console.log("Error: ", error);
+			}
+		});
 
 	    var updatePaymentsTab = (paymentsList) => {
 		    const paymentsTabContent = document.getElementById('payments');
@@ -57,8 +96,5 @@
 		    });
 
 		    paymentsTabContent.appendChild(table);
-
-	    }
-
-    });
+	    };
 </script>

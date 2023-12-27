@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/api/payments")
+@RequestMapping(value = "/api/payment")
 @RequiredArgsConstructor
 public class PaymentController {
 
