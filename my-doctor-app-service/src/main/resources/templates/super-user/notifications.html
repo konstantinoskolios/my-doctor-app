@@ -1,5 +1,54 @@
-<div class="tab-pane fade" id="notifications">
-    <h2>Notifications</h2>
-	<!-- Add content specific to the Notifications tab -->
-	<!-- ... Include the notifications content ... -->
+<div class="tab-pane fade in show active" id="patients">
+    <table class="table table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>Full Name</th>
+                <th>Social Security Number</th>
+                <th>Phone Number</th>
+                <th>Appointment Date</th>
+	            <th>Status</th>
+	            <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="appointment : ${Appointments}">
+                <td th:text="${appointment.fullName}"></td>
+                <td th:text="${appointment.socialSecurityNumber}"></td>
+                <td th:text="${appointment.phoneNumber}"></td>
+                <td th:text="${appointment.totalPrescriptions}"></td>
+                <td th:text="${appointment.date}"></td>
+                <td th:text="${appointment.date}"></td>
+                <td>
+                    <div aria-label="Patient Actions" class="btn-group" role="group">
+                        <button class="btn btn-primary mr-2"
+                                onclick="addPrescription(
+                                    this.getAttribute('add-prescription-patient-id'),
+                                    this.getAttribute('add-prescription-doctor-id'),
+                                    this.getAttribute('add-prescription-patient-first-name'),
+                                    this.getAttribute('add-prescription-patient-last-name')
+                                )"
+                                th:attr="
+                                add-prescription-patient-id=${patient.id},
+                                add-prescription-doctor-id=${doctorAccount.id},
+                                add-prescription-patient-first-name=${patient.firstName},
+                                add-prescription-patient-last-name=${patient.lastName}
+                                ">Add Prescription
+                        </button>
+
+                        <button class="btn btn-danger"
+                                onclick="removePatient(this.getAttribute('remove-patient-id'), this.getAttribute('remove-doctor-id'))"
+                                th:attr="remove-patient-id=${patient.id}, remove-doctor-id=${doctorAccount.id}"> Remove
+                            Patient
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+	    // You may include additional JavaScript logic if needed
+    });
+</script>

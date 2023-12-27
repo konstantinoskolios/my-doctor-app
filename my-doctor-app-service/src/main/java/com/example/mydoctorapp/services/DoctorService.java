@@ -126,6 +126,7 @@ public class DoctorService {
     @Transactional
     public String removePatient(DoctorViewDTO doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
         try {
+            //isHavingPayments? then throw exception else delete id.
             patientAccountRepository.deleteById(doctorViewDto.getPatientId());
             constructDoctorTabAttributes(doctorViewDto.getDoctorId(), model);
         } catch (Exception e) {
