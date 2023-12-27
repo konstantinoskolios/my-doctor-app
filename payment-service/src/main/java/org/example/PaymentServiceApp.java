@@ -8,9 +8,9 @@ import java.util.TimeZone;
 
 @SpringBootApplication
 @EnableEurekaClient
-public class DummyServiceApp {
+public class PaymentServiceApp {
     public static void main(String[] args) {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-        SpringApplication.run(DummyServiceApp.class, args);
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+3"));
+        SpringApplication.run(PaymentServiceApp.class, args);
     }
 }

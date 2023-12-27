@@ -10,14 +10,17 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
+    public static final String DOCTOR_APP_USER = "doctor-app-user";
+    public static final String DOCTOR_APP_ADMIN = "doctor-app-admin";
+    public static final String DOCTOR_APP_SUPER_USER = "doctor-app-super-user";
+
+
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity serverHttpSecurity) {
 
         serverHttpSecurity
                 .authorizeExchange()
-                .pathMatchers("/api/*/admin/**").hasRole("admin")
-                .pathMatchers("/api/*/user/**").hasRole("user")
-                .pathMatchers("/api/*/public/**").authenticated()
+                .pathMatchers("/**").hasAnyRole(DOCTOR_APP_ADMIN,DOCTOR_APP_USER,DOCTOR_APP_SUPER_USER)
                 .anyExchange().permitAll()
                 .and()
                 .oauth2ResourceServer()
