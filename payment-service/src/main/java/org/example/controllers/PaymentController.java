@@ -1,11 +1,15 @@
 package org.example.controllers;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.example.entities.Payment;
+import org.example.model.PaymentRequest;
+import org.example.model.PaymentResponse;
+import org.example.service.PaymentService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -15,39 +19,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PaymentController {
 
+    private final PaymentService paymentService;
+
     @GetMapping("/retrieve")
-    public PaymentResponse test() {
+    public PaymentResponse retrievePayments(@RequestParam String doctorId) {
+        var payments = paymentService.retrievePayments(doctorId);
+        var paymentsTotal = payments.stream().mapToLong(Payment::getAmount).sum();
+        return new PaymentResponse(payments, paymentsTotal);
 
-        var payments = List.of(
-                new Payment("John Smith", "112211234", "11223312345", "444444444", "20-01-2003", 30L),
-                new Payment("Peter Dang", "554433231", "22112321234", "111221123", "20-10-2024", 5L),
-                new Payment("Paola ALenk", "112211234", "3341123456", "112233123", "95-05-5999", 9L)
-        );
-        var paymentsTotal = payments.stream().mapToLong(Payment::getTotalAmount).sum();
-        return new PaymentResponse(payments,paymentsTotal);
+    }
 
+    @PostMapping("/add")
+    public void addPayment(@RequestBody PaymentRequest paymentRequest) {
+        paymentService.addPayment(paymentRequest);
     }
 
 }
 
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-class Payment {
-    private String fullName;
-    private String taxNumber;
-    private String socialSecurityNumber;
-    private String phoneNumber;
-    private String date;
-    private Long totalAmount;
-}
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-class PaymentResponse {
-    private List<Payment> paymentsList;
-    private Long totalAmountSum;
-}
 
