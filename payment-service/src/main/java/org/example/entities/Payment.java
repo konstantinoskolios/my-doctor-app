@@ -8,8 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import static org.example.utils.PaymentUtil.formatDate;
-import static org.example.utils.PaymentUtil.generateRandomAmount;
 
 @Data
 @AllArgsConstructor
@@ -27,7 +28,7 @@ public class Payment {
     public Payment(String patientId, String doctorId) {
         this.patientId = patientId;
         this.doctorId = doctorId;
-        this.amount = generateRandomAmount();
+        this.amount = ThreadLocalRandom.current().nextLong(10,100);
         this.createdDate = formatDate(System.currentTimeMillis());
     }
 

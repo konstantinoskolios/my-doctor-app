@@ -6,67 +6,68 @@
                 <th>Tax Number</th>
                 <th>Social Security Number</th>
                 <th>Phone Number</th>
-	            <th>Date</th>
+                <th>Date</th>
                 <th>Amount</th>
             </tr>
         </thead>
-	    <tbody id="paymentTableBody"></tbody>
+        <tbody id="paymentTableBody"></tbody>
     </table>
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+	    try {
+		    // Fetch OAuth2 token first
+		    const tokenResponse = await fetch('http://localhost:8080/realms/doctor-app-realm/protocol/openid-connect/token', {
+			    method: 'POST',
+			    headers: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+			    },
+			    body: new URLSearchParams({
+				    'grant_type': 'client_credentials',
+				    'client_id': 'doctor-app',
+				    'client_secret': '07YgTOkhoVLy8jrHs0wEIHGqcJHmgevs'
+			    }),
+		    });
 
-		document.addEventListener('DOMContentLoaded', async () => {
-			try {
-				// Fetch OAuth2 token first
-				const tokenResponse = await fetch('http://localhost:8080/realms/doctor-app-realm/protocol/openid-connect/token', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded',
-					},
-					body: new URLSearchParams({
-						'grant_type': 'client_credentials',
-						'client_id': 'doctor-app',
-						'client_secret': '07YgTOkhoVLy8jrHs0wEIHGqcJHmgevs'
-					}),
-				});
+		    console.log("Part 1 Completed!");
 
-				console.log("Part 1 Completed!")
+		    const tokenData = await tokenResponse.json();
+		    const accessToken = tokenData.access_token;
 
-				const tokenData = await tokenResponse.json();
-				const accessToken = tokenData.access_token;
+		    const paymentResponse = await fetch(`http://localhost:9999/api/payment/retrieve?doctorId=${doctorId}`, {
+			    headers: {
+				    'Authorization': 'Bearer ' + accessToken,
+				    'Content-Type': 'application/json',
+			    },
+		    });
 
-				// Fetch payment data using the obtained token
-				const paymentResponse = await fetch('http://localhost:9999/api/payment/retrieve', {
-					headers: {
-						'Authorization': 'Bearer ' + accessToken,
-						'Content-Type': 'application/json',
-					},
-				});
+		    if (!paymentResponse.ok) {
+			    throw new Error(`Failed to fetch payment data. Status: ${paymentResponse.status}`);
+		    }
 
-				const paymentData = await paymentResponse.json();
+		    const paymentData = await paymentResponse.json();
 
-				updatePaymentsTab(paymentData);
-			} catch (error) {
-				console.log("Error: ", error);
-			}
-		});
+		    updatePaymentsTab(paymentData);
+	    } catch (error) {
+		    console.log("Error: ", error);
+	    }
+    });
 
-		var updatePaymentsTab = (paymentData) => {
-			const paymentTableBody = document.getElementById('paymentTableBody');
-			const totalAmountSumElement = document.getElementById('totalAmountSum');
+    const updatePaymentsTab = (paymentData) => {
+	    const paymentTableBody = document.getElementById('paymentTableBody');
 
-			// Clear existing content
-			if (paymentTableBody.innerHTML.length > 2) {
-				paymentTableBody.innerHTML = ''
-			}
+	    // Clear existing content
+	    paymentTableBody.innerHTML = '';
 
-			let totalSum = 0; // Variable to store the total sum
+	    let totalSum = 0;
 
-			// Create table rows in the tbody
-			paymentData.paymentsList.forEach(payment => {
-				const row = paymentTableBody.insertRow();
-				row.innerHTML = `
+		console.log(paymentData)
+		console.log(paymentData.paymentsList)
+	    // Create table rows in the tbody
+	    paymentData.paymentsList.forEach(payment => {
+		    const row = paymentTableBody.insertRow();
+		    row.innerHTML = `
                 <td>${payment.fullName}</td>
                 <td>${payment.taxNumber}</td>
                 <td>${payment.socialSecurityNumber}</td>
@@ -75,17 +76,14 @@
                 <td>${payment.totalAmount}</td>
             `;
 
-				totalSum += parseFloat(payment.totalAmount);
-			});
+		    totalSum += parseFloat(payment.totalAmount);
+	    });
 
-			const totalSumRow = paymentTableBody.insertRow();
-			totalSumRow.innerHTML = `
-        <td colspan="5"></td>
-        <td style="color: green">${totalSum.toFixed(2)}</td>
-    `;
-
-		};
+	    // Add total sum row
+	    const totalSumRow = paymentTableBody.insertRow();
+	    totalSumRow.innerHTML = `
+            <td colspan="5"></td>
+            <td style="color: green">${totalSum.toFixed(2)}</td>
+        `;
+    };
 </script>
-
-</script>
-

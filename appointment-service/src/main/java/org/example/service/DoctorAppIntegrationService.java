@@ -16,10 +16,10 @@ public class DoctorAppIntegrationService {
 
     private final WebClient.Builder webclientBuilder;
 
-    public PatientDetailsResponse retrievePatientsInformation(String token, List<String> patientsId){
-       return webclientBuilder.build()
+    public PatientDetailsResponse retrievePatientsInformation(String token, List<String> patientsId) {
+        return webclientBuilder.build()
                 .post()
-                .uri("http://doctorapp:9999/api/patient/retrieve-patients-info")
+                .uri("http://doctor-app:8500/api/doctor-app/patient/retrieve-patient-info")
                 .header("Authorization", token)
                 .contentType(APPLICATION_JSON)
                 .body(BodyInserters.fromValue(patientsId))

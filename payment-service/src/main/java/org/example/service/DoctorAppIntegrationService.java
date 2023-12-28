@@ -1,28 +1,30 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.model.PaymentRequest;
+import org.example.model.PatientDetailsResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Service
 @RequiredArgsConstructor
-public class PaymentIntegrationService {
+public class DoctorAppIntegrationService {
 
     private final WebClient.Builder webclientBuilder;
 
-    public void addPayment(String token, PaymentRequest paymentRequest) {
-        webclientBuilder.build()
+    public PatientDetailsResponse retrievePatientsInformation(String token, List<String> patientsId){
+        return webclientBuilder.build()
                 .post()
-                .uri("http://payment-service:9999/api/payment/add")
+                .uri("http://doctor-app:8500/api/doctor-app/patient/retrieve-patient-info")
                 .header("Authorization", token)
                 .contentType(APPLICATION_JSON)
-                .body(BodyInserters.fromValue(paymentRequest))
+                .body(BodyInserters.fromValue(patientsId))
                 .retrieve()
-                .bodyToMono(Void.class)
+                .bodyToMono(PatientDetailsResponse.class)
                 .block();
     }
 }

@@ -28,7 +28,7 @@
     var fetchAndDisplayAppointmentData = async () => {
 	    try {
 		    const appointmentData = await getAppointmentData();
-		    updateNotificationsTab(appointmentData);
+		    updateAppointmentsTab(appointmentData);
 	    } catch (error) {
 		    console.error("Error fetching and displaying appointment data:", error);
 	    }
@@ -71,7 +71,7 @@
 	    }
     };
 
-    var updateNotificationsTab = (appointmentData) => {
+    var updateAppointmentsTab = (appointmentData) => {
 	    const appointmentTableBody = document.getElementById('appointmentTableBody');
 
 	    if (appointmentTableBody.innerHTML.length > 2) {
@@ -95,14 +95,14 @@
     };
 
     var handleAccept = async (appointmentId) => {
-	    await sendNotificationResponse(appointmentId, "Accept");
+	    await sendAppointmentResponse(appointmentId, "Accept");
     };
 
     var handleReject = async (appointmentId) => {
-	    await sendNotificationResponse(appointmentId, "Reject");
+	    await sendAppointmentResponse(appointmentId, "Reject");
     };
 
-    var sendNotificationResponse = async (appointmentId, isAccepted) => {
+    var sendAppointmentResponse = async (appointmentId, isAccepted) => {
 	    try {
 		    const response = await
 				    fetch(`http://localhost:9999/api/appointment/status/${appointmentId}?isAccepted=${isAccepted}`, {
@@ -115,7 +115,7 @@
 
 		    if (response.ok) {
 			    await fetchAndDisplayAppointmentData();
-			    console.log(`Notification ${isAccepted ? 'accepted' : 'rejected'} successfully.`);
+			    console.log(`Appointment ${isAccepted ? 'accepted' : 'rejected'} successfully.`);
 		    } else {
 			    // Handle error
 			    console.error('Error sending appointment response:', response.statusText);
