@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: appointment-service
+  #  enable jpa.show-sql only for debug testing/debugging proposes
+  #  jpa:
+  #    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: pgtest
+    password: pgtest
+    driver-class-name: org.postgresql.Driver
