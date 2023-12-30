@@ -38,11 +38,11 @@
 
 	    const appointmentResponse = await
 			    fetch(`http://localhost:9999/api/appointment/doctor/retrieve?doctorId=${doctorId}`, {
-		    headers: {
-			    'Authorization': 'Bearer ' + accessToken,
-			    'Content-Type': 'application/json',
-		    },
-	    });
+				    headers: {
+					    'Authorization': 'Bearer ' + accessToken,
+					    'Content-Type': 'application/json',
+				    },
+			    });
 
 	    if (!appointmentResponse.ok) {
 		    throw new Error(`Error fetching appointment data: ${appointmentResponse.statusText}`);
@@ -107,12 +107,12 @@
 	    try {
 		    const response = await
 				    fetch(`http://localhost:9999/api/appointment/status/${appointmentId}?isAccepted=${isAccepted}`, {
-			    method: 'POST',
-			    headers: {
-				    'Authorization': 'Bearer ' + accessToken,
-				    'Content-Type': 'application/json',
-			    },
-		    });
+					    method: 'POST',
+					    headers: {
+						    'Authorization': 'Bearer ' + accessToken,
+						    'Content-Type': 'application/json',
+					    },
+				    });
 
 		    if (response.ok) {
 			    await fetchAndDisplayAppointmentData();

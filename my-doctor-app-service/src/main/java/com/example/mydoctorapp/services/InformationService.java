@@ -2,11 +2,11 @@ package com.example.mydoctorapp.services;
 
 import com.example.mydoctorapp.model.DoctorDetailsResponse;
 import com.example.mydoctorapp.model.DoctorInformation;
+import com.example.mydoctorapp.model.PatientDetailsResponse;
+import com.example.mydoctorapp.model.PatientInformation;
 import com.example.mydoctorapp.repositories.DoctorAccountRepository;
 import com.example.mydoctorapp.repositories.PatientAccountRepository;
 import lombok.RequiredArgsConstructor;
-import com.example.mydoctorapp.model.PatientDetailsResponse;
-import com.example.mydoctorapp.model.PatientInformation;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -30,7 +30,6 @@ public class InformationService {
                         data.getPhoneNumber()
                 ))
         );
-
         return new PatientDetailsResponse(patientInformation);
     }
 
@@ -44,7 +43,6 @@ public class InformationService {
                         data.getSpeciality()
                 ))
         );
-
         return new DoctorDetailsResponse(doctorInformation);
     }
 

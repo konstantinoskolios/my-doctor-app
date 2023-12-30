@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import static com.example.mydoctorapp.constants.Constants.PRESCRIPTIONS_TEMPLATE_VALUE;
+import static com.example.mydoctorapp.constants.Constants.SUPER_USER_VIEW;
 
 @Controller
 @RequiredArgsConstructor
@@ -39,17 +40,19 @@ public class SuperUserController {
             @RequestParam String doctorId,
             RedirectAttributes redirectAttributes) {
         doctorService.addPatient(citizenId, doctorId, redirectAttributes);
-        return "redirect:/citizens/all"; // Adjust the URL as needed
+        return "redirect:/citizens/all";
     }
 
     @PostMapping("user/add/comment")
     public String addComment(@RequestBody DoctorViewDTO doctorViewDto, Model model) {
-        return doctorService.addComment(doctorViewDto, model);
+        doctorService.addComment(doctorViewDto, model);
+        return SUPER_USER_VIEW;
     }
 
     @DeleteMapping("user/remove")
     public String removePatient(@RequestBody DoctorViewDTO doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
-        return doctorService.removePatient(doctorViewDto, redirectAttributes, model);
+        doctorService.removePatient(doctorViewDto, redirectAttributes, model);
+        return SUPER_USER_VIEW;
     }
 
     @PostMapping("user/add/prescription")
