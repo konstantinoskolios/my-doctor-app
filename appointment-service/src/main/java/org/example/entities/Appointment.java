@@ -8,6 +8,9 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.enums.AppointmentStatus;
+
+import static org.example.utility.CalendarUtility.formatDate;
 
 @Entity
 @Table(name = "appointment")
@@ -24,5 +27,11 @@ public class Appointment {
     private String createdDate;
     private String status;
 
-
+    public Appointment(String patientId, String doctorId, String appointmentDate) {
+        this.patientId = patientId;
+        this.doctorId = doctorId;
+        this.appointmentDate = appointmentDate;
+        this.createdDate = formatDate(System.currentTimeMillis());
+        this.status = AppointmentStatus.PENDING.getValue();
+    }
 }
