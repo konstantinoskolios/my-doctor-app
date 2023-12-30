@@ -1,0 +1,105 @@
+<div class="tab-pane fade in show active" id="appointments">
+    <table class="table table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Speciality</th>
+                <th>Appointment Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="appointmentPatientTableBody"></tbody>
+    </table>
+</div>
+
+
+<style>
+
+	 .text-success {
+		 color: #28a745;
+	 }
+
+	 .text-danger {
+		 color: #dc3545;
+	 }
+
+	 .text-warning {
+		 color: #ffc107;
+	 }
+</style>
+
+<script>
+	    let accessToken;
+	    let patientId = "1542";
+
+	    document.addEventListener('DOMContentLoaded', async () => {
+		    accessToken = await getToken(); // Get and store the access token
+		    console.log("Success -> PatientAppointmentToken")
+
+		    await fetchAndDisplayPatientAppointmentData();
+	    });
+
+	    var fetchAndDisplayPatientAppointmentData = async () => {
+		    try {
+			    const appointmentData = await getPatientAppointmentData();
+			    updatePatientAppointmentsTab(appointmentData);
+		    } catch (error) {
+			    console.error("Error fetching and displaying appointment data:", error);
+		    }
+	    };
+
+	    var getPatientAppointmentData = async () => {
+
+		    const appointmentResponse = await
+				    fetch(`http://localhost:9999/api/appointment/patient/retrieve?patientId=${patientId}`, {
+			    headers: {
+				    'Authorization': 'Bearer ' + accessToken,
+				    'Content-Type': 'application/json',
+			    },
+		    });
+
+		    if (!appointmentResponse.ok) {
+			    throw new Error(`Error fetching appointment data: ${appointmentResponse.statusText}`);
+		    }
+
+		    return await appointmentResponse.json();
+	    };
+
+	    var updatePatientAppointmentsTab = (appointmentData) => {
+		    const appointmentTableBody = document.getElementById('appointmentPatientTableBody');
+
+		    if (appointmentTableBody.innerHTML.length > 2) {
+			    appointmentTableBody.innerHTML = ''
+		    }
+
+		    appointmentData.patientAppointments.forEach(appointment => {
+			    const row = appointmentTableBody.insertRow();
+
+			    let statusClass = '';
+			    switch (appointment.status) {
+				    case 'Accept':
+					    statusClass = 'text-success'; // soft green
+					    break;
+				    case 'Reject':
+					    statusClass = 'text-danger'; // soft red
+					    break;
+				    case 'Pending':
+					    statusClass = 'text-warning'; // soft orange
+					    break;
+				    default:
+					    statusClass = '';
+			    }
+
+			    row.innerHTML = `
+            <td class="${statusClass}">${appointment.fullName}</td>
+            <td class="${statusClass}">${appointment.email}</td>
+            <td class="${statusClass}">${appointment.speciality}</td>
+            <td class="${statusClass}">${appointment.appointmentDate}</td>
+            <td class="${statusClass}">${appointment.status}</td>
+        `;
+		    });
+	    };
+
+
+</script>

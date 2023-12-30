@@ -11,6 +11,8 @@ import com.example.mydoctorapp.exceptions.GuiException;
 import com.example.mydoctorapp.exceptions.InvalidEmailFormatException;
 import com.example.mydoctorapp.mapstruct.CitizenMapper;
 import com.example.mydoctorapp.mapstruct.DoctorMapper;
+import com.example.mydoctorapp.model.AppointmentRequest;
+import com.example.mydoctorapp.model.AvailableDatesResponse;
 import com.example.mydoctorapp.repositories.CitizenRepository;
 import com.example.mydoctorapp.repositories.DoctorAccountRepository;
 import com.example.mydoctorapp.repositories.PatientAccountRepository;
@@ -22,9 +24,15 @@ import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -47,6 +55,7 @@ public class DoctorService {
     private final PrescriptionDetailRepository prescriptionDetailRepository;
     private final DoctorMapper doctorMapper;
     private final CitizenMapper citizenMapper;
+    private final RestTemplate restTemplate;
 
 
     //    @Transactional #problem with redirect
@@ -181,5 +190,27 @@ public class DoctorService {
         model.addAttribute("categories", categories);
         model.addAttribute("prescriptions", prescriptions);
         model.addAttribute("prescriptionsDetails", prescriptionsDetails);
+    }
+
+    public void getAllDoctors(Model model) {
+        var doctors = doctorAccountRepository.findAll();
+        if (!doctors.isEmpty()) {
+            model.addAttribute("doctorsList", doctors);
+            model.addAttribute("patientId","100");
+        }
+    }
+
+    public List<String> getAvailableDates(String doctorId) {
+
+        return Objects.requireNonNull(
+                restTemplate
+                        .getForObject("http://appointment-service:9999/api/appointment/dates?doctorId=" + doctorId,
+                                AvailableDatesResponse.class)).dates();
+    }
+
+    public String scheduleAppointment(AppointmentRequest appointmentRequest) {
+        return restTemplate.postForObject("http://appointment-service:9999/api/appointment/add",
+                appointmentRequest,
+                String.class);
     }
 }

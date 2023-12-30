@@ -1,4 +1,4 @@
-package model;
+package com.example.mydoctorapp.model;
 
 import java.util.Map;
 

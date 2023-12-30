@@ -20,7 +20,7 @@
 
     document.addEventListener('DOMContentLoaded', async () => {
 	    accessToken = await getToken(); // Get and store the access token
-	    console.log("Part 1 Completed!");
+	    console.log("Success -> doctorAppointmentToken")
 
 	    await fetchAndDisplayAppointmentData();
     });
@@ -36,7 +36,8 @@
 
     var getAppointmentData = async () => {
 
-	    const appointmentResponse = await fetch(`http://localhost:9999/api/appointment/retrieve?doctorId=${doctorId}`, {
+	    const appointmentResponse = await
+			    fetch(`http://localhost:9999/api/appointment/doctor/retrieve?doctorId=${doctorId}`, {
 		    headers: {
 			    'Authorization': 'Bearer ' + accessToken,
 			    'Content-Type': 'application/json',

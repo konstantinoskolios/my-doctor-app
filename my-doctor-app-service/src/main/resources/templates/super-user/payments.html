@@ -17,7 +17,6 @@
 <script>
     document.addEventListener('DOMContentLoaded', async () => {
 	    try {
-		    // Fetch OAuth2 token first
 		    const tokenResponse = await fetch('http://localhost:8080/realms/doctor-app-realm/protocol/openid-connect/token', {
 			    method: 'POST',
 			    headers: {
@@ -57,14 +56,8 @@
     const updatePaymentsTab = (paymentData) => {
 	    const paymentTableBody = document.getElementById('paymentTableBody');
 
-	    // Clear existing content
 	    paymentTableBody.innerHTML = '';
 
-	    let totalSum = 0;
-
-		console.log(paymentData)
-		console.log(paymentData.paymentsList)
-	    // Create table rows in the tbody
 	    paymentData.paymentsList.forEach(payment => {
 		    const row = paymentTableBody.insertRow();
 		    row.innerHTML = `
@@ -73,17 +66,14 @@
                 <td>${payment.socialSecurityNumber}</td>
                 <td>${payment.phoneNumber}</td>
                 <td>${payment.date}</td>
-                <td>${payment.totalAmount}</td>
+                <td>${payment.amount}</td>
             `;
-
-		    totalSum += parseFloat(payment.totalAmount);
 	    });
 
-	    // Add total sum row
 	    const totalSumRow = paymentTableBody.insertRow();
 	    totalSumRow.innerHTML = `
             <td colspan="5"></td>
-            <td style="color: green">${totalSum.toFixed(2)}</td>
+            <td style="color: green">${paymentData.totalAmount}</td>
         `;
     };
 </script>

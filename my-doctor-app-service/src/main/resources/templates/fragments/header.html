@@ -18,7 +18,7 @@
             Admin Page
         </a>
         <a class="item" sec:authorize="hasRole('doctor-app-user')"
-           th:href="@{/user-page}">
+           th:href="@{/user/view/details}">
             User Page
         </a>
         <a class="item" sec:authorize="hasAnyRole('doctor-app-super-user')"

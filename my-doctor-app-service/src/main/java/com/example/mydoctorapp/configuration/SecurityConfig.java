@@ -41,9 +41,8 @@ public class SecurityConfig implements WebMvcConfigurer {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-//                        .antMatchers("/static/favicon.ico").permitAll()
                         .requestMatchers("/", "/login", "/public").permitAll()
-                        .requestMatchers("/api/doctor-app/patient/retrieve-patient-info").permitAll() //fixme: workaround asap
+                        .requestMatchers("/api/doctor-app/info/**").permitAll() //fixme: need to find a workaround  to stop redirect (ask for client credential), without permit ip like that way
                         .requestMatchers("/user/**").hasRole(DOCTOR_APP_USER)
                         .requestMatchers("/admin/**").hasRole(DOCTOR_APP_ADMIN)
                         .requestMatchers("/super-user/**").hasRole(DOCTOR_APP_SUPER_USER)

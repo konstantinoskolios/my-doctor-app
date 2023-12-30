@@ -3,3 +3,5 @@ databaseChangeLog:
       path: versions/v001/tables/
   - includeAll:
       path: versions/v002/tables/
+  - includeAll:
+      path: versions/v003/insert/
