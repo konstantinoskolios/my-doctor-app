@@ -2,7 +2,6 @@ package org.example.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.example.model.PaymentRequest;
-import org.example.model.PaymentsResponse;
 import org.example.service.PaymentService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,8 +20,12 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @GetMapping("/retrieve")
-    public PaymentsResponse retrievePayments(@RequestParam String doctorId,  @RequestHeader("Authorization") String token) {
-        return paymentService.retrievePayments(doctorId,token);
+    public Object retrieveDoctorPayments(
+            @RequestParam(required = false) String doctorId,
+            @RequestParam(required = false) String patientId,
+            @RequestHeader("Authorization") String token) {
+        if (doctorId != null && !doctorId.isBlank()) return paymentService.retrieveDoctorPayments(doctorId, token);
+        return paymentService.retrievePatientPayments(patientId, token);
     }
 
     @PostMapping("/add")

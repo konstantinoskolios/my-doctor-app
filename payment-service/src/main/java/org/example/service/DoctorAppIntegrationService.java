@@ -1,6 +1,7 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.model.DoctorDetailsResponse;
 import org.example.model.PatientDetailsResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -19,7 +20,7 @@ public class DoctorAppIntegrationService {
     public PatientDetailsResponse retrievePatientsInformation(String token, List<String> patientsId){
         return webclientBuilder.build()
                 .post()
-                .uri("http://doctor-app:8500/api/doctor-app/patient/retrieve-patient-info")
+                .uri("http://doctor-app:8500/api/doctor-app/info/patient/retrieve-patient-info")
                 .header("Authorization", token)
                 .contentType(APPLICATION_JSON)
                 .body(BodyInserters.fromValue(patientsId))
@@ -27,4 +28,17 @@ public class DoctorAppIntegrationService {
                 .bodyToMono(PatientDetailsResponse.class)
                 .block();
     }
+
+    public DoctorDetailsResponse retrieveDoctorsInformation(String token, List<String> doctorsId){
+        return webclientBuilder.build()
+                .post()
+                .uri("http://doctor-app:8500/api/doctor-app/info/doctor/retrieve-doctor-info")
+                .header("Authorization", token)
+                .contentType(APPLICATION_JSON)
+                .body(BodyInserters.fromValue(doctorsId))
+                .retrieve()
+                .bodyToMono(DoctorDetailsResponse.class)
+                .block();
+    }
+
 }
