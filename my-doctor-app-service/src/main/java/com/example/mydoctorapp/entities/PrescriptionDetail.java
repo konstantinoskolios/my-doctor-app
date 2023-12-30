@@ -1,14 +1,14 @@
 package com.example.mydoctorapp.entities;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,9 +19,9 @@ import javax.persistence.Table;
 @IdClass(PrescriptionDetailId.class)
 public class PrescriptionDetail {
     @Id
-    private Long patientId;
+    private String patientId;
     @Id
-    private Long doctorId;
+    private String doctorId;
     private String category;
     @Id
     private String prescription;

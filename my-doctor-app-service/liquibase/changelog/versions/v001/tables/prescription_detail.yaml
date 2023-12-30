@@ -8,10 +8,14 @@ databaseChangeLog:
             columns:
               - column:
                   name: patient_id
-                  type: BIGINT
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
               - column:
                   name: doctor_id
-                  type: BIGINT
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
               - column:
                   name: category
                   type: VARCHAR(50)

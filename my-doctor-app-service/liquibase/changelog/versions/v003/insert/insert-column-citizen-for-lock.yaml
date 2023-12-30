@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-column-citizen-for-lock
+      author: Konstantinos Kolios
+      changes:
+        - addColumn:
+            tableName: citizen
+            columns:
+              - column:
+                  name: is_locked
+                  type: boolean
+                  defaultValueBoolean: false

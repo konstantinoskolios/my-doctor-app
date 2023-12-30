@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Doctor App</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/hover-icons.css}"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet"
+          type="text/css"/>
+
+    <style>
+        tbody tr:hover {
+	        background-color: #f5f5f5;
+	        cursor: pointer;
+        }
+    </style>
+</head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<body>
+
+<div th:replace="fragments/navbar"></div>
+
+<!-- Add this code at the top of your HTML template to display the success message -->
+<div class="alert alert-success" id="successMessage" th:if="${successMessage}">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div class="alert alert-danger" id="failureMessage" th:if="${failureMessage}">
+    <p th:text="${failureMessage}"></p>
+</div>
+
+
+<div class="container">
+    <h1>Citizen Search</h1>
+
+	<!-- Sort and Order Form -->
+    <form class="mb-3" method="GET" th:action="@{/citizens/all}">
+        <div class="form-row align-items-center">
+            <div class="col-auto">
+                <select class="form-control" name="sortField">
+                    <option value="firstName">First Name</option>
+                    <option value="lastName">Last Name</option>
+                    <option value="fatherFirstName">Father First Name</option>
+                    <option value="taxNumber">Tax Number</option>
+                    <option value="socialSecurityNumber">Social Security Number</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <select class="form-control" name="sortDir">
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-outline-primary" type="submit">Apply Sort</button>
+            </div>
+        </div>
+    </form>
+
+	<!-- Search Form -->
+    <form class="mb-3" method="GET" th:action="@{/citizens/all}">
+        <div class="input-group">
+            <input class="form-control" name="searchBy" placeholder="Search by Tax, Mobile, or Social Number"
+                   type="text">
+            <div class="input-group-append">
+                <button class="btn btn-outline-primary" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Father First Name</th>
+            <th scope="col">Tax Number</th>
+            <th scope="col">Social Security Number</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Birthdate</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="citizen: ${citizens.content}">
+            <td th:text="${citizen.firstName}"/>
+            <td th:text="${citizen.lastName}"/>
+            <td th:text="${citizen.fatherFirstName}"/>
+            <td th:text="${citizen.taxNumber}"/>
+            <td th:text="${citizen.socialSecurityNumber}"/>
+            <td th:text="${citizen.phoneNumber}"/>
+            <td th:text="${citizen.birthdate}"/>
+            <td>
+                <form action="/super-user/user/add" method="post">
+                    <input name="citizenId" th:value="${citizen.id}" type="hidden"/>
+                    <input name="doctorId" th:value="${doctorId}" type="hidden"/>
+                    <button class="btn btn-primary" id="add-patient-button" type="submit">Add Patient</button>
+                </form>
+        </tr>
+        </tbody>
+    </table>
+
+	<!-- Pagination -->
+    <ul class="pagination">
+        <li class="page-item" th:if="${citizens.hasPrevious()}">
+            <a class="page-link" th:href="@{/citizens/all(page=0)}">First</a>
+        </li>
+        <li class="page-item" th:if="${citizens.hasPrevious()}">
+            <a class="page-link" th:href="@{/citizens/all(page=${citizens.number - 1})}">Previous</a>
+        </li>
+        <li class="page-item" th:if="${citizens.hasNext()}">
+            <a class="page-link" th:href="@{/citizens/all(page=${citizens.number + 1})}">Next</a>
+        </li>
+        <li class="page-item" th:if="${citizens.hasNext()}">
+            <a class="page-link" th:href="@{/citizens/all(page=${citizens.totalPages - 1})}">Last</a>
+        </li>
+    </ul>
+
+	<!-- Display current page and items -->
+    <div class="text-center mt-3">
+        <p class="mb-0" th:text="'Page ' + ${citizens.number + 1} + ' of ' + ${citizens.totalPages}"></p>
+        <p class="mb-0"
+           th:text="'Displaying items ' + ${startItem} + ' - ' + ${endItem} + ' of ' + ${citizens.totalElements}"></p>
+    </div>
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script th:if="${successMessage}">
+        (() => {
+	        setTimeout(() => {
+		        document.getElementById('successMessage').style.display = 'none';
+	        }, 2000);
+        })();
+    </script>
+
+    <script th:if="${failureMessage}">
+        (() => {
+	        setTimeout(() => {
+		        document.getElementById('failureMessage').style.display = 'none';
+	        }, 4000);
+        })();
+    </script>
+
+    <script>
+        var doctorId = localStorage.getItem("doctorId")
+        var doctorInputs = document.querySelectorAll('input[name="doctorId"]')
+        doctorInputs.forEach((input) => {
+	        input.value = doctorId
+        })
+        console.log(doctorId)
+    </script>
+
+    <script>
+        window.addEventListener("beforeunload", (e) => {
+	        notifyAndReloadParent();
+        });
+
+        function notifyAndReloadParent() {
+	        window.opener.location.reload();
+        }
+
+        document.getElementById("add-patient-button").addEventListener("click", () => {
+	        notifyAndReloadParent();
+        })
+
+    </script>
+</div>
+
+</body>
+</html>

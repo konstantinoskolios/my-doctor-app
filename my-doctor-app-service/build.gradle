@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.5'
-    id 'io.spring.dependency-management' version '1.1.3'
+    id 'org.springframework.boot' version '3.2.1'
+    id 'io.spring.dependency-management' version '1.1.4'
 
 }
 
@@ -9,7 +9,7 @@ group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '11'
+    sourceCompatibility = '17'
 }
 
 configurations {
@@ -23,28 +23,49 @@ repositories {
 }
 
 dependencies {
-    implementation(
-            'org.springframework.boot:spring-boot-starter-thymeleaf',
-            'org.springframework.boot:spring-boot-starter',
-            'org.springframework.boot:spring-boot-starter-web',
-            'org.springframework.boot:spring-boot-starter-data-jpa',
-            'net.logstash.logback:logstash-logback-encoder:6.1',
-            'org.postgresql:postgresql:42.2.27',
-            'org.apache.commons:commons-lang3:3.0',
-            'org.mapstruct:mapstruct:1.5.5.Final',
-            'org.springframework.boot:spring-boot-starter-validation:2.6.3',
-            'org.liquibase:liquibase-core',
-            'org.springframework.boot:spring-boot-starter-actuator',
-            'io.micrometer:micrometer-registry-prometheus',
-            'org.springframework.boot:spring-boot-starter-webflux',
-            'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:3.1.4'
-    )
-    compileOnly 'org.projectlombok:lombok'
+    // Spring Boot and Web
+//    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.3'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
+    // Database
+    implementation 'org.postgresql:postgresql:42.2.27'
+    implementation 'org.liquibase:liquibase-core'
+
+    // Logging
+    implementation 'net.logstash.logback:logstash-logback-encoder:6.1'
+
+    // Utilities
+    implementation 'org.apache.commons:commons-lang3:3.0'
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api'
+
+    // Monitoring
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    // Thymeleaf extras
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    annotationProcessor('org.projectlombok:lombok')
-    annotationProcessor('org.hibernate:hibernate-jpamodelgen')
-    annotationProcessor('org.mapstruct:mapstruct-processor:1.5.5.Final')
+    // MapStruct
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+    // Hibernate
+    annotationProcessor 'org.hibernate.orm:hibernate-jpamodelgen'
+
+    //eureka
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.1.0'
+
 }
 

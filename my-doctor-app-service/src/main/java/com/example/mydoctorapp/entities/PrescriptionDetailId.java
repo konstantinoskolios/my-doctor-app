@@ -10,8 +10,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PrescriptionDetailId implements Serializable {
-    private Long patientId;
-    private Long doctorId;
+    private String patientId;
+    private String doctorId;
     private String prescription;
     private String date;
 }

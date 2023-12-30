@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PatientAccountRepository extends JpaRepository<PatientAccount, Long> {
+public interface PatientAccountRepository extends JpaRepository<PatientAccount, String> {
 
-    List<PatientAccount> findAllByDoctorId(Long doctorId);
+    List<PatientAccount> findAllByDoctorId(String doctorId);
 
-    Optional<PatientAccount> findByIdAndDoctorId(Long patientId, Long doctorId);
+    Optional<PatientAccount> findByIdAndDoctorId(String patientId, String doctorId);
 
-    boolean existsByIdAndDoctorId(Long patientId, Long doctorId);
+    boolean existsByIdAndDoctorId(String patientId, String doctorId);
 }

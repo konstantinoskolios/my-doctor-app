@@ -19,8 +19,10 @@ public class Constants {
     public static final String START_ITEM = "startItem";
     public static final String END_ITEM = "endItem";
     public static final int ONE_VALUE = 1;
-    public static final String REGEX_EMAIL_FORMAT = "^[A-Za-z0-9+_.-]+@mydoctorapp\\.com$";
+    public static final String REGEX_EMAIL_FORMAT = "^[A-Za-z0-9+_.-]+@doctorapp\\.com$";
     public static final String SUCCESS_MESSAGE_ALERT = "successMessage";
     public static final String FAILURE_MESSAGE_ALERT = "failureMessage";
     public static final String GENERIC_ERROR_FOR_UI = "An error occurred, please contact the support team";
+    public static final String ERROR_ATTRIBUTE = "error";
+    public static final String INDEX_VIEW = "index";
 }

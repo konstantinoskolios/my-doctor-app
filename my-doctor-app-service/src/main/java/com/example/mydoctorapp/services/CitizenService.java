@@ -17,7 +17,14 @@ import org.springframework.ui.Model;
 
 import java.util.stream.Collectors;
 
-import static com.example.mydoctorapp.constants.Constants.*;
+import static com.example.mydoctorapp.constants.Constants.CITIZENS;
+import static com.example.mydoctorapp.constants.Constants.CITIZENS_TEMPLATE_VALUE;
+import static com.example.mydoctorapp.constants.Constants.END_ITEM;
+import static com.example.mydoctorapp.constants.Constants.MAIN_TEMPLATE_VALUE;
+import static com.example.mydoctorapp.constants.Constants.ONE_VALUE;
+import static com.example.mydoctorapp.constants.Constants.PATIENT_TEMPLATE_VALUE;
+import static com.example.mydoctorapp.constants.Constants.SORT_ASCENDING;
+import static com.example.mydoctorapp.constants.Constants.START_ITEM;
 import static com.example.mydoctorapp.specifications.CitizenSpecification.constructCitizenSpecification;
 
 @Service
@@ -53,7 +60,7 @@ public class CitizenService {
                         return new InvalidCredentialsException(errorMessage);
                     }
             );
-            var prescriptions = prescriptionDetailRepository.findAllByPatientId(patient.getId());
+            var prescriptions = prescriptionDetailRepository.findAllByPatientId(String.valueOf(patient.getId()));
 
             var prescriptionInformationDTOS =
                     prescriptions.stream().map(
@@ -73,7 +80,7 @@ public class CitizenService {
         }
     }
 
-    private String constructDoctorFullName(Long doctorId) {
+    private String constructDoctorFullName(String doctorId) {
         var doctorAccount = doctorAccountRepository.findById(doctorId).orElseThrow(
                 () -> {
                     var errorMessage = "An business error occurred, Reason: Doctor Account is not found, please contact with the support team.";
@@ -82,6 +89,6 @@ public class CitizenService {
                 }
         );
 
-        return doctorAccount.getFirstName().concat(" ").concat(doctorAccount.getLastName().concat(" ,").concat(doctorAccount.getSpeciality()));
+        return doctorAccount.getFullName().concat(" ,").concat(doctorAccount.getSpeciality());
     }
 }

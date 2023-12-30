@@ -1,0 +1,145 @@
+<doctors class="tab-pane fade in show active" id="doctors">
+    <table class="table table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Speciality</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="doctor : ${doctorsList}" th:id="${'doctorRow_' + doctor.id}">
+                <td th:text="${doctor.fullName}"></td>
+                <td th:text="${doctor.email}"></td>
+                <td th:text="${doctor.speciality}"></td>
+                <td>
+                    <button class="btn btn-primary"
+                            onclick="getAvailableDates(this)"
+                            th:attr="data-doctorid=${doctor.id}"
+                    >Schedule Appointment</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</doctors>
+
+<div class="modal" id="datesModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Available Dates</h5>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Ensure that the modal content div is available -->
+                <div id="datesModalContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-primary" onclick="scheduleAppointment()">Schedule</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var selectedDoctorId;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+	    try {
+		    accessToken = await getToken();
+		    console.log("Success -> doctorUserToken");
+	    } catch (error) {
+		    console.error('Error:', error);
+	    }
+    });
+
+    var getToken = async () => {
+	    try {
+		    const tokenResponse = await fetch('http://localhost:8080/realms/doctor-app-realm/protocol/openid-connect/token', {
+			    method: 'POST',
+			    headers: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+			    },
+			    body: new URLSearchParams({
+				    'grant_type': 'client_credentials',
+				    'client_id': 'doctor-app',
+				    'client_secret': '07YgTOkhoVLy8jrHs0wEIHGqcJHmgevs'
+			    }),
+		    });
+
+		    if (!tokenResponse.ok) {
+			    throw new Error('Network response was not ok');
+		    }
+
+		    const tokenData = await tokenResponse.json();
+		    return tokenData.access_token;
+	    } catch (error) {
+		    console.error('Error fetching token:', error);
+		    throw error;
+	    }
+    };
+
+    function getAvailableDates(button) {
+	    selectedDoctorId = button.getAttribute("data-doctorid");
+
+	    fetch(`http://localhost:9999/api/appointment/dates?doctorId=${selectedDoctorId}`, {
+		    method: 'GET',
+		    headers: {
+			    'Authorization': 'Bearer ' + accessToken,
+			    'Content-Type': 'application/json',
+		    }
+	    })
+			    .then(response => {
+				    if (!response.ok) {
+					    throw new Error('Network response was not ok');
+				    }
+				    return response.json();
+			    })
+			    .then(data => {
+				    // Update the inner HTML of the modal content
+				    var datesModalContent = document.getElementById('datesModalContent');
+				    if (datesModalContent) {
+					    datesModalContent.innerHTML = ''; // Clear existing content
+
+					    var selectElement = document.createElement('select');
+					    selectElement.id = 'dateSelect';
+					    selectElement.className = 'form-control';
+
+					    data.dates.forEach(date => {
+						    var option = document.createElement('option');
+						    option.value = date;
+						    option.text = date;
+						    selectElement.appendChild(option);
+					    });
+
+					    datesModalContent.appendChild(selectElement);
+					    $('#datesModal').modal('show');
+				    }
+			    })
+			    .catch(error => console.error('Error:', error));
+    }
+
+    function scheduleAppointment() {
+	    var selectedDate = document.getElementById('dateSelect').value;
+
+	    fetch(`http://localhost:9999/api/appointment/add`, {
+		    method: 'POST',
+		    headers: {
+			    'Authorization': 'Bearer ' + accessToken,
+			    'Content-Type': 'application/json',
+		    },
+		    body: JSON.stringify({
+			    patientId: "[[${patientId}]]",
+			    doctorId: selectedDoctorId,
+			    selectedDate: selectedDate,
+		    }),
+	    })
+			    .then(response => console.log(response))
+	    $('#datesModal').modal('hide')
+			    .catch(error => console.error('Error:', error));
+    }
+</script>

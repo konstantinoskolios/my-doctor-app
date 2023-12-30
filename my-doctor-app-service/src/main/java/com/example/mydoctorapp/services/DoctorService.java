@@ -8,26 +8,41 @@ import com.example.mydoctorapp.entities.PatientAccount;
 import com.example.mydoctorapp.entities.PrescriptionDetail;
 import com.example.mydoctorapp.enumerations.PrescriptionCategoryEnum;
 import com.example.mydoctorapp.exceptions.GuiException;
-import com.example.mydoctorapp.exceptions.InvalidCredentialsException;
 import com.example.mydoctorapp.exceptions.InvalidEmailFormatException;
 import com.example.mydoctorapp.mapstruct.CitizenMapper;
 import com.example.mydoctorapp.mapstruct.DoctorMapper;
+import com.example.mydoctorapp.model.AppointmentRequest;
+import com.example.mydoctorapp.model.AvailableDatesResponse;
 import com.example.mydoctorapp.repositories.CitizenRepository;
 import com.example.mydoctorapp.repositories.DoctorAccountRepository;
 import com.example.mydoctorapp.repositories.PatientAccountRepository;
 import com.example.mydoctorapp.repositories.PrescriptionDetailRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.InvalidDataAccessResourceUsageException;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.example.mydoctorapp.constants.Constants.*;
+import static com.example.mydoctorapp.constants.Constants.ERROR_ATTRIBUTE;
+import static com.example.mydoctorapp.constants.Constants.FAILURE_MESSAGE_ALERT;
+import static com.example.mydoctorapp.constants.Constants.GENERIC_ERROR_FOR_UI;
+import static com.example.mydoctorapp.constants.Constants.INDEX_VIEW;
+import static com.example.mydoctorapp.constants.Constants.REGEX_EMAIL_FORMAT;
+import static com.example.mydoctorapp.constants.Constants.SUCCESS_MESSAGE_ALERT;
+import static com.example.mydoctorapp.entities.DoctorAccount_.email;
 import static com.example.mydoctorapp.utils.MyDoctorAppUtils.getCurrentTimeInGMT3;
 
 @Service
@@ -40,49 +55,55 @@ public class DoctorService {
     private final PrescriptionDetailRepository prescriptionDetailRepository;
     private final DoctorMapper doctorMapper;
     private final CitizenMapper citizenMapper;
+    private final RestTemplate restTemplate;
 
-    public String loginDoctor(String email, String password, Model model) {
+
+    //    @Transactional #problem with redirect
+    public String loginSuperUser(Model model, OidcUser user) {
         try {
-            isValidEmailFormat(email);
-            isEmailExists(email);
-            var doctorAccount = retrieveDoctorAccount(email, password);
+            isValidEmailFormat(user.getEmail(), user.getEmailVerified());
+            var doctorAccount = updateSuperUserInfo(user);
             log.info(String.format("Doctor with email: %s has successfully logged into the application at: %s", email, getCurrentTimeInGMT3()));
-            model.addAttribute("doctorAccount", doctorMapper.toDto(doctorAccount));
             var patientList = patientAccountRepository.findAllByDoctorId(doctorAccount.getId());
+            model.addAttribute("doctorAccount", doctorAccount);
             model.addAttribute("patientList", patientList);
-            return DOCTOR_TEMPLATE_VALUE;
+            return "super_user_view";
+
+        } catch (GuiException e) {
+            model.addAttribute(ERROR_ATTRIBUTE, e.getMessage());
+            return INDEX_VIEW;
+        } catch (InvalidDataAccessResourceUsageException e) {
+            model.addAttribute(ERROR_ATTRIBUTE, "Something is wrong with schema or database, contact your administrators.");
+            return INDEX_VIEW;
         } catch (Exception e) {
-            model.addAttribute("error", "An error occurred: " + e.getMessage());
-            return MAIN_TEMPLATE_VALUE;
+            model.addAttribute(ERROR_ATTRIBUTE, "An error occurred: " + e.getLocalizedMessage());
+            return INDEX_VIEW;
         }
     }
 
-    private void isEmailExists(String email) {
-        doctorAccountRepository.findDoctorAccountByEmail(email).orElseThrow(() -> {
-            var errorMessage = String.format("No doctor account found with the provided email: %s", email);
-            log.warn(String.format(errorMessage));
-            throw new InvalidCredentialsException(errorMessage);
-        });
+    private DoctorAccount updateSuperUserInfo(OidcUser user) {
+        var fullName = user.getFullName();
+        var email = user.getEmail();
+        var subId = user.getSubject();
+        var speciality = "";
+        try {
+            speciality = user.getClaims().get("speciality").toString();
+        } catch (Exception e) {
+            throw new GuiException("Please contact with administrator to add you a speciality.");
+        }
+        return doctorAccountRepository.save(new DoctorAccount(subId, email, fullName, speciality));
     }
 
-    private DoctorAccount retrieveDoctorAccount(String email, String password) {
-        return doctorAccountRepository.findDoctorAccountByEmailAndPass(email, password).orElseThrow(() -> {
-            var errorMessage = String.format("Invalid login credentials for the doctor with email: %s", email);
-            log.warn(errorMessage);
-            throw new InvalidCredentialsException(errorMessage);
-        });
-    }
-
-    private void isValidEmailFormat(String email) {
+    private void isValidEmailFormat(String email, boolean verifiedEmail) {
         var emailPattern = Pattern.compile(REGEX_EMAIL_FORMAT).matcher(email).matches();
-        if (!emailPattern) throw new InvalidEmailFormatException(email);
+        if (!emailPattern || !verifiedEmail) throw new InvalidEmailFormatException(email);
     }
 
-    public void addPatient(Long citizenId, Long doctorId, RedirectAttributes redirectAttributes) {
+    public void addPatient(String citizenId, String doctorId, RedirectAttributes redirectAttributes) {
 
         try {
             log.info("Citizen id: {} doctorId : {}", citizenId, doctorId);
-            var citizenInfo = citizenRepository.findById(citizenId).orElseThrow(GuiException::new);
+            var citizenInfo = citizenRepository.findById(Long.valueOf(citizenId)).orElseThrow(GuiException::new);
             var patient = citizenMapper.citizenToPatientAccount(citizenInfo, doctorId);
             if (patientAccountRepository.existsByIdAndDoctorId(patient.getId(), patient.getDoctorId()))
                 throw new GuiException("Patient has already been added, if not showing refresh the doctor page");
@@ -94,34 +115,37 @@ public class DoctorService {
         }
     }
 
-    public void addComment(DoctorViewDTO doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
+    public String addComment(DoctorViewDTO doctorViewDto, Model model) {
         try {
             var patientAccount = patientAccountRepository.findByIdAndDoctorId(doctorViewDto.getPatientId(), doctorViewDto.getDoctorId()).orElseThrow(GuiException::new);
             patientAccount.setComments(doctorViewDto.getComment());
             patientAccountRepository.save(patientAccount);
-            redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE_ALERT, "Comment has been changed successfully");
+            model.addAttribute(SUCCESS_MESSAGE_ALERT, "Comment has been changed successfully");
             constructDoctorTabAttributes(doctorViewDto.getDoctorId(), model);
         } catch (Exception e) {
             log.error("An error occurred during edit of the comment of the patient: {} and exception: {}", e.getMessage(), e);
-            redirectAttributes.addFlashAttribute(FAILURE_MESSAGE_ALERT, GENERIC_ERROR_FOR_UI);
+            model.addAttribute(FAILURE_MESSAGE_ALERT, GENERIC_ERROR_FOR_UI);
         }
+        return "super_user_view";
     }
 
     /**
-     * In case an error occured we want to ensure that the record is immutable
+     * In case an error occurred we want to ensure that the record is immutable
      */
     @Transactional
-    public void removePatient(DoctorViewDTO doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
+    public String removePatient(DoctorViewDTO doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
         try {
+            //isHavingPayments? then throw exception else delete id.
             patientAccountRepository.deleteById(doctorViewDto.getPatientId());
             constructDoctorTabAttributes(doctorViewDto.getDoctorId(), model);
         } catch (Exception e) {
             log.error("An error occurred removing the patient: {} with exception: {}", e.getMessage(), e);
             redirectAttributes.addFlashAttribute(FAILURE_MESSAGE_ALERT, GENERIC_ERROR_FOR_UI);
         }
+        return "super_user_view";
     }
 
-    private void constructDoctorTabAttributes(Long doctorId, Model model) {
+    private void constructDoctorTabAttributes(String doctorId, Model model) {
         var doctorAccount = doctorAccountRepository.findById(doctorId).orElseThrow(GuiException::new);
         var patientList = patientAccountRepository.findAllByDoctorId(doctorId);
         model.addAttribute("doctorAccount", doctorMapper.toDto(doctorAccount));
@@ -166,5 +190,27 @@ public class DoctorService {
         model.addAttribute("categories", categories);
         model.addAttribute("prescriptions", prescriptions);
         model.addAttribute("prescriptionsDetails", prescriptionsDetails);
+    }
+
+    public void getAllDoctors(Model model) {
+        var doctors = doctorAccountRepository.findAll();
+        if (!doctors.isEmpty()) {
+            model.addAttribute("doctorsList", doctors);
+            model.addAttribute("patientId","100");
+        }
+    }
+
+    public List<String> getAvailableDates(String doctorId) {
+
+        return Objects.requireNonNull(
+                restTemplate
+                        .getForObject("http://appointment-service:9999/api/appointment/dates?doctorId=" + doctorId,
+                                AvailableDatesResponse.class)).dates();
+    }
+
+    public String scheduleAppointment(AppointmentRequest appointmentRequest) {
+        return restTemplate.postForObject("http://appointment-service:9999/api/appointment/add",
+                appointmentRequest,
+                String.class);
     }
 }

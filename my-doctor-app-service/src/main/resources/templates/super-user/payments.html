@@ -1,0 +1,79 @@
+<div class="tab-pane fade in show active" id="payments">
+    <table class="table table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>Full Name</th>
+                <th>Tax Number</th>
+                <th>Social Security Number</th>
+                <th>Phone Number</th>
+                <th>Date</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody id="paymentTableBody"></tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+	    try {
+		    const tokenResponse = await fetch('http://localhost:8080/realms/doctor-app-realm/protocol/openid-connect/token', {
+			    method: 'POST',
+			    headers: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+			    },
+			    body: new URLSearchParams({
+				    'grant_type': 'client_credentials',
+				    'client_id': 'doctor-app',
+				    'client_secret': '07YgTOkhoVLy8jrHs0wEIHGqcJHmgevs'
+			    }),
+		    });
+
+		    console.log("Part 1 Completed!");
+
+		    const tokenData = await tokenResponse.json();
+		    const accessToken = tokenData.access_token;
+
+		    const paymentResponse = await fetch(`http://localhost:9999/api/payment/retrieve?doctorId=${doctorId}`, {
+			    headers: {
+				    'Authorization': 'Bearer ' + accessToken,
+				    'Content-Type': 'application/json',
+			    },
+		    });
+
+		    if (!paymentResponse.ok) {
+			    throw new Error(`Failed to fetch payment data. Status: ${paymentResponse.status}`);
+		    }
+
+		    const paymentData = await paymentResponse.json();
+
+		    updatePaymentsTab(paymentData);
+	    } catch (error) {
+		    console.log("Error: ", error);
+	    }
+    });
+
+    const updatePaymentsTab = (paymentData) => {
+	    const paymentTableBody = document.getElementById('paymentTableBody');
+
+	    paymentTableBody.innerHTML = '';
+
+	    paymentData.paymentsList.forEach(payment => {
+		    const row = paymentTableBody.insertRow();
+		    row.innerHTML = `
+                <td>${payment.fullName}</td>
+                <td>${payment.taxNumber}</td>
+                <td>${payment.socialSecurityNumber}</td>
+                <td>${payment.phoneNumber}</td>
+                <td>${payment.date}</td>
+                <td>${payment.amount}</td>
+            `;
+	    });
+
+	    const totalSumRow = paymentTableBody.insertRow();
+	    totalSumRow.innerHTML = `
+            <td colspan="5"></td>
+            <td style="color: green">${paymentData.totalAmount}</td>
+        `;
+    };
+</script>

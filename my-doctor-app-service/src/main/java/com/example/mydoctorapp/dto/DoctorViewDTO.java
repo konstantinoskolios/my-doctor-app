@@ -1,11 +1,10 @@
 package com.example.mydoctorapp.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotBlank;
 
 @Data
 @AllArgsConstructor
@@ -13,9 +12,9 @@ import javax.validation.constraints.NotBlank;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DoctorViewDTO {
     @NotBlank
-    private Long patientId;
+    private String patientId;
     @NotBlank
-    private Long doctorId;
+    private String doctorId;
     private String comment;
     private String patientFullName;
 }

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/hover-icons.css}"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet"
+          type="text/css"/>
+</head>
+<body>
+
+<!-- Display Thymeleaf error message in a Bootstrap alert -->
+<div class="alert alert-danger mt-3" th:if="${error}">
+    <p th:text="${error}"></p>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Login</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs" id="loginTab" role="tablist">
+                        <li class="nav-item">
+                            <a aria-controls="patient" aria-selected="true" class="nav-link active" data-toggle="tab"
+                               href="#patient"
+                               id="patient-tab" role="tab">Citizen</a>
+                        </li>
+                        <li class="nav-item">
+                            <a aria-controls="doctor" aria-selected="false" class="nav-link" data-toggle="tab"
+                               href="#doctor"
+                               id="doctor-tab" role="tab">Doctor</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="loginTabContent">
+                        <!-- Patient Login Tab -->
+                        <div aria-labelledby="patient-tab" class="tab-pane fade show active" id="patient"
+                             role="tabpanel">
+                            <form method="get" th:action="@{/citizens/information}">
+                                <div class="form-group">
+                                    <label for="taxNumber">Tax Number:</label>
+                                    <input class="form-control" id="taxNumber" name="taxNumber" required type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="socialNumber">Social Number:</label>
+                                    <input class="form-control" id="socialNumber" name="socialNumber" required
+                                           type="text">
+                                </div>
+                                <button class="btn btn-primary" onclick="submitCitizenLoginForm()" type="submit">Login
+                                </button>
+                                <a class="btn btn-link" href="#"
+                                   onclick="showErrorMessage('The current action is not available during this version.')">Connect
+                                    with Phone</a>
+                            </form>
+                        </div>
+                        <!-- Doctor Login Tab -->
+                        <div aria-labelledby="doctor-tab" class="tab-pane fade" id="doctor" role="tabpanel">
+                            <form id="doctorLoginForm" method="post" th:action="@{/login}">
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <input class="form-control" id="email" name="email" required type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password:</label>
+                                    <input class="form-control" id="password" name="password" required type="password">
+                                </div>
+                                <button class="btn btn-primary" onclick="submitDoctorLoginForm()" type="submit">Login
+                                </button>
+                                <a class="btn btn-link" href="#"
+                                   onclick="showErrorMessage('The current action is not available during this version.')">Forgot
+                                    Password</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/pop-up-not-ready.html"></div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- Include Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    function showErrorMessage(message) {
+	    document.getElementById('errorMessageText').textContent = message;
+	    $('#popupMessage').modal('show');
+    }
+</script>
+
+<script th:inline="javascript">
+    function submitDoctorLoginForm(event) {
+	    console.log(event)
+	    event.preventDefault();
+
+	    $.ajax({
+		    type: "POST",
+		    url: "/login",
+		    data: $("#doctorLoginForm").serialize(),
+		    success: (res) => {
+			    // console.log(res)
+
+		    },
+		    error: (xhr, ajaxOptions, thrownError) => {
+			    showErrorMessage(xhr.responseText);
+		    }
+	    });
+    }
+</script>
+
+<script th:inline="javascript">
+    function submitCitizenLoginForm(event) {
+	    console.log(event)
+	    event.preventDefault();
+
+	    $.ajax({
+		    type: "GET",
+		    url: "/citizens/information",
+		    data: $("#submitCitizenLoginForm").serialize(),
+		    success: (res) => {
+			    // console.log(res)
+
+		    },
+		    error: (xhr, ajaxOptions, thrownError) => {
+			    showErrorMessage(xhr.responseText);
+		    }
+	    });
+    }
+</script>
+
+
+</body>
+</html>

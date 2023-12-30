@@ -1,0 +1,128 @@
+<div class="tab-pane fade in show active" id="appointments">
+    <table class="table table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>Full Name</th>
+                <th>Social Security Number</th>
+                <th>Phone Number</th>
+                <th>Appointment Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="appointmentTableBody"></tbody>
+    </table>
+</div>
+
+<script>
+    let accessToken;
+    let doctorId = "[[${doctorAccount.id}]]";
+
+    document.addEventListener('DOMContentLoaded', async () => {
+	    accessToken = await getToken(); // Get and store the access token
+	    console.log("Success -> doctorAppointmentToken")
+
+	    await fetchAndDisplayAppointmentData();
+    });
+
+    var fetchAndDisplayAppointmentData = async () => {
+	    try {
+		    const appointmentData = await getAppointmentData();
+		    updateAppointmentsTab(appointmentData);
+	    } catch (error) {
+		    console.error("Error fetching and displaying appointment data:", error);
+	    }
+    };
+
+    var getAppointmentData = async () => {
+
+	    const appointmentResponse = await
+			    fetch(`http://localhost:9999/api/appointment/doctor/retrieve?doctorId=${doctorId}`, {
+		    headers: {
+			    'Authorization': 'Bearer ' + accessToken,
+			    'Content-Type': 'application/json',
+		    },
+	    });
+
+	    if (!appointmentResponse.ok) {
+		    throw new Error(`Error fetching appointment data: ${appointmentResponse.statusText}`);
+	    }
+
+	    return await appointmentResponse.json();
+    };
+
+    var getToken = async () => {
+	    try {
+		    const tokenResponse = await fetch('http://localhost:8080/realms/doctor-app-realm/protocol/openid-connect/token', {
+			    method: 'POST',
+			    headers: {
+				    'Content-Type': 'application/x-www-form-urlencoded',
+			    },
+			    body: new URLSearchParams({
+				    'grant_type': 'client_credentials',
+				    'client_id': 'doctor-app',
+				    'client_secret': '07YgTOkhoVLy8jrHs0wEIHGqcJHmgevs'
+			    }),
+		    });
+
+		    const tokenData = await tokenResponse.json();
+		    return tokenData.access_token;
+	    } catch (error) {
+		    console.error('Error fetching token:', error);
+	    }
+    };
+
+    var updateAppointmentsTab = (appointmentData) => {
+	    const appointmentTableBody = document.getElementById('appointmentTableBody');
+
+	    if (appointmentTableBody.innerHTML.length > 2) {
+		    appointmentTableBody.innerHTML = ''
+	    }
+
+	    appointmentData.doctorAppointments.forEach(appointment => {
+		    const row = appointmentTableBody.insertRow();
+		    row.innerHTML = `
+                <td>${appointment.fullName}</td>
+                <td>${appointment.socialSecurityNumber}</td>
+                <td>${appointment.phoneNumber}</td>
+                <td>${appointment.appointmentDate}</td>
+                <td>${appointment.status}</td>
+                <td>
+			        <button class="btn btn-success" onclick="handleAccept('${appointment.appointmentId}')" ${appointment.status !== 'Pending' ? 'disabled' : ''}>Accept</button>
+			        <button class="btn btn-danger"  onclick="handleReject('${appointment.appointmentId}')" ${appointment.status !== 'Pending' ? 'disabled' : ''}>Reject</button>
+                </td>
+            `;
+	    });
+    };
+
+    var handleAccept = async (appointmentId) => {
+	    await sendAppointmentResponse(appointmentId, "Accept");
+    };
+
+    var handleReject = async (appointmentId) => {
+	    await sendAppointmentResponse(appointmentId, "Reject");
+    };
+
+    var sendAppointmentResponse = async (appointmentId, isAccepted) => {
+	    try {
+		    const response = await
+				    fetch(`http://localhost:9999/api/appointment/status/${appointmentId}?isAccepted=${isAccepted}`, {
+			    method: 'POST',
+			    headers: {
+				    'Authorization': 'Bearer ' + accessToken,
+				    'Content-Type': 'application/json',
+			    },
+		    });
+
+		    if (response.ok) {
+			    await fetchAndDisplayAppointmentData();
+			    console.log(`Appointment ${isAccepted ? 'accepted' : 'rejected'} successfully.`);
+		    } else {
+			    // Handle error
+			    console.error('Error sending appointment response:', response.statusText);
+		    }
+	    } catch (error) {
+		    console.error('Error:', error);
+	    }
+    };
+</script>

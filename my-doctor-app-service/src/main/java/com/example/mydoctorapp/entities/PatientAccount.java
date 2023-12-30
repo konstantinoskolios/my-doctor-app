@@ -1,13 +1,12 @@
 package com.example.mydoctorapp.entities;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +15,8 @@ import javax.persistence.Table;
 @Table(name = "patient_account")
 public class PatientAccount {
     @Id
-    private Long id;
+    @Column(unique = true, nullable = false)
+    private String id;
     private String firstName;
     private String lastName;
     private String fatherFirstName;
@@ -29,5 +29,6 @@ public class PatientAccount {
     private String birthdate;
     private String comments;
     private String prescriptionsIds;
-    private Long doctorId;
+    @Column(nullable = false)
+    private String doctorId;
 }

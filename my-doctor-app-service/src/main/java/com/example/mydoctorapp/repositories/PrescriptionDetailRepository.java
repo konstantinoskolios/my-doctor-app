@@ -7,11 +7,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PrescriptionDetailRepository extends JpaRepository<PrescriptionDetail, Long> {
+public interface PrescriptionDetailRepository extends JpaRepository<PrescriptionDetail, String> {
 
-    List<PrescriptionDetail> findAllByPatientIdAndDoctorId(Long patientId, Long doctorId);
+    List<PrescriptionDetail> findAllByPatientIdAndDoctorId(String patientId, String doctorId);
 
-    void deleteByPatientIdAndDoctorId(Long patientId, Long doctorId);
+    void deleteByPatientIdAndDoctorId(String patientId, String doctorId);
 
-    List<PrescriptionDetail> findAllByPatientId(Long id);
+    List<PrescriptionDetail> findAllByPatientId(String id);
 }

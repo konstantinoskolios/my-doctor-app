@@ -1,0 +1,50 @@
+#server:
+#  port: 8500
+#
+#spring:
+#  application:
+#    name: doctor-app
+#  #  enable jpa.show-sql only for debug testing/debugging proposes
+#  #  jpa:
+#  #    show-sql: true
+#  thymeleaf:
+#    cache: false
+#    mode: HTML
+#    encoding: UTF-8
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/postgres
+#    username: pgtest
+#    password: pgtest
+#    driver-class-name: org.postgresql.Driver
+#  liquibase:
+#    enabled: false # disable liquibase to allow manual control
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: http://localhost:8080/realms/doctor-app-realm
+#      client:
+#        provider:
+#          keycloak:
+#            issuer-uri: http://localhost:8080/realms/doctor-app-realm
+#            user-name-attribute: ${jwt.auth.converter.principal-attribute}
+#        registration:
+#          keycloak:
+#            client-id: ${spring.application.name}
+#            client-secret: ${KEYCLOAK_CLIENT_SECRET}
+#            scope: openid,profile,email
+#
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: '*' # enable all actuator metrics
+#
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        security: DEBUG
+#
+#jwt.auth.converter.resource-id: ${spring.application.name}
+#jwt.auth.converter.principal-attribute: preferred_username

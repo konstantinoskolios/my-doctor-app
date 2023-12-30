@@ -1,0 +1,64 @@
+<div class="tab-pane fade in show active" id="payments">
+    <table class="table table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Speciality</th>
+                <th>Created Date</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody id="paymentPatientTableBody"></tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+	    try {
+
+		    accessToken = await getToken();
+		    console.log("Success -> PatientPaymentToken")
+
+		    const paymentResponse = await fetch(`http://localhost:9999/api/payment/retrieve?patientId=${patientId}`, {
+			    headers: {
+				    'Authorization': 'Bearer ' + accessToken,
+				    'Content-Type': 'application/json',
+			    },
+		    });
+
+		    if (!paymentResponse.ok) {
+			    throw new Error(`Failed to fetch payment data. Status: ${paymentResponse.status}`);
+		    }
+
+		    const paymentData = await paymentResponse.json();
+
+		    updatePatientPaymentsTab(paymentData);
+	    } catch (error) {
+		    console.log("Error: ", error);
+	    }
+    });
+
+    const updatePatientPaymentsTab = (paymentData) => {
+	    const paymentTableBody = document.getElementById('paymentPatientTableBody');
+
+	    paymentTableBody.innerHTML = '';
+
+	    paymentData.paymentsList.forEach(payment => {
+		    const row = paymentTableBody.insertRow();
+		    row.innerHTML = `
+                <td>${payment.fullName}</td>
+                <td>${payment.email}</td>
+                <td>${payment.speciality}</td>
+                <td>${payment.createdDate}</td>
+                <td>${payment.amount}</td>
+            `;
+	    });
+
+	    const totalSumRow = paymentTableBody.insertRow();
+	    totalSumRow.innerHTML = `
+            <td colspan="4"></td>
+            <td style="color: green">${paymentData.totalAmount}</td>
+        `;
+    };
+</script>

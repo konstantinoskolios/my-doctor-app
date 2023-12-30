@@ -6,6 +6,10 @@ import lombok.experimental.UtilityClass;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class MyDoctorAppUtils {
@@ -15,6 +19,5 @@ public class MyDoctorAppUtils {
                 .withZone(ZoneId.of("GMT+3"))
                 .format(Instant.now());
     }
-
 
 }

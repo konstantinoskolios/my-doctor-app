@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
+</head>
+<body>
+
+<header>
+    <div class="ui massive menu">
+        <a class="item" th:href="@{/static}">
+            <i class="cube camera icon"></i>
+            Doctor App
+        </a>
+        <a class="item" th:href="@{/about}">
+            About Project
+        </a>
+        <a class="item" sec:authorize="hasRole('doctor-app-admin')"
+           th:href="@{/admin-page}">
+            Admin Page
+        </a>
+        <a class="item" sec:authorize="hasRole('doctor-app-user')"
+           th:href="@{/user/view/details}">
+            User Page
+        </a>
+        <a class="item" sec:authorize="hasAnyRole('doctor-app-super-user')"
+           th:href="@{/super-user/view}">
+            Super User Page
+        </a>
+        <div class="right menu">
+            <a class="ui item" sec:authorize="!isAuthenticated()" th:href="@{/login}">
+                Login
+            </a>
+            <a class="ui item" sec:authentication="name" sec:authorize="isAuthenticated()">
+            </a>
+            <a class="ui item" sec:authorize="isAuthenticated()" th:href="@{/logout}">
+                Logout
+            </a>
+        </div>
+    </div>
+</header>
+
+</body>
+</html>
