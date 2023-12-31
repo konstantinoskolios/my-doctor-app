@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface CitizenRepository extends JpaRepository<Citizen, Long>, JpaSpecificationExecutor<Citizen> {
+public interface CitizenRepository extends JpaRepository<Citizen, String>, JpaSpecificationExecutor<Citizen> {
     Optional<Citizen> findByTaxNumberAndSocialSecurityNumber(String taxNumber, String socialSecurityNumber);
+    Optional<Citizen> findByRegisterId(String registerId);
 }

@@ -29,4 +29,6 @@ public class Constants {
     public static final String LOGIN_VIEW = "login";
     public static final String USER_VIEW = "user/view";
     public static final String SUPER_USER_VIEW = "super-user/view";
+    public static final String YES_VALUE = "yes";
+    public static final String USER_REGISTER_VIEW = "user/register";
 }
