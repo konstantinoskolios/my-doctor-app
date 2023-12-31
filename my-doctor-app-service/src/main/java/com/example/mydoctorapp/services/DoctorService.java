@@ -97,7 +97,7 @@ public class DoctorService {
 
         try {
             log.info("Citizen id: {} doctorId : {}", citizenId, doctorId);
-            var citizenInfo = citizenRepository.findById(Long.valueOf(citizenId)).orElseThrow(GuiException::new);
+            var citizenInfo = citizenRepository.findById(citizenId).orElseThrow(GuiException::new);
             var patient = citizenMapper.citizenToPatientAccount(citizenInfo, doctorId);
             if (patientAccountRepository.existsByIdAndDoctorId(patient.getId(), patient.getDoctorId()))
                 throw new GuiException("Patient has already been added, if not showing refresh the doctor page");
@@ -188,7 +188,6 @@ public class DoctorService {
         var doctors = doctorAccountRepository.findAll();
         if (!doctors.isEmpty()) {
             model.addAttribute("doctorsList", doctors);
-            model.addAttribute("patientId", "100");
         }
     }
 }
