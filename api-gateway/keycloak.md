@@ -32,7 +32,24 @@
 - create role: doctor-app-user 
 - create role: doctor-app-super-user 
 
+# Create Groups
+
+- create group: admins   -> role mapping -> doctor-app-admin
+- create group: citizens -> role mapping -> doctor-app-user
+- create group: doctors  -> role mapping -> doctor-app-super-user
+
 # Create Super-User Attributes
 
 - Users > Attributes 
 - Add attribute for 'speciality' in order to descript the category of the super-user meaning 'Cardiologist,Pathologist' and etc.
+
+# Realm Settings
+
+- Enable User Registration -> Assign role -> Default Groups -> citizens
+
+# Add Identity Providers
+
+- Need to provide your personal auth2 client/secret in order to test it.
+- Facebook
+- Github
+- Google
