@@ -52,10 +52,17 @@ public class CitizenService {
 
         var fullName = user.getUserInfo().getFullName();
         String[] parts = fullName.split(" ");
-        var firstName = parts[1];
-        var lastName = parts[2];
-        model.addAttribute("firstName",firstName);
-        model.addAttribute("lastName",lastName);
+        var firstName = "";
+        var lastName = "";
+        if (parts.length > 2) {
+            firstName = parts[1];
+            lastName = parts[2];
+        } else {
+            firstName = fullName;
+        }
+
+        model.addAttribute("firstName", firstName);
+        model.addAttribute("lastName", lastName);
 
         try {
             var patient = citizenRepository.findByTaxNumberAndSocialSecurityNumber(citizenViewDTO.getTaxNumber(), citizenViewDTO.getSocialNumber()).orElseThrow(
@@ -79,7 +86,7 @@ public class CitizenService {
                     patient.getSocialSecurityNumber(),
                     patient.getPhoneNumber(),
                     patient.getBirthdate(),
-                    null,null,null));
+                    null, null, null));
 
             citizenRepository.save(patient);
 
@@ -87,7 +94,7 @@ public class CitizenService {
         } catch (Exception e) {
             model.addAttribute("error", "An error occurred: " + e.getMessage());
             model.addAttribute("firstName", firstName);
-            model.addAttribute("lastName",lastName);
+            model.addAttribute("lastName", lastName);
             return USER_REGISTER_VIEW;
         }
     }
