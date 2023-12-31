@@ -8,18 +8,18 @@
 
 # Create Realm
 
-- springboot-microservice-realm
-- issuer: http://localhost:8080/realms/springboot-microservice-realm
-- token-endpoint: http://localhost:8080/realms/springboot-microservice-realm/protocol/openid-connect/token
+- doctor-app-realm
+- issuer: http://localhost:8080/realms/doctor-app-realm
+- token-endpoint: http://localhost:8080/realms/doctor-app-realm/protocol/openid-connect/token
 
 # Create Clients
 
-- microservice-auth
+- doctor-app
 - enable Client-Authentication
 - enable only 'Service Account Roles' from the 'Authentication Flow'
 - set rootUrl: http://localhost:9999 (note this is #gateway url/port)
 - set homeUrl: http://localhost:9999 (note this is #gateway url/port)
-- client secret: i9y07waNc2xWTfuRgE46yt6OKAq32T0t
+- client secret: xxxxxxxxxxxxxxxxxx #secret will be different every time
 
 # Create User
 
@@ -28,5 +28,11 @@
 
 # Create Role
 
-- create role: admin
-- create role: user
+- create role: doctor-app-admin 
+- create role: doctor-app-user 
+- create role: doctor-app-super-user 
+
+# Create Super-User Attributes
+
+- Users > Attributes 
+- Add attribute for 'speciality' in order to descript the category of the super-user meaning 'Cardiologist,Pathologist' and etc.
