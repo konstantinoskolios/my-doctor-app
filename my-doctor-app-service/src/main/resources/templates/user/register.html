@@ -30,17 +30,12 @@
                                href="#patient"
                                id="patient-tab" role="tab">Citizen</a>
                         </li>
-                        <li class="nav-item">
-                            <a aria-controls="doctor" aria-selected="false" class="nav-link" data-toggle="tab"
-                               href="#doctor"
-                               id="doctor-tab" role="tab">Doctor</a>
-                        </li>
                     </ul>
                     <div class="tab-content" id="loginTabContent">
                         <!-- Patient Login Tab -->
                         <div aria-labelledby="patient-tab" class="tab-pane fade show active" id="patient"
                              role="tabpanel">
-                            <form method="get" th:action="@{/citizens/information}">
+                            <form method="get" th:action="@{/citizens/registration}">
                                 <div class="form-group">
                                     <label for="taxNumber">Tax Number:</label>
                                     <input class="form-control" id="taxNumber" name="taxNumber" required type="text">
@@ -50,29 +45,9 @@
                                     <input class="form-control" id="socialNumber" name="socialNumber" required
                                            type="text">
                                 </div>
+
                                 <button class="btn btn-primary" onclick="submitCitizenLoginForm()" type="submit">Login
                                 </button>
-                                <a class="btn btn-link" href="#"
-                                   onclick="showErrorMessage('The current action is not available during this version.')">Connect
-                                    with Phone</a>
-                            </form>
-                        </div>
-                        <!-- Doctor Login Tab -->
-                        <div aria-labelledby="doctor-tab" class="tab-pane fade" id="doctor" role="tabpanel">
-                            <form id="doctorLoginForm" method="post" th:action="@{/login}">
-                                <div class="form-group">
-                                    <label for="email">Email:</label>
-                                    <input class="form-control" id="email" name="email" required type="text">
-                                </div>
-                                <div class="form-group">
-                                    <label for="password">Password:</label>
-                                    <input class="form-control" id="password" name="password" required type="password">
-                                </div>
-                                <button class="btn btn-primary" onclick="submitDoctorLoginForm()" type="submit">Login
-                                </button>
-                                <a class="btn btn-link" href="#"
-                                   onclick="showErrorMessage('The current action is not available during this version.')">Forgot
-                                    Password</a>
                             </form>
                         </div>
                     </div>
@@ -98,25 +73,6 @@
     }
 </script>
 
-<script th:inline="javascript">
-    function submitDoctorLoginForm(event) {
-	    console.log(event)
-	    event.preventDefault();
-
-	    $.ajax({
-		    type: "POST",
-		    url: "/login",
-		    data: $("#doctorLoginForm").serialize(),
-		    success: (res) => {
-			    // console.log(res)
-
-		    },
-		    error: (xhr, ajaxOptions, thrownError) => {
-			    showErrorMessage(xhr.responseText);
-		    }
-	    });
-    }
-</script>
 
 <script th:inline="javascript">
     function submitCitizenLoginForm(event) {

@@ -25,4 +25,10 @@ public class Constants {
     public static final String GENERIC_ERROR_FOR_UI = "An error occurred, please contact the support team";
     public static final String ERROR_ATTRIBUTE = "error";
     public static final String INDEX_VIEW = "index";
+    public static final String ABOUT_VIEW = "about";
+    public static final String LOGIN_VIEW = "login";
+    public static final String USER_VIEW = "user/view";
+    public static final String SUPER_USER_VIEW = "super-user/view";
+    public static final String YES_VALUE = "yes";
+    public static final String USER_REGISTER_VIEW = "user/register";
 }

@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @UtilityClass
 public class MyDoctorAppUtils {
@@ -18,6 +17,11 @@ public class MyDoctorAppUtils {
         return DateTimeFormatter.ofPattern(DateFormatPattern.GMT_FORMAT.getPattern())
                 .withZone(ZoneId.of("GMT+3"))
                 .format(Instant.now());
+    }
+
+    public static List<String> reduceDuplicatesIds(List<String> strings) {
+        HashSet<String> set = new HashSet<>(strings);
+        return new ArrayList<>(set);
     }
 
 }

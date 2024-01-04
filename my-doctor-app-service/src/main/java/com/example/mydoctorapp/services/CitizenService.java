@@ -2,29 +2,27 @@ package com.example.mydoctorapp.services;
 
 import com.example.mydoctorapp.dto.CitizenViewDTO;
 import com.example.mydoctorapp.entities.Citizen;
+import com.example.mydoctorapp.entities.PatientAccount;
 import com.example.mydoctorapp.exceptions.InvalidCredentialsException;
-import com.example.mydoctorapp.mapstruct.PrescriptionMapper;
 import com.example.mydoctorapp.repositories.CitizenRepository;
-import com.example.mydoctorapp.repositories.DoctorAccountRepository;
-import com.example.mydoctorapp.repositories.PrescriptionDetailRepository;
+import com.example.mydoctorapp.repositories.PatientAccountRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-
-import java.util.stream.Collectors;
 
 import static com.example.mydoctorapp.constants.Constants.CITIZENS;
 import static com.example.mydoctorapp.constants.Constants.CITIZENS_TEMPLATE_VALUE;
 import static com.example.mydoctorapp.constants.Constants.END_ITEM;
-import static com.example.mydoctorapp.constants.Constants.MAIN_TEMPLATE_VALUE;
 import static com.example.mydoctorapp.constants.Constants.ONE_VALUE;
-import static com.example.mydoctorapp.constants.Constants.PATIENT_TEMPLATE_VALUE;
 import static com.example.mydoctorapp.constants.Constants.SORT_ASCENDING;
 import static com.example.mydoctorapp.constants.Constants.START_ITEM;
+import static com.example.mydoctorapp.constants.Constants.USER_REGISTER_VIEW;
 import static com.example.mydoctorapp.specifications.CitizenSpecification.constructCitizenSpecification;
 
 @Service
@@ -32,9 +30,7 @@ import static com.example.mydoctorapp.specifications.CitizenSpecification.constr
 @RequiredArgsConstructor
 public class CitizenService {
     private final CitizenRepository citizenRepository;
-    private final PrescriptionDetailRepository prescriptionDetailRepository;
-    private final PrescriptionMapper prescriptionMapper;
-    private final DoctorAccountRepository doctorAccountRepository;
+    private final PatientAccountRepository patientAccountRepository;
 
     public String getAllCitizens(int page, int size, String sortField, String sortDir, Model model, String searchBy) {
         var pageable = PageRequest.of(page, size, sortDir.equals(SORT_ASCENDING) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending());
@@ -51,7 +47,23 @@ public class CitizenService {
         model.addAttribute(END_ITEM, endItem);
     }
 
-    public String getCitizenInformation(CitizenViewDTO citizenViewDTO, Model model) {
+    @Transactional
+    public String registerCitizen(CitizenViewDTO citizenViewDTO, Model model, OidcUser user) {
+
+        var fullName = user.getUserInfo().getFullName();
+        String[] parts = fullName.split(" ");
+        var firstName = "";
+        var lastName = "";
+        if (parts.length > 2) {
+            firstName = parts[1];
+            lastName = parts[2];
+        } else {
+            firstName = fullName;
+        }
+
+        model.addAttribute("firstName", firstName);
+        model.addAttribute("lastName", lastName);
+
         try {
             var patient = citizenRepository.findByTaxNumberAndSocialSecurityNumber(citizenViewDTO.getTaxNumber(), citizenViewDTO.getSocialNumber()).orElseThrow(
                     () -> {
@@ -60,35 +72,31 @@ public class CitizenService {
                         return new InvalidCredentialsException(errorMessage);
                     }
             );
-            var prescriptions = prescriptionDetailRepository.findAllByPatientId(String.valueOf(patient.getId()));
 
-            var prescriptionInformationDTOS =
-                    prescriptions.stream().map(
-                            data -> {
-                                String doctorFullName = constructDoctorFullName(data.getDoctorId());
-                                return prescriptionMapper.toPrescriptionInformationDTO(data, doctorFullName);
-                            }
-                    ).collect(Collectors.toList());
+            patient.setFirstName(firstName);
+            patient.setLastName(lastName);
+            patient.setRegisterId(user.getUserInfo().getSubject());
 
-            var patientFullName = patient.getFirstName().concat(" ").concat(patient.getLastName());
-            model.addAttribute("prescriptions", prescriptionInformationDTOS);
-            model.addAttribute("patientName", patientFullName);
-            return PATIENT_TEMPLATE_VALUE;
+            patientAccountRepository.save(new PatientAccount(
+                    patient.getRegisterId(),
+                    patient.getFirstName(),
+                    patient.getLastName(),
+                    patient.getFatherFirstName(),
+                    patient.getTaxNumber(),
+                    patient.getSocialSecurityNumber(),
+                    patient.getPhoneNumber(),
+                    patient.getBirthdate(),
+                    null, null, null));
+
+            citizenRepository.save(patient);
+
+            return "redirect:/user/view";
         } catch (Exception e) {
             model.addAttribute("error", "An error occurred: " + e.getMessage());
-            return MAIN_TEMPLATE_VALUE;
+            model.addAttribute("firstName", firstName);
+            model.addAttribute("lastName", lastName);
+            return USER_REGISTER_VIEW;
         }
     }
 
-    private String constructDoctorFullName(String doctorId) {
-        var doctorAccount = doctorAccountRepository.findById(doctorId).orElseThrow(
-                () -> {
-                    var errorMessage = "An business error occurred, Reason: Doctor Account is not found, please contact with the support team.";
-                    log.warn(errorMessage);
-                    return new InvalidCredentialsException(errorMessage);
-                }
-        );
-
-        return doctorAccount.getFullName().concat(" ,").concat(doctorAccount.getSpeciality());
-    }
 }

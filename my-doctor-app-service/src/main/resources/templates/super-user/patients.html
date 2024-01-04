@@ -106,7 +106,7 @@
 	    localStorage.setItem("doctorId", doctorId)
 	    localStorage.setItem("patientId", patientId)
 	    localStorage.setItem("fullName", fullName)
-	    const url = `/user/getPrescriptions?patientId=${patientId}&doctorId=${doctorId}`;
+	    const url = `/super-user/user/prescriptions?patientId=${patientId}&doctorId=${doctorId}`;
 	    window.open(url, "AddPrescriptionDialog", "width=800,height=600")
 
     }

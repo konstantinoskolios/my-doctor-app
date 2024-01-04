@@ -45,8 +45,10 @@
     </div>
 </div>
 
-<script>
+<script th:inline="javascript">
     var selectedDoctorId;
+	var patientId = [[${patientId}]]; //model value
+	console.log(patientId)
 
     document.addEventListener('DOMContentLoaded', async () => {
 	    try {
@@ -133,7 +135,7 @@
 			    'Content-Type': 'application/json',
 		    },
 		    body: JSON.stringify({
-			    patientId: "[[${patientId}]]",
+			    patientId: patientId,
 			    doctorId: selectedDoctorId,
 			    selectedDate: selectedDate,
 		    }),

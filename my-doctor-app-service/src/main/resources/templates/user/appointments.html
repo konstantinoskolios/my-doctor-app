@@ -31,7 +31,6 @@
 
 <script>
 	    let accessToken;
-	    let patientId = "1542";
 
 	    document.addEventListener('DOMContentLoaded', async () => {
 		    accessToken = await getToken(); // Get and store the access token
@@ -53,11 +52,11 @@
 
 		    const appointmentResponse = await
 				    fetch(`http://localhost:9999/api/appointment/patient/retrieve?patientId=${patientId}`, {
-			    headers: {
-				    'Authorization': 'Bearer ' + accessToken,
-				    'Content-Type': 'application/json',
-			    },
-		    });
+					    headers: {
+						    'Authorization': 'Bearer ' + accessToken,
+						    'Content-Type': 'application/json',
+					    },
+				    });
 
 		    if (!appointmentResponse.ok) {
 			    throw new Error(`Error fetching appointment data: ${appointmentResponse.statusText}`);

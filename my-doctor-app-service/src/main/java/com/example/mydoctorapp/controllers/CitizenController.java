@@ -5,6 +5,8 @@ import com.example.mydoctorapp.services.CitizenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,10 +34,10 @@ public class CitizenController {
     }
 
 
-    @GetMapping("information")
+    @GetMapping("registration")
     //fixme: need to add @Valid annotation to enable validations, for now is off cause there not need to implement logic for view side.
-    public String getCitizenInformation(CitizenViewDTO citizenViewDTO, Model model) {
-        return citizenService.getCitizenInformation(citizenViewDTO, model);
+    public String registerCitizen(CitizenViewDTO citizenViewDTO, Model model, @AuthenticationPrincipal OidcUser user) {
+        return citizenService.registerCitizen(citizenViewDTO, model,user);
     }
 
 

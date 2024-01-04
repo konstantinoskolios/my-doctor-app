@@ -112,8 +112,8 @@ public class AppointmentService {
     }
 
     private Map<String, List<String>> availableDaysPerDoctor = new HashMap<>();
-    private static final String START_DATE = "01-01-2023 09:00";
-    private static final String END_DATE = "31-12-2023 15:00";
+    private static final String START_DATE = "01-01-2024 09:00";
+    private static final String END_DATE = "31-12-2024 15:00";
 
     public AvailableDatesResponse retrieveAvailableDates(String doctorId) {
         var availableDates = availableDaysPerDoctor.get(doctorId);

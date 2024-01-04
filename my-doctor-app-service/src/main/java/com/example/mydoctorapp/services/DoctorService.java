@@ -11,8 +11,6 @@ import com.example.mydoctorapp.exceptions.GuiException;
 import com.example.mydoctorapp.exceptions.InvalidEmailFormatException;
 import com.example.mydoctorapp.mapstruct.CitizenMapper;
 import com.example.mydoctorapp.mapstruct.DoctorMapper;
-import com.example.mydoctorapp.model.AppointmentRequest;
-import com.example.mydoctorapp.model.AvailableDatesResponse;
 import com.example.mydoctorapp.repositories.CitizenRepository;
 import com.example.mydoctorapp.repositories.DoctorAccountRepository;
 import com.example.mydoctorapp.repositories.PatientAccountRepository;
@@ -27,12 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -42,6 +35,7 @@ import static com.example.mydoctorapp.constants.Constants.GENERIC_ERROR_FOR_UI;
 import static com.example.mydoctorapp.constants.Constants.INDEX_VIEW;
 import static com.example.mydoctorapp.constants.Constants.REGEX_EMAIL_FORMAT;
 import static com.example.mydoctorapp.constants.Constants.SUCCESS_MESSAGE_ALERT;
+import static com.example.mydoctorapp.constants.Constants.SUPER_USER_VIEW;
 import static com.example.mydoctorapp.entities.DoctorAccount_.email;
 import static com.example.mydoctorapp.utils.MyDoctorAppUtils.getCurrentTimeInGMT3;
 
@@ -67,7 +61,7 @@ public class DoctorService {
             var patientList = patientAccountRepository.findAllByDoctorId(doctorAccount.getId());
             model.addAttribute("doctorAccount", doctorAccount);
             model.addAttribute("patientList", patientList);
-            return "super_user_view";
+            return SUPER_USER_VIEW;
 
         } catch (GuiException e) {
             model.addAttribute(ERROR_ATTRIBUTE, e.getMessage());
@@ -103,7 +97,7 @@ public class DoctorService {
 
         try {
             log.info("Citizen id: {} doctorId : {}", citizenId, doctorId);
-            var citizenInfo = citizenRepository.findById(Long.valueOf(citizenId)).orElseThrow(GuiException::new);
+            var citizenInfo = citizenRepository.findById(citizenId).orElseThrow(GuiException::new);
             var patient = citizenMapper.citizenToPatientAccount(citizenInfo, doctorId);
             if (patientAccountRepository.existsByIdAndDoctorId(patient.getId(), patient.getDoctorId()))
                 throw new GuiException("Patient has already been added, if not showing refresh the doctor page");
@@ -115,7 +109,7 @@ public class DoctorService {
         }
     }
 
-    public String addComment(DoctorViewDTO doctorViewDto, Model model) {
+    public void addComment(DoctorViewDTO doctorViewDto, Model model) {
         try {
             var patientAccount = patientAccountRepository.findByIdAndDoctorId(doctorViewDto.getPatientId(), doctorViewDto.getDoctorId()).orElseThrow(GuiException::new);
             patientAccount.setComments(doctorViewDto.getComment());
@@ -126,14 +120,13 @@ public class DoctorService {
             log.error("An error occurred during edit of the comment of the patient: {} and exception: {}", e.getMessage(), e);
             model.addAttribute(FAILURE_MESSAGE_ALERT, GENERIC_ERROR_FOR_UI);
         }
-        return "super_user_view";
     }
 
     /**
      * In case an error occurred we want to ensure that the record is immutable
      */
     @Transactional
-    public String removePatient(DoctorViewDTO doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
+    public void removePatient(DoctorViewDTO doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
         try {
             //isHavingPayments? then throw exception else delete id.
             patientAccountRepository.deleteById(doctorViewDto.getPatientId());
@@ -142,7 +135,6 @@ public class DoctorService {
             log.error("An error occurred removing the patient: {} with exception: {}", e.getMessage(), e);
             redirectAttributes.addFlashAttribute(FAILURE_MESSAGE_ALERT, GENERIC_ERROR_FOR_UI);
         }
-        return "super_user_view";
     }
 
     private void constructDoctorTabAttributes(String doctorId, Model model) {
@@ -196,21 +188,6 @@ public class DoctorService {
         var doctors = doctorAccountRepository.findAll();
         if (!doctors.isEmpty()) {
             model.addAttribute("doctorsList", doctors);
-            model.addAttribute("patientId","100");
         }
-    }
-
-    public List<String> getAvailableDates(String doctorId) {
-
-        return Objects.requireNonNull(
-                restTemplate
-                        .getForObject("http://appointment-service:9999/api/appointment/dates?doctorId=" + doctorId,
-                                AvailableDatesResponse.class)).dates();
-    }
-
-    public String scheduleAppointment(AppointmentRequest appointmentRequest) {
-        return restTemplate.postForObject("http://appointment-service:9999/api/appointment/add",
-                appointmentRequest,
-                String.class);
     }
 }

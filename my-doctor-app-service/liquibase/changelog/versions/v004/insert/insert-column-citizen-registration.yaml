@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-column-citizen-registration
+      author: Konstantinos Kolios
+      changes:
+        - addColumn:
+            tableName: citizen
+            columns:
+              - column:
+                  name: register_id
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true

@@ -1,6 +1,7 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.config.MicroserviceProperties;
 import org.example.model.DoctorDetailsResponse;
 import org.example.model.PatientDetailsResponse;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
+import static org.example.constants.Constants.AUTHORIZATION_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Service
@@ -16,12 +18,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 public class DoctorAppIntegrationService {
 
     private final WebClient.Builder webclientBuilder;
+    private final MicroserviceProperties microserviceProperties;
 
     public PatientDetailsResponse retrievePatientsInformation(String token, List<String> patientsId) {
         return webclientBuilder.build()
                 .post()
-                .uri("http://doctor-app:8500/api/doctor-app/info/patient/retrieve-patient-info")
-                .header("Authorization", token)
+                .uri(microserviceProperties.retrievePatientsInformationUrl())
+                .header(AUTHORIZATION_VALUE, token)
                 .contentType(APPLICATION_JSON)
                 .body(BodyInserters.fromValue(patientsId))
                 .retrieve()
@@ -32,8 +35,8 @@ public class DoctorAppIntegrationService {
     public DoctorDetailsResponse retrieveDoctorsInformation(String token, List<String> doctorsId) {
         return webclientBuilder.build()
                 .post()
-                .uri("http://doctor-app:8500/api/doctor-app/info/doctor/retrieve-doctor-info")
-                .header("Authorization", token)
+                .uri(microserviceProperties.retrieveDoctorsInformationUrl())
+                .header(AUTHORIZATION_VALUE, token)
                 .contentType(APPLICATION_JSON)
                 .body(BodyInserters.fromValue(doctorsId))
                 .retrieve()
