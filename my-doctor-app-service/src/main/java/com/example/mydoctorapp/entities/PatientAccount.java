@@ -28,7 +28,7 @@ public class PatientAccount {
     private String phoneNumber;
     private String birthdate;
     private String comments;
-    private String prescriptionsIds;
+    private String createdDate;
     @Column(nullable = false)
     private String doctorId;
 }
