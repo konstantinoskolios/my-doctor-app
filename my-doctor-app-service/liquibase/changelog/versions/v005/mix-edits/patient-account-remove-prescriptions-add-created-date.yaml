@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: patient-account-remove-prescriptions-add-created-date
+      author: Konstantinos Kolios
+      changes:
+        - dropColumn:
+            tableName: patient_account
+            columns:
+              - column:
+                  name: prescriptions_ids
+        - addColumn:
+            tableName: patient_account
+            columns:
+              - column:
+                  name: created_date
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: 'currentDateTime("yyyy-MM-dd")'
