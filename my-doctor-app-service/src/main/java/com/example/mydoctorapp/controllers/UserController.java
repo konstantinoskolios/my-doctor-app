@@ -29,6 +29,8 @@ public class UserController {
     public String getDetails(Model model, @AuthenticationPrincipal OidcUser user) {
         if (Objects.equals(patientService.isUserRegister(user, model), USER_REGISTER_VIEW)) return USER_REGISTER_VIEW;
         doctorService.getAllDoctors(model);
+        patientService.getPrescriptions(user,model);
         return USER_VIEW;
     }
+
 }
