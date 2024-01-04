@@ -60,4 +60,10 @@ public class SuperUserController {
         doctorService.attachPrescriptions(attachPrescriptionDto);
         return PRESCRIPTIONS_TEMPLATE_VALUE;
     }
+
+    @GetMapping("user/prescriptions")
+    public String getPrescriptions(DoctorViewDTO doctorViewDto, Model model) {
+        doctorService.getPrescriptions(doctorViewDto, model);
+        return PRESCRIPTIONS_TEMPLATE_VALUE;
+    }
 }
