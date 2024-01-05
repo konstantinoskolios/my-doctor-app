@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <title>PGExporter Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container-lg mt-5">
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">PGExporter Dashboard</h4>
+        <p>
+            Monitor PostgreSQL databases using Grafana with the PGExporter dashboard.
+            Gain insights into database performance and health metrics.
+        </p>
+        <hr>
+        <p class="mb-0">
+            Open the PGExporter Dashboard below to analyze PostgreSQL metrics.
+        </p>
+    </div>
+
+    <h2 class="text-lg-center">PGExporter Dashboard</h2>
+    <div class="text-center">
+        <iframe src="http://localhost:3000/d/000000039/postgresql-database?orgId=1&refresh=10s"
+                style="width:150%; height:1400px; border: none;"></iframe>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
