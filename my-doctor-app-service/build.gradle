@@ -24,7 +24,6 @@ repositories {
 
 dependencies {
     // Spring Boot and Web
-//    implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -64,7 +63,7 @@ dependencies {
     // Hibernate
     annotationProcessor 'org.hibernate.orm:hibernate-jpamodelgen'
 
-    //eureka
+    // Eureka
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.1.0'
 
 }
