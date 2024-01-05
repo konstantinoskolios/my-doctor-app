@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public enum DateFormatPattern {
-    GMT_FORMAT("dd-MM-yyyy hh:mm:ss");
+    GMT_FORMAT("dd-MM-yyyy hh:mm:ss"),GMT_FORMAT_ONLY_DATE("dd-MM-yyyy");
     private String pattern;
 }
