@@ -1,13 +1,27 @@
 scrape_configs:
   - job_name: 'MyDoctorAppMetrics'
     metrics_path: '/actuator/prometheus'
-    scrape_interval: 3s
+    scrape_interval: 10s
     static_configs:
-      - targets: ['host.docker.internal:8500']
+      - targets: [ 'host.docker.internal:8500' ]
         labels:
-          application: 'My Doctor App Spring Boot Application'
+          application: 'Doctor App'
   - job_name: 'postgres'
     static_configs:
       - targets: ['postgres-exporter:9187'] #Need pg-exporter to retrieve metrics for postgres db.
         labels:
-          application: 'My Doctor App Database'
+          application: 'Doctor App Database'
+  - job_name: 'MyDoctorAppMetricsAppointments'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 10s
+    static_configs:
+      - targets: [ 'host.docker.internal:9000' ]
+        labels:
+          application: 'Doctor App Appointments Service'
+  - job_name: 'MyDoctorAppMetricsPayments'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 10s
+    static_configs:
+      - targets: [ 'host.docker.internal:9001' ]
+        labels:
+          application: 'Doctor App Payments Service'
