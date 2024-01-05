@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Page</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/hover-icons.css}"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+    <div th:insert="~{fragments/header :: header}"></div>
+
+     <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#business">Business</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#elk">ELK</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#grafana">Grafana</a>
+        </li>
+         <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#eureka">Eureka</a>
+        </li>
+    </ul>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <div class="container mt-2">
+        <div class="tab-content">
+            <div class="tab-pane show active" id="business" th:include="user/doctors.html"></div>
+            <div class="tab-pane" id="elk" th:include="user/appointments.html"></div>
+            <div class="tab-pane" id="grafana" th:include="user/payments.html"></div>
+            <div class="tab-pane" id="eureka" th:include="user/prescriptions.html"></div>
+        </div>
+    </div>
+
+</body>
+</html>
