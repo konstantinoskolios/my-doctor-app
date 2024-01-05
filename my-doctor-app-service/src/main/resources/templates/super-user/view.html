@@ -1,5 +1,3 @@
-<!-- super-user-view.html -->
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -18,7 +16,6 @@
     <h1 th:text="'Welcome Dr. ' + ${doctorAccount.fullName} + ', ' + ${doctorAccount.speciality}"></h1>
 
      <ul class="nav nav-tabs">
-        <!-- Nav tabs here -->
         <li class="nav-item">
             <a class="nav-link active" data-toggle="tab" href="#patients">Patients</a>
         </li>
@@ -30,7 +27,6 @@
         </li>
     </ul>
 
-    <!-- Include Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <div class="container mt-2">
