@@ -13,7 +13,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: created_date
-                  type: VARCHAR(30)
+                  type: date
                   constraints:
                     nullable: false
-                    defaultValueComputed: 'currentDateTime("yyyy-MM-dd")'
+                    defaultValueComputed: 'currentDateTime("dd-MM-yyyy")'
