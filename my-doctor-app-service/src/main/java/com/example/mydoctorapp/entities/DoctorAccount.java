@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 import static com.example.mydoctorapp.utils.MyDoctorAppUtils.getCurrentTimeInGMT3OnlyDate;
 
 @AllArgsConstructor
@@ -23,7 +25,7 @@ public class DoctorAccount {
     private String email;
     private String fullName;
     private String speciality;
-    private String createdDate = getCurrentTimeInGMT3OnlyDate();
+    private Date createdDate = getCurrentTimeInGMT3OnlyDate();
 
     public DoctorAccount(String id, String email, String fullName, String speciality) {
         this.id = id;

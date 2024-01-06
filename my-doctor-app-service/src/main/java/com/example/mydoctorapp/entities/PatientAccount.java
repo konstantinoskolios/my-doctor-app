@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 import static com.example.mydoctorapp.utils.MyDoctorAppUtils.getCurrentTimeInGMT3OnlyDate;
 
 @AllArgsConstructor
@@ -32,7 +34,7 @@ public class PatientAccount {
     private String phoneNumber;
     private String birthdate;
     private String comments;
-    private String createdDate = getCurrentTimeInGMT3OnlyDate();
+    private Date createdDate = getCurrentTimeInGMT3OnlyDate();
     @Column(nullable = false)
     private String doctorId;
 
