@@ -11,6 +11,5 @@ databaseChangeLog:
                   type: date
                   constraints:
                     nullable: false
-                    defaultValueComputed: 'currentDateTime("dd-MM-yyyy")'
 
 
