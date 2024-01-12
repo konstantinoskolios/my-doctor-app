@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Grafana Spring Boot Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">Grafana Spring Boot Dashboard</h4>
+        <p>
+            View statistics for Spring Boot applications using Grafana.
+            Explore metrics and gain insights into the performance of your Spring Boot services.
+        </p>
+        <hr>
+        <p class="mb-0">
+            Open the Grafana Spring Boot Dashboard below to analyze Spring Boot metrics.
+        </p>
+    </div>
+
+    <h2 class="text-center">Grafana Spring Boot Dashboard</h2>
+    <div class="text-center">
+        <iframe src="http://localhost:3000/d/spring_boot_21/spring-boot-3-x-statistics?orgId=1"
+                style="width:100%; height: 800px; border: none;"></iframe>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

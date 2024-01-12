@@ -21,11 +21,6 @@
 - set homeUrl: http://localhost:9999 (note this is #gateway url/port)
 - client secret: xxxxxxxxxxxxxxxxxx #secret will be different every time
 
-# Create User
-
-- create user: konstantinos-user
-- create admin: konstantinos-admin
-
 # Create Role
 
 - create role: doctor-app-admin 
@@ -38,6 +33,18 @@
 - create group: citizens -> role mapping -> doctor-app-user
 - create group: doctors  -> role mapping -> doctor-app-super-user
 
+# Create Admin
+
+- create admin with valid email ending in the pattern *@admin.com
+- select 'Email Verified'
+- Join Groups > admin
+
+# Create Super-User
+
+- create admin with valid email ending in the pattern *@doctorapp.com
+- select 'Email Verified'
+- Join Groups > doctors
+
 # Create Super-User Attributes
 
 - Users > Attributes 
@@ -45,7 +52,7 @@
 
 # Realm Settings
 
-- Enable User Registration -> Assign role -> Default Groups -> citizens
+- Enable User Registration -> Default Groups -> Add groups -> citizens
 
 # Add Identity Providers
 

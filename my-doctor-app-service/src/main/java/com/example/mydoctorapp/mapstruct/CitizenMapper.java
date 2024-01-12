@@ -8,8 +8,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CitizenMapper {
 
-    @Mapping(target = "prescriptionsIds", ignore = true)
+    @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "comments", ignore = true)
     @Mapping(target = "doctorId", source = "doctorId")
+    @Mapping(target = "id", source = "citizen.registerId")
     PatientAccount citizenToPatientAccount(Citizen citizen, String doctorId);
 }

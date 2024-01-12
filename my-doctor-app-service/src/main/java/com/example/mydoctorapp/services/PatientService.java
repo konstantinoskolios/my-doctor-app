@@ -31,6 +31,7 @@ public class PatientService {
 
         if (userId.isPresent()) {
             model.addAttribute("patientId", userId.get().getRegisterId());
+            model.addAttribute("fullName",user.getFullName());
             return YES_VALUE;
         }
 

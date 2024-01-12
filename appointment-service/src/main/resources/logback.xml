@@ -10,7 +10,7 @@
 		
 		<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 				<!-- Use the currentDate property in the file name -->
-				<file>mylog/${currentDate}_myapp.log</file>
+				<file>mylog/${currentDate}_appointment.log</file>
 				<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 						<fileNamePattern>logs/${currentDate}_%d{yyyy_MM_dd}_myapp.v%i.log</fileNamePattern>
 						<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">

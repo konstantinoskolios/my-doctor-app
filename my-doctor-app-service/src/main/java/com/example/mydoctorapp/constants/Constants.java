@@ -11,10 +11,7 @@ public class Constants {
     public static final int SOCIAL_SECURITY_NUMBER_LENGTH = 11;
     public static final String CITIZENS_TEMPLATE_VALUE = "citizens_view";
     public static final String CITIZENS = "citizens";
-    public static final String MAIN_TEMPLATE_VALUE = "main_view";
-    public static final String DOCTOR_TEMPLATE_VALUE = "doctor_view";
     public static final String PRESCRIPTIONS_TEMPLATE_VALUE = "prescriptions_view";
-    public static final String PATIENT_TEMPLATE_VALUE = "patient_view";
     public static final String SORT_ASCENDING = "asc";
     public static final String START_ITEM = "startItem";
     public static final String END_ITEM = "endItem";
@@ -29,6 +26,8 @@ public class Constants {
     public static final String LOGIN_VIEW = "login";
     public static final String USER_VIEW = "user/view";
     public static final String SUPER_USER_VIEW = "super-user/view";
+    public static final String ADMIN_VIEW = "admin/view";
     public static final String YES_VALUE = "yes";
     public static final String USER_REGISTER_VIEW = "user/register";
+    public static  final String EUROPEAN_TIMEZONE = "GMT+3";
 }

@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: doctor-account-add-created-date
+      author: Konstantinos Kolios
+      changes:
+        - addColumn:
+            tableName: doctor_account
+            columns:
+              - column:
+                  name: created_date
+                  type: date
+                  constraints:
+                    nullable: false
+
+
