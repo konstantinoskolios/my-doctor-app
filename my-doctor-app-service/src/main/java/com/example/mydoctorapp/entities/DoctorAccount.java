@@ -3,14 +3,14 @@ package com.example.mydoctorapp.entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-
-import static com.example.mydoctorapp.utils.MyDoctorAppUtils.getCurrentTimeInGMT3OnlyDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,12 +25,21 @@ public class DoctorAccount {
     private String email;
     private String fullName;
     private String speciality;
-    private Date createdDate = getCurrentTimeInGMT3OnlyDate();
+
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    private Date createdDate;
 
     public DoctorAccount(String id, String email, String fullName, String speciality) {
         this.id = id;
         this.email = email;
         this.fullName = fullName;
         this.speciality = speciality;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.createdDate == null) {
+            this.createdDate = new Date();
+        }
     }
 }

@@ -6,12 +6,14 @@ import org.springframework.context.annotation.PropertySource;
 
 import java.util.TimeZone;
 
+import static com.example.mydoctorapp.constants.Constants.EUROPEAN_TIMEZONE;
+
 @SpringBootApplication
 @PropertySource("classpath:.env")
 public class MyDoctorAppApplication {
 
     public static void main(String[] args) {
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT+3"));
+        TimeZone.setDefault(TimeZone.getTimeZone(EUROPEAN_TIMEZONE));
         SpringApplication.run(MyDoctorAppApplication.class, args);
     }
 

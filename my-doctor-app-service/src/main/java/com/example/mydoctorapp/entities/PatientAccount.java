@@ -3,22 +3,23 @@ package com.example.mydoctorapp.entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
-import static com.example.mydoctorapp.utils.MyDoctorAppUtils.getCurrentTimeInGMT3OnlyDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
 @Table(name = "patient_account")
-@Builder
+    @Builder
 public class PatientAccount {
     @Id
     @Column(unique = true, nullable = false)
@@ -34,8 +35,17 @@ public class PatientAccount {
     private String phoneNumber;
     private String birthdate;
     private String comments;
-    private Date createdDate = getCurrentTimeInGMT3OnlyDate();
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @Column(name = "created_date", nullable = false, updatable = false)
+    private Date createdDate;
     @Column(nullable = false)
     private String doctorId;
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.createdDate == null) {
+            this.createdDate = new Date();
+        }
+    }
 
 }
