@@ -50,6 +50,11 @@
 - Users > Attributes 
 - Add attribute for 'speciality' in order to descript the category of the super-user meaning 'Cardiologist,Pathologist' and etc.
 
+# Add Attributes Mapper In Order To Convert Attribute to Json Format
+
+- Clients > doctor-app > Client Scopes > doctor-app-dedicated > Add mapper > By configuration > User attribute
+- Add "speciality" attribute for name, user attribute and token-claim-name and press save
+
 # Realm Settings
 
 - Enable User Registration -> Default Groups -> Add groups -> citizens
