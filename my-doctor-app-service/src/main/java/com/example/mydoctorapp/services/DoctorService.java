@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static com.example.mydoctorapp.constants.Constants.DOCTOR_SPECIALITY;
 import static com.example.mydoctorapp.constants.Constants.ERROR_ATTRIBUTE;
 import static com.example.mydoctorapp.constants.Constants.FAILURE_MESSAGE_ALERT;
 import static com.example.mydoctorapp.constants.Constants.GENERIC_ERROR_FOR_UI;
@@ -81,11 +82,13 @@ public class DoctorService {
         var subId = user.getSubject();
         var speciality = "";
         try {
-            speciality = user.getClaims().get("speciality").toString();
+            speciality = user.getClaims().get(DOCTOR_SPECIALITY).toString();
         } catch (Exception e) {
             throw new GuiException("Please contact with administrator to add you a speciality.");
         }
-        return doctorAccountRepository.save(new DoctorAccount(subId, email, fullName, speciality));
+        var doctorAccount = new DoctorAccount(subId, email, fullName, speciality);
+        if(doctorAccountRepository.existsById(user.getUserInfo().getSubject())) return doctorAccount;
+        return doctorAccountRepository.save(doctorAccount);
     }
 
     private void isValidEmailFormat(String email, boolean verifiedEmail) {
