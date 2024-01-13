@@ -36,7 +36,7 @@ public class CitizenService {
 
     public String getAllCitizens(int page, int size, String sortField, String sortDir, Model model, String searchBy) {
         var pageable = PageRequest.of(page, size, sortDir.equals(SORT_ASCENDING) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending());
-        var citizens = citizenRepository.findAll(Objects.requireNonNull(constructCitizenSpecification(searchBy)), pageable);
+        var citizens = citizenRepository.findAll((constructCitizenSpecification(searchBy)), pageable);
         displayItems(citizens, page, model);
         model.addAttribute(CITIZENS, citizens);
         return CITIZENS_TEMPLATE_VALUE;
