@@ -56,9 +56,9 @@ public class CitizenService {
         String[] parts = fullName.split(" ");
         var firstName = "";
         var lastName = "";
-        if (parts.length > 2) {
-            firstName = parts[1];
-            lastName = parts[2];
+        if (parts.length == 2) {
+            firstName = parts[0];
+            lastName = parts[1];
         } else {
             firstName = fullName;
         }
