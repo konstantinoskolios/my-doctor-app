@@ -30,4 +30,5 @@ public class Constants {
     public static final String YES_VALUE = "yes";
     public static final String USER_REGISTER_VIEW = "user/register";
     public static  final String EUROPEAN_TIMEZONE = "GMT+3";
+    public static  final String DOCTOR_SPECIALITY = "speciality";
 }
