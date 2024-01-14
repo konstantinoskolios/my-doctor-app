@@ -55,6 +55,3 @@ databaseChangeLog:
               - column:
                   name: prescriptions_ids
                   type: VARCHAR(255)
-              - column:
-                  name: doctor_id
-                  type: VARCHAR(255)
