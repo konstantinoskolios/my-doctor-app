@@ -4,6 +4,7 @@ import com.example.mydoctorapp.dto.AttachPrescriptionDTO;
 import com.example.mydoctorapp.dto.DoctorViewDTO;
 import com.example.mydoctorapp.dto.PrescriptionInformationDTO;
 import com.example.mydoctorapp.entities.DoctorAccount;
+import com.example.mydoctorapp.entities.DoctorPatientRelationship;
 import com.example.mydoctorapp.entities.PatientAccount;
 import com.example.mydoctorapp.entities.PrescriptionDetail;
 import com.example.mydoctorapp.enumerations.PrescriptionCategoryEnum;
@@ -13,6 +14,7 @@ import com.example.mydoctorapp.mapstruct.CitizenMapper;
 import com.example.mydoctorapp.mapstruct.DoctorMapper;
 import com.example.mydoctorapp.repositories.CitizenRepository;
 import com.example.mydoctorapp.repositories.DoctorAccountRepository;
+import com.example.mydoctorapp.repositories.DoctorPatientRelationshipRepository;
 import com.example.mydoctorapp.repositories.PatientAccountRepository;
 import com.example.mydoctorapp.repositories.PrescriptionDetailRepository;
 import jakarta.transaction.Transactional;
@@ -22,10 +24,10 @@ import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -50,8 +52,7 @@ public class DoctorService {
     private final PrescriptionDetailRepository prescriptionDetailRepository;
     private final DoctorMapper doctorMapper;
     private final CitizenMapper citizenMapper;
-    private final RestTemplate restTemplate;
-
+    private final DoctorPatientRelationshipRepository doctorPatientRelationshipRepository;
 
     //    @Transactional #problem with redirect
     public String loginSuperUser(Model model, OidcUser user) {
@@ -59,9 +60,8 @@ public class DoctorService {
             isValidEmailFormat(user.getEmail(), user.getEmailVerified());
             var doctorAccount = updateSuperUserInfo(user);
             log.info(String.format("Doctor with email: %s has successfully logged into the application at: %s", email, getCurrentTimeInGMT3()));
-            var patientList = patientAccountRepository.findAllByDoctorId(doctorAccount.getId());
             model.addAttribute("doctorAccount", doctorAccount);
-            model.addAttribute("patientList", patientList);
+            model.addAttribute("patientList", retrievePatientAccounts(doctorAccount.getId()));
             return SUPER_USER_VIEW;
 
         } catch (GuiException e) {
@@ -76,6 +76,10 @@ public class DoctorService {
         }
     }
 
+    private List<PatientAccount> retrievePatientAccounts(String doctorId) {
+        return doctorPatientRelationshipRepository.findByDoctorId(doctorId).stream().map(DoctorPatientRelationship::getPatient).toList();
+    }
+
     private DoctorAccount updateSuperUserInfo(OidcUser user) {
         var fullName = user.getFullName();
         var email = user.getEmail();
@@ -87,7 +91,7 @@ public class DoctorService {
             throw new GuiException("Please contact with administrator to add you a speciality.");
         }
         var doctorAccount = new DoctorAccount(subId, email, fullName, speciality);
-        if(doctorAccountRepository.existsById(user.getUserInfo().getSubject())) return doctorAccount;
+        if (doctorAccountRepository.existsById(user.getUserInfo().getSubject())) return doctorAccount;
         return doctorAccountRepository.save(doctorAccount);
     }
 
@@ -102,8 +106,13 @@ public class DoctorService {
             log.info("Citizen id: {} doctorId : {}", citizenId, doctorId);
             var citizenInfo = citizenRepository.findById(citizenId).orElseThrow(GuiException::new);
             var patient = citizenMapper.citizenToPatientAccount(citizenInfo, doctorId);
-            if (patientAccountRepository.existsByIdAndDoctorId(patient.getId(), patient.getDoctorId()))
+            if (patientAccountRepository.existsByIdAndDoctorRelationships_DoctorId(patient.getId(), doctorId))
                 throw new GuiException("Patient has already been added, if not showing refresh the doctor page");
+
+            DoctorPatientRelationship relationship = new DoctorPatientRelationship();
+            relationship.setDoctor(doctorAccountRepository.findById(doctorId).orElseThrow(() -> new GuiException("Doctor not found")));
+            relationship.setPatient(patient);
+            patient.getDoctorRelationships().add(relationship);
             patientAccountRepository.save(patient);
             redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE_ALERT, "Patient has been added successfully");
         } catch (Exception e) {
@@ -114,7 +123,7 @@ public class DoctorService {
 
     public void addComment(DoctorViewDTO doctorViewDto, Model model) {
         try {
-            var patientAccount = patientAccountRepository.findByIdAndDoctorId(doctorViewDto.getPatientId(), doctorViewDto.getDoctorId()).orElseThrow(GuiException::new);
+            var patientAccount = patientAccountRepository.findByIdAndDoctorRelationships_DoctorId(doctorViewDto.getPatientId(), doctorViewDto.getDoctorId()).orElseThrow(GuiException::new);
             patientAccount.setComments(doctorViewDto.getComment());
             patientAccountRepository.save(patientAccount);
             model.addAttribute(SUCCESS_MESSAGE_ALERT, "Comment has been changed successfully");
@@ -131,8 +140,7 @@ public class DoctorService {
     @Transactional
     public void removePatient(DoctorViewDTO doctorViewDto, RedirectAttributes redirectAttributes, Model model) {
         try {
-            //isHavingPayments? then throw exception else delete id.
-            patientAccountRepository.deleteById(doctorViewDto.getPatientId());
+            doctorPatientRelationshipRepository.deleteByDoctorIdAndPatientId(doctorViewDto.getDoctorId(), doctorViewDto.getPatientId());
             constructDoctorTabAttributes(doctorViewDto.getDoctorId(), model);
         } catch (Exception e) {
             log.error("An error occurred removing the patient: {} with exception: {}", e.getMessage(), e);
@@ -142,7 +150,7 @@ public class DoctorService {
 
     private void constructDoctorTabAttributes(String doctorId, Model model) {
         var doctorAccount = doctorAccountRepository.findById(doctorId).orElseThrow(GuiException::new);
-        var patientList = patientAccountRepository.findAllByDoctorId(doctorId);
+        var patientList = retrievePatientAccounts(doctorId);
         model.addAttribute("doctorAccount", doctorMapper.toDto(doctorAccount));
         model.addAttribute("patientList", patientList);
     }
@@ -150,20 +158,21 @@ public class DoctorService {
 
     @Transactional
     public void attachPrescriptions(AttachPrescriptionDTO input) {
-        var patientAccount = patientAccountRepository.findByIdAndDoctorId(input.getPatientId(), input.getDoctorId()).orElseThrow(() -> new GuiException("Patient not Found"));
+        var patientAccount = patientAccountRepository.findByIdAndDoctorRelationships_DoctorId(input.getPatientId(), input.getDoctorId()).orElseThrow(() -> new GuiException("Patient not Found"));
+
 
         var prescriptionDetails = input
                 .getPrescriptionsInformation()
                 .stream()
-                .map(prescription -> constructPrescriptionDetail(patientAccount, prescription)).collect(Collectors.toList());
+                .map(prescription -> constructPrescriptionDetail(patientAccount, prescription, input.getDoctorId())).collect(Collectors.toList());
         prescriptionDetailRepository.deleteByPatientIdAndDoctorId(input.getPatientId(), input.getDoctorId());
         prescriptionDetailRepository.saveAll(prescriptionDetails);
     }
 
-    private PrescriptionDetail constructPrescriptionDetail(PatientAccount patientAccount, PrescriptionInformationDTO prescription) {
+    private PrescriptionDetail constructPrescriptionDetail(PatientAccount patientAccount, PrescriptionInformationDTO prescription, String doctorId) {
         return PrescriptionDetail.builder()
                 .patientId(patientAccount.getId())
-                .doctorId(patientAccount.getDoctorId())
+                .doctorId(doctorId)
                 .category(prescription.getCategory())
                 .prescription(prescription.getPrescriptionName())
                 .date(prescription.getDate())
