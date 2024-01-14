@@ -13,8 +13,7 @@ public interface CitizenMapper {
 
     @Mapping(target = "createdDate", source = "citizen", qualifiedByName = "mapCreatedDate")
     @Mapping(target = "comments", ignore = true)
-    @Mapping(target = "doctorId", source = "doctorId")
-    @Mapping(target = "id", source = "citizen.registerId",qualifiedByName = "mapRegisterId")
+    @Mapping(target = "id", source = "citizen.registerId", qualifiedByName = "mapRegisterId")
     PatientAccount citizenToPatientAccount(Citizen citizen, String doctorId);
 
     @Named(value = "mapRegisterId")
@@ -23,7 +22,7 @@ public interface CitizenMapper {
     }
 
     @Named(value = "mapCreatedDate")
-    default Date mapCreatedDate(Citizen citizen){
+    default Date mapCreatedDate(Citizen citizen) {
         return new Date();
     }
 }
