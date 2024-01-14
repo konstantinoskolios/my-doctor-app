@@ -16,8 +16,6 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import java.util.Objects;
-
 import static com.example.mydoctorapp.constants.Constants.CITIZENS;
 import static com.example.mydoctorapp.constants.Constants.CITIZENS_TEMPLATE_VALUE;
 import static com.example.mydoctorapp.constants.Constants.END_ITEM;
@@ -36,7 +34,7 @@ public class CitizenService {
 
     public String getAllCitizens(int page, int size, String sortField, String sortDir, Model model, String searchBy) {
         var pageable = PageRequest.of(page, size, sortDir.equals(SORT_ASCENDING) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending());
-        var citizens = citizenRepository.findAll((constructCitizenSpecification(searchBy)), pageable);
+        var citizens = citizenRepository.findAll(constructCitizenSpecification(searchBy), pageable);
         displayItems(citizens, page, model);
         model.addAttribute(CITIZENS, citizens);
         return CITIZENS_TEMPLATE_VALUE;
@@ -80,14 +78,14 @@ public class CitizenService {
             patient.setRegisterId(user.getUserInfo().getSubject());
 
             patientAccountRepository.save(PatientAccount.builder()
-                            .id(patient.getRegisterId())
-                            .firstName(patient.getFirstName())
-                            .lastName(patient.getLastName())
-                            .fatherFirstName(patient.getFatherFirstName())
-                            .taxNumber(patient.getTaxNumber())
-                            .socialSecurityNumber(patient.getSocialSecurityNumber())
-                            .phoneNumber(patient.getPhoneNumber())
-                            .birthdate(patient.getBirthdate())
+                    .id(patient.getRegisterId())
+                    .firstName(patient.getFirstName())
+                    .lastName(patient.getLastName())
+                    .fatherFirstName(patient.getFatherFirstName())
+                    .taxNumber(patient.getTaxNumber())
+                    .socialSecurityNumber(patient.getSocialSecurityNumber())
+                    .phoneNumber(patient.getPhoneNumber())
+                    .birthdate(patient.getBirthdate())
                     .build());
 
             citizenRepository.save(patient);
