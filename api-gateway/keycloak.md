@@ -16,7 +16,7 @@
 
 - doctor-app
 - enable Client-Authentication
-- enable only 'Service Account Roles' from the 'Authentication Flow'
+- enable 'StandardFlow','Service Account Roles' from the 'Authentication Flow'
 - set rootUrl: http://localhost:9999 (note this is #gateway url/port)
 - set homeUrl: http://localhost:9999 (note this is #gateway url/port)
 - client secret: xxxxxxxxxxxxxxxxxx #secret will be different every time
@@ -65,3 +65,13 @@
 - Facebook
 - Github
 - Google
+
+# Instructions for Thesis
+
+To follow the instructions outlined in my thesis, please complete the following steps:
+
+- **Create Two Super Users:**
+    - John Smith (Specialty: Cardiologist)
+    - Peter Pan (Specialty: Pathologist)
+- For each user, navigate to their credentials and assign a temporary password of your choice.
+- Log in to the application and access the 'Super User' tab. Register both users in the system.
