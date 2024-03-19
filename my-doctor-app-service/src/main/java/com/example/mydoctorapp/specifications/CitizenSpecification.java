@@ -19,21 +19,27 @@ public class CitizenSpecification {
                 StringUtils.isBlank(field) ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get(fieldValue), field));
     }
 
+    private static Specification<Citizen> findOnlyRegisterCitizens() {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.isNotNull(root.get(Citizen_.registerId));
+    }
+
     public static Specification<Citizen> constructCitizenSpecification(String input) {
 
-        if (StringUtils.isBlank(input) || !StringUtils.isNumeric(input)) {
-            return null;
+        var baseSpecification = findOnlyRegisterCitizens();
+
+        if (StringUtils.isNotBlank(input) && StringUtils.isNumeric(input)) {
+            switch (StringUtils.length(input)) {
+                case TAX_NUMBER_LENGTH:
+                    return Specification.where(baseSpecification).and(findByField(input, Citizen_.TAX_NUMBER));
+                case PHONE_NUMBER_LENGTH:
+                    return Specification.where(baseSpecification).and(findByField(input, Citizen_.PHONE_NUMBER));
+                case SOCIAL_SECURITY_NUMBER_LENGTH:
+                    return Specification.where(baseSpecification).and(findByField(input, Citizen_.SOCIAL_SECURITY_NUMBER));
+            }
         }
 
-        switch (StringUtils.length(input)) {
-            case TAX_NUMBER_LENGTH:
-                return findByField(input, Citizen_.TAX_NUMBER);
-            case PHONE_NUMBER_LENGTH:
-                return findByField(input, Citizen_.PHONE_NUMBER);
-            case SOCIAL_SECURITY_NUMBER_LENGTH:
-                return findByField(input, Citizen_.SOCIAL_SECURITY_NUMBER);
-            default:
-                return null;
-        }
+        return baseSpecification;
     }
+
 }

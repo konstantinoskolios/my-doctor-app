@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: doctor-patient-relationship-table
+      author: your_author_name
+      changes:
+        - createTable:
+            tableName: doctor_patient_relationship
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: doctor_id
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: patient_id
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+            constraints:
+              primaryKey: true
+              uniqueConstraintName: pk_doctor_patient_relationship

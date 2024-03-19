@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run the Python script to mock data for citizens
-python ../src/main/resources/scripts/mock_data.py
+python ../../../my-doctor-app/my-doctor-app-service/src/main/resources/scripts/mock_data.py
 
 # shellcheck disable=SC2181
 if [ $? -eq 0 ]; then

@@ -9,3 +9,5 @@ databaseChangeLog:
       path: versions/v004/insert/
   - includeAll:
       path: versions/v005/mix-edits/
+  - includeAll:
+      path: versions/v006/tables/

@@ -16,7 +16,7 @@
 
 - doctor-app
 - enable Client-Authentication
-- enable only 'Service Account Roles' from the 'Authentication Flow'
+- enable 'StandardFlow','Service Account Roles' from the 'Authentication Flow'
 - set rootUrl: http://localhost:9999 (note this is #gateway url/port)
 - set homeUrl: http://localhost:9999 (note this is #gateway url/port)
 - client secret: xxxxxxxxxxxxxxxxxx #secret will be different every time
@@ -50,6 +50,11 @@
 - Users > Attributes 
 - Add attribute for 'speciality' in order to descript the category of the super-user meaning 'Cardiologist,Pathologist' and etc.
 
+# Add Attributes Mapper In Order To Convert Attribute to Json Format
+
+- Clients > doctor-app > Client Scopes > doctor-app-dedicated > Add mapper > By configuration > User attribute
+- Add "speciality" attribute for name, user attribute and token-claim-name and press save
+
 # Realm Settings
 
 - Enable User Registration -> Default Groups -> Add groups -> citizens
@@ -60,3 +65,13 @@
 - Facebook
 - Github
 - Google
+
+# Instructions for Thesis
+
+To follow the instructions outlined in my thesis, please complete the following steps:
+
+- **Create Two Super Users:**
+    - John Smith (Specialty: Cardiologist)
+    - Peter Pan (Specialty: Pathologist)
+- For each user, navigate to their credentials and assign a temporary password of your choice.
+- Log in to the application and access the 'Super User' tab. Register both users in the system.
